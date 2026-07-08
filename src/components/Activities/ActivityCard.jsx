@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MapPin, Clock } from "lucide-react";
+import { ConfirmModal } from "../ui/ConfirmModal";
 import api from "../../api";
 
 export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
@@ -13,6 +14,8 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 		location: activity.location,
 		price: activity.price,
 	});
+
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	const handleChange = ({ target }) => {
 		setForm((prev) => ({
@@ -84,7 +87,7 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 					</button>
 
 					<button
-						onClick={handleDelete}
+						onClick={() => setShowDeleteModal(true)}
 						className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white"
 					>
 						Eliminar
@@ -136,6 +139,17 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 					</button>
 				</form>
 			)}
+
+			<ConfirmModal
+				isOpen={showDeleteModal}
+				title="Eliminar actividad"
+				message="¿Seguro que quieres eliminar esta actividad? Esta acción no se puede deshacer."
+				onCancel={() => setShowDeleteModal(false)}
+				onConfirm={async () => {
+					await handleDelete();
+					setShowDeleteModal(false);
+				}}
+			/>
 		</div>
 	);
 };
