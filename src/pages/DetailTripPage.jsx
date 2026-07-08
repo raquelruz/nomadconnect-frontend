@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../api";
 
+import { TripCreator } from "../components/TripDetail/TripCreator";
+import { TripStats } from "../components/TripDetail/TripStats";
+import { TripDescription } from "../components/TripDetail/TripDescription";
+import { TripItinerary } from "../components/TripDetail/TripItinerary";
+
 export const DetailTripPage = () => {
 	const { id } = useParams();
+
 	const [trip, setTrip] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -15,82 +21,121 @@ export const DetailTripPage = () => {
 			.finally(() => setLoading(false));
 	}, [id]);
 
+
 	if (loading)
 		return (
-			<p className="text-center text-gray-500 mt-10">
-				Cargando viaje...
-			</p>
+			<div className="min-h-screen bg-slate-50 flex items-center justify-center">
+				<div className="flex flex-col items-center gap-4">
+					<div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+					<p className="text-slate-600 font-medium">Cargando viaje...</p>
+				</div>
+			</div>
 		);
+
 
 	if (error)
 		return (
-			<p className="text-center text-red-500 mt-10">
-				{error}
-			</p>
+			<div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+				<div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
+					<div className="text-4xl mb-4">⚠️</div>
+
+					<h2 className="text-xl font-semibold text-slate-800 mb-2">
+						Ha ocurrido un error
+					</h2>
+
+					<p className="text-slate-500">
+						{error}
+					</p>
+				</div>
+			</div>
 		);
+
 
 	if (!trip)
 		return (
-			<p className="text-center text-gray-500 mt-10">
-				Viaje no encontrado
-			</p>
+			<div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+				<div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
+					<div className="text-5xl mb-4">🌍</div>
+
+					<h2 className="text-xl font-semibold text-slate-800 mb-2">
+						Viaje no encontrado
+					</h2>
+
+					<p className="text-slate-500 mb-6">
+						El viaje que buscas no existe o ha sido eliminado.
+					</p>
+
+					<Link
+						to="/trips"
+						className="inline-flex items-center justify-center bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-slate-700 transition"
+					>
+						Volver a viajes
+					</Link>
+				</div>
+			</div>
 		);
 
+
 	return (
-		<div className="min-h-screen bg-gray-50 py-10 px-4">
-			<div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-lg overflow-hidden">
-				
+		<div className="bg-slate-50 min-h-screen pb-20">
+			<div className="relative">
+
 				<img
 					src={trip.image}
 					alt={trip.title}
-					className="w-full h-[450px] object-cover"
+					className="w-full h-112.5 object-cover"
 				/>
 
-				<div className="p-8">
-					
-					<Link
-						to="/trips"
-						className="text-sm text-primary-500 hover:underline"
-					>
-						← Volver a viajes
-					</Link>
+				<Link
+					to="/trips"
+					className="absolute top-6 left-6 bg-white w-10 h-10 rounded-full flex items-center justify-center shadow"
+				>
+					←
+				</Link>
 
-					<div className="mt-6 flex justify-between items-start gap-4">
+
+				<button className="absolute top-6 right-6 bg-white w-10 h-10 rounded-full shadow">
+					♡
+				</button>
+
+			</div>
+
+
+			<main className="max-w-5xl mx-auto px-4">
+
+				<div className="bg-white rounded-3xl shadow-xl p-8 -mt-20 relative">
+
+					<div className="flex justify-between">
+
 						<div>
-							<h1 className="text-4xl font-bold text-gray-900">
+							<h1 className="text-3xl font-bold text-blue-950">
 								{trip.title}
 							</h1>
-
-							<p className="mt-2 text-lg text-gray-500">
-								📍 {trip.destination}
-							</p>
 						</div>
+
+
+						<span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-lg h-fit">
+							★ 4.9
+						</span>
+
 					</div>
 
 
-					<div className="mt-6 bg-gray-100 rounded-xl p-4">
-						<p className="font-medium text-gray-700">
-							📅 Fechas
-						</p>
-
-						<p className="text-gray-600 mt-1">
-							{trip.startDate} - {trip.endDate}
-						</p>
-					</div>
-
-
-					<div className="mt-8">
-						<h2 className="text-2xl font-semibold text-gray-900">
-							Descripción
-						</h2>
-
-						<p className="mt-3 text-gray-600 leading-relaxed">
-							{trip.description}
-						</p>
-					</div>
+					{trip.owner && <TripCreator owner={trip.owner} />}
 
 				</div>
-			</div>
+
+
+				<TripStats trip={trip} />
+
+
+				<TripDescription description={trip.description} />
+
+
+				<TripItinerary itinerary={trip.itinerary} />
+
+			</main>
+
 		</div>
 	);
 };
