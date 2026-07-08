@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, Users } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
 
@@ -143,7 +143,21 @@ export const DetailTripPage = () => {
 							</div>
 						</div>
 
-						<div className="rounded-xl bg-orange-100 px-4 py-2 font-semibold text-orange-700">★ 4.9</div>
+						<div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4">
+							<div className="flex items-center gap-3">
+								<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
+									<Users size={18} />
+								</div>
+
+								<div>
+									<p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+										Participantes
+									</p>
+
+									<p className="text-xl font-bold text-slate-900">{trip.members?.length || 1}</p>
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div className="mt-8">{trip.owner && <TripCreator owner={trip.owner} />}</div>
