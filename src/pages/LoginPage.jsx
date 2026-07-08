@@ -60,7 +60,7 @@ export const LoginPage = () => {
                                 placeholder="Correo electrónico"
                                 value={form.email}
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-[var(--color-primary)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-(--color-primary) focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
                         </div>
@@ -71,7 +71,7 @@ export const LoginPage = () => {
                                 placeholder="Contraseña"
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-[var(--color-primary)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-(--color-primary) focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
 

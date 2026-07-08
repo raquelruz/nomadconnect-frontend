@@ -8,32 +8,43 @@ import { ExplorePage } from "./pages/ExplorePage";
 import { ProtectedRoute } from "./auth/ProtectedRoute.jsx";
 import { MyTripsPage } from "./pages/MyTripsPage.jsx";
 import { ProfilePage } from "./pages/ProfilePage.jsx";
+import { DetailTripPage } from "./pages/DetailTripPage.jsx";
 
 export const App = () => {
-    return (
-        <>
-            <Navbar />
+	return (
+		<>
+			<Navbar />
 
-            <main>
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
+			<main>
+				<Routes>
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="/register" element={<RegisterPage />} />
 
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/explore" element={<ProtectedRoute>{<ExplorePage />}</ProtectedRoute>} />
+					<Route path="/" element={<HomePage />} />
+					<Route path="/explore" element={<ProtectedRoute>{<ExplorePage />}</ProtectedRoute>} />
 
-                    <Route path="/my-trips/:id" element={<ProtectedRoute>{<MyTripsPage />}</ProtectedRoute>} />
+					<Route path="/my-trips/:id" element={<ProtectedRoute>{<MyTripsPage />}</ProtectedRoute>} />
 
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProtectedRoute>
-                                <ProfilePage />
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </main>
-        </>
-    );
+					<Route
+						path="/profile"
+						element={
+							<ProtectedRoute>
+								<ProfilePage />
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
+						path="/trips/:id"
+						element={
+							<ProtectedRoute>
+								<DetailTripPage />
+							</ProtectedRoute>
+						}
+					/>
+
+				</Routes>
+			</main>
+		</>
+	);
 };
