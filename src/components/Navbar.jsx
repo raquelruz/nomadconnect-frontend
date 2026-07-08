@@ -40,7 +40,7 @@ export const Navbar = () => {
                             <FaRegCompass className="text-xl" />
                         </div>
                         <div className="flex flex-col leading-tight">
-                            <span className="text-lg font-semibold tracking-tight text-text-primary">VueltitApp</span>
+                            <span className="text-lg font-semibold tracking-tight text-text-primary">NomadConnect</span>
                             <span className="text-xs tracking-widest uppercase text-text-muted font-medium">
                                 Comunidad viajera
                             </span>

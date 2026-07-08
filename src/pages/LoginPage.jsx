@@ -43,7 +43,7 @@ export const LoginPage = () => {
                             >
                                 <FaRegCompass className="text-2xl" />
                             </div>
-                            <span className="text-lg font-semibold text-primary">VueltitApp</span>
+                            <span className="text-lg font-semibold text-primary">NomadConnect</span>
                         </Link>
 
                         <h2 className=" font-bold text-gray-900">Bienvenido de nuevo</h2>
