@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { Calendar, MapPin } from "lucide-react";
+import { useAuth } from "../auth/AuthContext";
 import api from "../api";
 
 import { TripCreator } from "../components/TripDetail/TripCreator";
@@ -9,116 +11,165 @@ import { TripItinerary } from "../components/TripDetail/TripItinerary";
 import { CreateItineraryForm } from "../components/TripDetail/CreateItineraryForm";
 
 export const DetailTripPage = () => {
+	const { user } = useAuth();
 	const { id } = useParams();
 
 	const [trip, setTrip] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-
 	const [showItineraryForm, setShowItineraryForm] = useState(false);
 
-	const getTrip = () => {
-		setLoading(true);
+	const formatDate = (date) => {
+		return new Date(date).toLocaleDateString("es-ES", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		});
+	};
 
-		api.get(`/trips/${id}`)
-			.then((response) => setTrip(response.data))
-			.catch((error) => setError(error.message))
-			.finally(() => setLoading(false));
+	const getTrip = async () => {
+		try {
+			setLoading(true);
+			setError(null);
+
+			const response = await api.get(`/trips/${id}`);
+			setTrip(response.data);
+		} catch (error) {
+			setError(error.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
 		getTrip();
 	}, [id]);
 
-	if (loading)
+	if (loading) {
 		return (
 			<div className="min-h-screen bg-slate-50 flex items-center justify-center">
 				<div className="flex flex-col items-center gap-4">
 					<div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
 					<p className="text-slate-600 font-medium">Cargando viaje...</p>
 				</div>
 			</div>
 		);
+	}
 
-	if (error)
+	if (error) {
 		return (
 			<div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-				<div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
-					<div className="text-4xl mb-4">⚠️</div>
+				<div className="max-w-md rounded-2xl bg-white p-8 text-center shadow-md">
+					<div className="mb-4 text-4xl">⚠️</div>
 
-					<h2 className="text-xl font-semibold text-slate-800 mb-2">Ha ocurrido un error</h2>
+					<h2 className="mb-2 text-xl font-semibold text-slate-800">Ha ocurrido un error</h2>
 
 					<p className="text-slate-500">{error}</p>
 				</div>
 			</div>
 		);
+	}
 
-	if (!trip)
+	if (!trip) {
 		return (
 			<div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-				<div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
-					<div className="text-5xl mb-4">🌍</div>
+				<div className="max-w-md rounded-2xl bg-white p-8 text-center shadow-md">
+					<div className="mb-4 text-5xl">🌍</div>
 
-					<h2 className="text-xl font-semibold text-slate-800 mb-2">Viaje no encontrado</h2>
+					<h2 className="mb-2 text-xl font-semibold text-slate-800">Viaje no encontrado</h2>
 
-					<p className="text-slate-500 mb-6">El viaje que buscas no existe o ha sido eliminado.</p>
+					<p className="mb-6 text-slate-500">El viaje que buscas no existe o ha sido eliminado.</p>
 
 					<Link
 						to="/trips"
-						className="inline-flex items-center justify-center bg-slate-900 text-white px-5 py-2.5 rounded-xl hover:bg-slate-700 transition"
+						className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-white transition hover:bg-slate-700"
 					>
 						Volver a viajes
 					</Link>
 				</div>
 			</div>
 		);
+	}
+
+	const isOwner = trip.owner?.id === user?.id || trip.owner?._id === user?.id;
+
+	let itineraryButtonText = "+ Nuevo itinerario";
+
+	if (showItineraryForm) {
+		itineraryButtonText = "Cancelar";
+	}
 
 	return (
-		<div className="bg-slate-50 min-h-screen pb-20">
+		<div className="min-h-screen bg-slate-50 pb-20">
 			<div className="relative">
-				<img src={trip.image} alt={trip.title} className="w-full h-112.5 object-cover" />
+				<img src={trip.image} alt={trip.title} className="h-112.5 w-full object-cover" />
 
 				<Link
 					to="/trips"
-					className="absolute top-6 left-6 bg-white w-10 h-10 rounded-full flex items-center justify-center shadow"
+					className="absolute left-6 top-6 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow transition hover:shadow-lg"
 				>
 					←
 				</Link>
 
-				<button className="absolute top-6 right-6 bg-white w-10 h-10 rounded-full shadow">♡</button>
+				<button className="absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow transition hover:shadow-lg">
+					♡
+				</button>
 			</div>
 
-			<main className="max-w-5xl mx-auto px-4">
-				<div className="bg-white rounded-3xl shadow-xl p-8 -mt-20 relative">
-					<div className="flex justify-between">
-						<div>
-							<h1 className="text-3xl font-bold text-blue-950">{trip.title}</h1>
+			<main className="mx-auto max-w-5xl px-4">
+				{/* Cabecera */}
+				<div className="-mt-20 rounded-3xl bg-white p-8 shadow-xl relative">
+					<div className="flex items-start justify-between gap-6">
+						<div className="flex-1">
+							<h1 className="text-4xl font-bold text-blue-950">{trip.title}</h1>
+
+							<div className="mt-4 flex flex-wrap gap-6 text-slate-500">
+								<div className="flex items-center gap-2">
+									<MapPin size={18} className="text-blue-600" />
+
+									<span className="font-medium">
+										{trip.city}, {trip.country}
+									</span>
+								</div>
+
+								<div className="flex items-center gap-2">
+									<Calendar size={18} className="text-blue-600" />
+
+									<span className="font-medium">
+										{formatDate(trip.startDate)} — {formatDate(trip.endDate)}
+									</span>
+								</div>
+							</div>
 						</div>
 
-						<span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-lg h-fit">★ 4.9</span>
+						<div className="rounded-xl bg-orange-100 px-4 py-2 font-semibold text-orange-700">★ 4.9</div>
 					</div>
 
-					{trip.owner && <TripCreator owner={trip.owner} />}
+					<div className="mt-8">{trip.owner && <TripCreator owner={trip.owner} />}</div>
 				</div>
 
 				<TripStats trip={trip} />
 
 				<TripDescription description={trip.description} />
 
-				<div className="mt-10 space-y-6">
-					<div className="flex items-center justify-between">
+				{/* Itinerarios */}
+				<section className="mt-10">
+					<div className="mb-6 flex items-center justify-between">
+						<h2 className="text-2xl font-bold text-slate-800">Itinerarios</h2>
 
-
-						<button
-							onClick={() => setShowItineraryForm(!showItineraryForm)}
-							className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-						>
-							{showItineraryForm ? "Cancelar" : "+ Nuevo itinerario"}
-						</button>
+						{isOwner && (
+							<button
+								onClick={() => setShowItineraryForm(!showItineraryForm)}
+								className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700"
+							>
+								{itineraryButtonText}
+							</button>
+						)}
 					</div>
 
-					{showItineraryForm && (
-						<div className="bg-white rounded-2xl shadow-md p-6">
+					{isOwner && showItineraryForm && (
+						<div className="mb-8">
 							<CreateItineraryForm
 								onCreated={() => {
 									setShowItineraryForm(false);
@@ -128,8 +179,8 @@ export const DetailTripPage = () => {
 						</div>
 					)}
 
-					<TripItinerary itinerary={trip.itinerary} />
-				</div>
+					<TripItinerary itineraries={trip.itineraries} refreshTrip={getTrip} isOwner={isOwner} />
+				</section>
 			</main>
 		</div>
 	);
