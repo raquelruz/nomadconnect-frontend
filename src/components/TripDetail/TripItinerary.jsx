@@ -1,57 +1,27 @@
-export const TripItinerary = ({itinerary=[]}) => {
+export const TripItinerary = ({ itinerary, refreshTrip }) => {
+    if (!itinerary?.length) {
+        return (
+            <div className="bg-white rounded-2xl shadow p-6 mt-8">
+                <h2 className="text-2xl font-bold mb-4">
+                    Itinerarios
+                </h2>
 
+                <p className="text-slate-500">
+                    Este viaje todavía no tiene itinerarios.
+                </p>
+            </div>
+        );
+    }
 
-	return (
-
-		<section className="mt-10">
-
-
-			<h2 className="
-				text-2xl
-				font-bold
-				text-blue-950
-				mb-5
-			">
-				Trip Itinerary
-			</h2>
-
-
-
-			{
-				itinerary.length === 0
-				?
-				<div className="
-					bg-white
-					rounded-2xl
-					p-5
-				">
-					No itinerary available
-				</div>
-
-				:
-
-				itinerary.map((day,index)=>(
-					
-					<div
-						key={index}
-						className="
-							bg-white
-							rounded-2xl
-							p-5
-							mb-3
-						"
-					>
-
-						{day}
-
-					</div>
-
-				))
-			}
-
-
-		</section>
-
-	);
-
+    return (
+        <div className="space-y-6 mt-8">
+            {itinerary.map((item) => (
+                <ItineraryCard
+                    key={item._id}
+                    itinerary={item}
+                    refreshTrip={refreshTrip}
+                />
+            ))}
+        </div>
+    );
 };

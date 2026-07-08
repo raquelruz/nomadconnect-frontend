@@ -6,6 +6,7 @@ import { TripCreator } from "../components/TripDetail/TripCreator";
 import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripItinerary } from "../components/TripDetail/TripItinerary";
+import { CreateItineraryForm } from "../components/TripDetail/CreateItineraryForm";
 
 export const DetailTripPage = () => {
 	const { id } = useParams();
@@ -14,13 +15,20 @@ export const DetailTripPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	useEffect(() => {
+	const [showItineraryForm, setShowItineraryForm] = useState(false);
+
+	const getTrip = () => {
+		setLoading(true);
+
 		api.get(`/trips/${id}`)
 			.then((response) => setTrip(response.data))
 			.catch((error) => setError(error.message))
 			.finally(() => setLoading(false));
-	}, [id]);
+	};
 
+	useEffect(() => {
+		getTrip();
+	}, [id]);
 
 	if (loading)
 		return (
@@ -32,24 +40,18 @@ export const DetailTripPage = () => {
 			</div>
 		);
 
-
 	if (error)
 		return (
 			<div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
 				<div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
 					<div className="text-4xl mb-4">⚠️</div>
 
-					<h2 className="text-xl font-semibold text-slate-800 mb-2">
-						Ha ocurrido un error
-					</h2>
+					<h2 className="text-xl font-semibold text-slate-800 mb-2">Ha ocurrido un error</h2>
 
-					<p className="text-slate-500">
-						{error}
-					</p>
+					<p className="text-slate-500">{error}</p>
 				</div>
 			</div>
 		);
-
 
 	if (!trip)
 		return (
@@ -57,13 +59,9 @@ export const DetailTripPage = () => {
 				<div className="bg-white rounded-2xl shadow-md p-8 text-center max-w-md">
 					<div className="text-5xl mb-4">🌍</div>
 
-					<h2 className="text-xl font-semibold text-slate-800 mb-2">
-						Viaje no encontrado
-					</h2>
+					<h2 className="text-xl font-semibold text-slate-800 mb-2">Viaje no encontrado</h2>
 
-					<p className="text-slate-500 mb-6">
-						El viaje que buscas no existe o ha sido eliminado.
-					</p>
+					<p className="text-slate-500 mb-6">El viaje que buscas no existe o ha sido eliminado.</p>
 
 					<Link
 						to="/trips"
@@ -75,16 +73,10 @@ export const DetailTripPage = () => {
 			</div>
 		);
 
-
 	return (
 		<div className="bg-slate-50 min-h-screen pb-20">
 			<div className="relative">
-
-				<img
-					src={trip.image}
-					alt={trip.title}
-					className="w-full h-112.5 object-cover"
-				/>
+				<img src={trip.image} alt={trip.title} className="w-full h-112.5 object-cover" />
 
 				<Link
 					to="/trips"
@@ -93,49 +85,52 @@ export const DetailTripPage = () => {
 					←
 				</Link>
 
-
-				<button className="absolute top-6 right-6 bg-white w-10 h-10 rounded-full shadow">
-					♡
-				</button>
-
+				<button className="absolute top-6 right-6 bg-white w-10 h-10 rounded-full shadow">♡</button>
 			</div>
 
-
 			<main className="max-w-5xl mx-auto px-4">
-
 				<div className="bg-white rounded-3xl shadow-xl p-8 -mt-20 relative">
-
 					<div className="flex justify-between">
-
 						<div>
-							<h1 className="text-3xl font-bold text-blue-950">
-								{trip.title}
-							</h1>
+							<h1 className="text-3xl font-bold text-blue-950">{trip.title}</h1>
 						</div>
 
-
-						<span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-lg h-fit">
-							★ 4.9
-						</span>
-
+						<span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-lg h-fit">★ 4.9</span>
 					</div>
 
-
 					{trip.owner && <TripCreator owner={trip.owner} />}
-
 				</div>
-
 
 				<TripStats trip={trip} />
 
-
 				<TripDescription description={trip.description} />
 
+				<div className="mt-10 space-y-6">
+					<div className="flex items-center justify-between">
 
-				<TripItinerary itinerary={trip.itinerary} />
 
+						<button
+							onClick={() => setShowItineraryForm(!showItineraryForm)}
+							className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+						>
+							{showItineraryForm ? "Cancelar" : "+ Nuevo itinerario"}
+						</button>
+					</div>
+
+					{showItineraryForm && (
+						<div className="bg-white rounded-2xl shadow-md p-6">
+							<CreateItineraryForm
+								onCreated={() => {
+									setShowItineraryForm(false);
+									getTrip();
+								}}
+							/>
+						</div>
+					)}
+
+					<TripItinerary itinerary={trip.itinerary} />
+				</div>
 			</main>
-
 		</div>
 	);
 };
