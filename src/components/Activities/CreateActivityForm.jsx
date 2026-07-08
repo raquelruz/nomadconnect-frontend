@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Calendar, Clock, MapPin, Euro, FileText, Compass } from "lucide-react";
 import api from "../../api";
 
 export const CreateActivityForm = ({ dayId, onCreated }) => {
@@ -13,12 +14,6 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 
 	const [form, setForm] = useState(emptyForm);
 	const [loading, setLoading] = useState(false);
-
-	let buttonText = "Crear actividad";
-
-	if (loading) {
-		buttonText = "Creando...";
-	}
 
 	const handleChange = ({ target }) => {
 		setForm((prev) => ({
@@ -49,82 +44,138 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 	};
 
 	return (
-		<div className="rounded-2xl border border-slate-200 bg-white p-6">
-			<h4 className="mb-5 text-lg font-bold text-slate-900">
-				✨ Nueva actividad
-			</h4>
+		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+			<div className="border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-6 py-5">
+				<div className="flex items-center gap-3">
+					<div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
+						<Compass size={20} />
+					</div>
 
-			<form onSubmit={handleSubmit} className="space-y-4">
+					<div>
+						<h4 className="text-lg font-bold text-slate-900">Nueva actividad</h4>
 
-				<input
-					type="text"
-					name="title"
-					value={form.title}
-					onChange={handleChange}
-					placeholder="Nombre de la actividad"
-					required
-					className="w-full rounded-xl border border-slate-300 px-4 py-3"
-				/>
+						<p className="text-sm text-slate-500">Añade una actividad al itinerario.</p>
+					</div>
+				</div>
+			</div>
 
-				<textarea
-					name="description"
-					value={form.description}
-					onChange={handleChange}
-					placeholder="Descripción"
-					rows={3}
-					className="w-full rounded-xl border border-slate-300 px-4 py-3"
-				/>
+			<form onSubmit={handleSubmit} className="space-y-5 p-6">
+				<div>
+					<label className="mb-2 block text-sm font-semibold text-slate-700">Título</label>
 
-				<div className="grid grid-cols-2 gap-4">
+					<div className="relative">
+						<Compass size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
 
-					<input
-						type="date"
-						name="date"
-						value={form.date}
-						onChange={handleChange}
-						required
-						className="rounded-xl border border-slate-300 px-4 py-3"
-					/>
-
-					<input
-						type="time"
-						name="time"
-						value={form.time}
-						onChange={handleChange}
-						required
-						className="rounded-xl border border-slate-300 px-4 py-3"
-					/>
-
+						<input
+							type="text"
+							name="title"
+							value={form.title}
+							onChange={handleChange}
+							required
+							placeholder="Ej. Visita al Coliseo"
+							className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+						/>
+					</div>
 				</div>
 
-				<input
-					type="text"
-					name="location"
-					value={form.location}
-					onChange={handleChange}
-					placeholder="Ubicación"
-					className="w-full rounded-xl border border-slate-300 px-4 py-3"
-				/>
+				<div>
+					<label className="mb-2 block text-sm font-semibold text-slate-700">Descripción</label>
 
-				<input
-					type="number"
-					name="price"
-					value={form.price}
-					onChange={handleChange}
-					placeholder="Precio"
-					className="w-full rounded-xl border border-slate-300 px-4 py-3"
-				/>
+					<div className="relative">
+						<FileText size={18} className="absolute left-3 top-4 text-slate-400" />
 
-				<div className="flex justify-end">
+						<textarea
+							name="description"
+							value={form.description}
+							onChange={handleChange}
+							rows={3}
+							placeholder="Describe la actividad..."
+							className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+						/>
+					</div>
+				</div>
+
+				<div className="grid gap-4 md:grid-cols-2">
+					<div>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Fecha</label>
+
+						<div className="relative">
+							<Calendar size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+
+							<input
+								type="date"
+								name="date"
+								value={form.date}
+								onChange={handleChange}
+								required
+								className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+							/>
+						</div>
+					</div>
+
+					<div>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Hora</label>
+
+						<div className="relative">
+							<Clock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+
+							<input
+								type="time"
+								name="time"
+								value={form.time}
+								onChange={handleChange}
+								required
+								className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div className="grid gap-4 md:grid-cols-2">
+					<div>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Ubicación</label>
+
+						<div className="relative">
+							<MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+
+							<input
+								type="text"
+								name="location"
+								value={form.location}
+								onChange={handleChange}
+								placeholder="Ej. Plaza Mayor"
+								className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+							/>
+						</div>
+					</div>
+
+					<div>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Precio</label>
+
+						<div className="relative">
+							<Euro size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+
+							<input
+								type="number"
+								name="price"
+								value={form.price}
+								onChange={handleChange}
+								placeholder="0"
+								className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div className="flex justify-end border-t border-slate-100 pt-5">
 					<button
 						type="submit"
 						disabled={loading}
-						className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+						className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{buttonText}
+						{loading ? "Creando..." : "Crear actividad"}
 					</button>
 				</div>
-
 			</form>
 		</div>
 	);

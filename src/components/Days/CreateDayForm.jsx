@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Calendar, CalendarPlus } from "lucide-react";
 import api from "../../api";
 
 export const CreateDayForm = ({ itineraryId, onCreated }) => {
@@ -10,12 +11,6 @@ export const CreateDayForm = ({ itineraryId, onCreated }) => {
 	const [form, setForm] = useState(emptyDayForm);
 	const [loading, setLoading] = useState(false);
 
-	let buttonText = "Crear día";
-
-	if (loading) {
-		buttonText = "Creando...";
-	}
-
 	const handleChange = ({ target }) => {
 		setForm((prev) => ({
 			...prev,
@@ -23,8 +18,8 @@ export const CreateDayForm = ({ itineraryId, onCreated }) => {
 		}));
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async (event) => {
+		event.preventDefault();
 
 		try {
 			setLoading(true);
@@ -44,43 +39,69 @@ export const CreateDayForm = ({ itineraryId, onCreated }) => {
 	};
 
 	return (
-		<div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-			<div className="mb-6">
-				<h4 className="text-lg font-bold text-slate-900">
-					📅 Nuevo día
-				</h4>
+		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+			<div className="border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-6 py-5">
 
-				<p className="mt-1 text-sm text-slate-500">
-					Añade un nuevo día al itinerario.
-				</p>
+				<div className="flex items-center gap-3">
+
+					<div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
+						<CalendarPlus size={20} />
+					</div>
+
+					<div>
+						<h4 className="text-lg font-bold text-slate-900">
+							Nuevo día
+						</h4>
+
+						<p className="text-sm text-slate-500">
+							Añade un nuevo día al itinerario.
+						</p>
+					</div>
+
+				</div>
+
 			</div>
 
-			<form onSubmit={handleSubmit} className="space-y-5">
+			<form onSubmit={handleSubmit} className="space-y-5 p-6">
+
 				<div>
 					<label className="mb-2 block text-sm font-semibold text-slate-700">
 						Fecha
 					</label>
 
-					<input
-						type="date"
-						name="date"
-						value={form.date}
-						onChange={handleChange}
-						required
-						className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
-					/>
+					<div className="relative">
+
+						<Calendar
+							size={18}
+							className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+						/>
+
+						<input
+							type="date"
+							name="date"
+							value={form.date}
+							onChange={handleChange}
+							required
+							className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 outline-none transition focus:border-blue-500"
+						/>
+
+					</div>
 				</div>
 
-				<div className="flex justify-end">
+				<div className="flex justify-end border-t border-slate-100 pt-5">
+
 					<button
 						type="submit"
 						disabled={loading}
-						className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+						className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
 					>
-						{buttonText}
+						{loading ? "Creando..." : "Crear día"}
 					</button>
+
 				</div>
+
 			</form>
+
 		</div>
 	);
 };

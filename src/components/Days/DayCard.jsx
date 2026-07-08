@@ -1,31 +1,28 @@
 import { useState } from "react";
 import { CreateActivityForm } from "../Activities/CreateActivityForm";
 import { ActivityCard } from "../Activities/ActivityCard";
-import api from "../../api";
+import { FaCalendarAlt } from "react-icons/fa";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import api from "../../api";
 
 export const DayCard = ({ day, refreshTrip, isOwner }) => {
 	const [showActivityForm, setShowActivityForm] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	const [form, setForm] = useState({
 		date: day.date?.slice(0, 10),
 	});
 
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const hasActivities = day.activities?.length > 0;
 
-	let buttonText = "+ Actividad";
-
-	if (showActivityForm) {
-		buttonText = "Cancelar";
-	}
-
-	let hasActivities = false;
-
-	if (day.activities && day.activities.length > 0) {
-		hasActivities = true;
-	}
+	const formattedDate = new Date(day.date).toLocaleDateString("es-ES", {
+		weekday: "long",
+		day: "numeric",
+		month: "long",
+	});
 
 	const handleChange = ({ target }) => {
 		setForm((prev) => ({
@@ -54,7 +51,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 	const handleDelete = async () => {
 		try {
 			await api.delete(`/days/${day.id}`);
-
 			refreshTrip();
 		} catch (error) {
 			console.error(error);
@@ -62,55 +58,73 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 	};
 
 	return (
-		<div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-			<div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
-				<div>
-					<h4 className="text-lg font-bold text-slate-900">
-						📅{" "}
-						{new Date(day.date).toLocaleDateString("es-ES", {
-							weekday: "long",
-							day: "numeric",
-							month: "long",
-						})}
-					</h4>
+		<div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+			<div className="flex items-center justify-between border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-6 py-5">
+				<div className="flex items-center gap-3">
+					<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
+						<FaCalendarAlt />
+					</div>
 
-					<p className="text-sm text-slate-500">{day.activities?.length || 0} actividades</p>
+					<div>
+						<h4 className="text-lg font-bold capitalize text-slate-900">{formattedDate}</h4>
+
+						<div className="mt-1 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+							{day.activities?.length || 0} actividades
+						</div>
+					</div>
 				</div>
 
 				{isOwner && (
-					<div className="flex gap-2">
+					<div className="flex items-center gap-3">
+						<button
+							onClick={() => setShowActivityForm(true)}
+							className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+						>
+							<Plus size={18} />
+							Añadir actividad
+						</button>
+
 						<button
 							onClick={() => setEditing(!editing)}
-							className="rounded-lg bg-slate-200 px-4 py-2 text-sm font-semibold"
+							title={editing ? "Cancelar edición" : "Editar día"}
+							className="flex h-10 w-10 items-center justify-center rounded-full border border-primary-500 text-primary-600 transition hover:bg-blue-50"
 						>
-							Editar
+							<Pencil size={18} />
 						</button>
 
 						<button
 							onClick={() => setShowDeleteModal(true)}
-							className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white"
+							title="Eliminar día"
+							className="flex h-10 w-10 items-center justify-center rounded-full border border-error-500 text-error-500 transition hover:bg-red-50"
 						>
-							Eliminar
+							<Trash2 size={18} />
 						</button>
 					</div>
 				)}
 			</div>
 
 			{isOwner && editing && (
-				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-6 space-y-4">
-					<label className="block text-sm font-semibold text-slate-700">Fecha</label>
+				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-6">
+					<div className="space-y-4">
+						<div>
+							<label className="mb-2 block text-sm font-semibold text-slate-700">Fecha del día</label>
 
-					<input
-						type="date"
-						name="date"
-						value={form.date}
-						onChange={handleChange}
-						className="w-full rounded-lg border px-3 py-2"
-					/>
+							<input
+								type="date"
+								name="date"
+								value={form.date}
+								onChange={handleChange}
+								className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
+							/>
+						</div>
 
-					<button disabled={loading} className="rounded-lg bg-blue-600 px-4 py-2 text-white">
-						{loading ? "Guardando..." : "Guardar cambios"}
-					</button>
+						<button
+							disabled={loading}
+							className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+						>
+							{loading ? "Guardando..." : "Guardar cambios"}
+						</button>
+					</div>
 				</form>
 			)}
 
@@ -127,15 +141,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 			)}
 
 			<div className="space-y-4 p-6">
-				{isOwner && (
-					<button
-						onClick={() => setShowActivityForm(!showActivityForm)}
-						className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-					>
-						{buttonText}
-					</button>
-				)}
-
 				{hasActivities &&
 					day.activities.map((activity) => (
 						<ActivityCard
@@ -147,8 +152,14 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					))}
 
 				{!hasActivities && (
-					<div className="rounded-xl border-2 border-dashed border-slate-200 py-8 text-center">
-						<p className="text-slate-500">No hay actividades para este día.</p>
+					<div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center">
+						<div className="mb-3 text-4xl">🗺️</div>
+
+						<h5 className="font-semibold text-slate-700">Este día está vacío</h5>
+
+						<p className="mt-2 max-w-sm text-sm text-slate-500">
+							Añade actividades para crear el plan perfecto del día.
+						</p>
 					</div>
 				)}
 			</div>

@@ -1,32 +1,23 @@
 import { useState } from "react";
+import { IoIosAirplane } from "react-icons/io";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import { CreateDayForm } from "../Days/CreateDayForm";
 import { DayCard } from "../Days/DayCard";
-import api from "../../api";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import api from "../../api";
 
 export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 	const [showCreateDay, setShowCreateDay] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	const [form, setForm] = useState({
 		title: itinerary.title,
 		description: itinerary.description || "",
 	});
 
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-	let buttonText = "+ Añadir día";
-
-	if (showCreateDay) {
-		buttonText = "Cancelar";
-	}
-
-	let hasDays = false;
-
-	if (itinerary.days && itinerary.days.length > 0) {
-		hasDays = true;
-	}
+	const hasDays = itinerary.days?.length > 0;
 
 	const handleChange = ({ target }) => {
 		setForm((prev) => ({
@@ -55,7 +46,6 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 	const handleDelete = async () => {
 		try {
 			await api.delete(`/itineraries/${itinerary.id}`);
-
 			refreshTrip();
 		} catch (error) {
 			console.error(error);
@@ -63,29 +53,52 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 	};
 
 	return (
-		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-			<div className="p-6">
-				<div className="flex items-start justify-between gap-4">
-					<div>
-						<h3 className="text-2xl font-bold text-slate-900">{itinerary.title}</h3>
+		<div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
+			{/* HEADER */}
+			<div className="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white px-6 py-5">
+				<div className="flex items-start justify-between gap-6">
+					<div className="flex items-start gap-4">
+						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-2xl text-white">
+							<IoIosAirplane />
+						</div>
 
-						{itinerary.description && <p className="mt-2 text-slate-500">{itinerary.description}</p>}
+						<div>
+							<h3 className="text-2xl font-bold text-slate-900">{itinerary.title}</h3>
+
+							{itinerary.description && (
+								<p className="mt-2 max-w-2xl text-slate-500">{itinerary.description}</p>
+							)}
+
+							<div className="mt-3 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+								{itinerary.days?.length || 0} días
+							</div>
+						</div>
 					</div>
 
 					{isOwner && (
-						<div className="flex gap-2">
+						<div className="flex gap-3">
+							<button
+								onClick={() => setShowCreateDay(true)}
+								className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+							>
+								<Plus size={18} />
+								Añadir día
+							</button>
+
 							<button
 								onClick={() => setEditing(!editing)}
-								className="rounded-lg bg-slate-200 px-4 py-2 text-sm font-semibold"
+								title="Editar itinerario"
+								className="flex h-10 w-10 items-center justify-center rounded-full border border-blue-500 text-blue-600 transition hover:bg-blue-50"
 							>
-								Editar
+								<Pencil size={18} />
 							</button>
 
 							<button
 								onClick={() => setShowDeleteModal(true)}
-								className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white"
+								title="Eliminar itinerario"
+								className="flex h-10 w-10 items-center justify-center rounded-full border border-red-500 text-red-500 transition hover:bg-red-50"
 							>
-								Eliminar
+								<Trash2 size={18} />
 							</button>
 						</div>
 					)}
@@ -94,40 +107,37 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 
 			{isOwner && editing && (
 				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-6 space-y-4">
-					<input
-						name="title"
-						value={form.title}
-						onChange={handleChange}
-						className="w-full rounded-lg border px-3 py-2"
-					/>
+					<div>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Nombre</label>
 
-					<textarea
-						name="description"
-						value={form.description}
-						onChange={handleChange}
-						className="w-full rounded-lg border px-3 py-2"
-					/>
+						<input
+							name="title"
+							value={form.title}
+							onChange={handleChange}
+							className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
+						/>
+					</div>
 
-					<button disabled={loading} className="rounded-lg bg-blue-600 px-4 py-2 text-white">
+					<div>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Descripción</label>
+
+						<textarea
+							name="description"
+							value={form.description}
+							onChange={handleChange}
+							rows={4}
+							className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none resize-none focus:border-blue-500"
+						/>
+					</div>
+
+					<button
+						disabled={loading}
+						className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+					>
 						{loading ? "Guardando..." : "Guardar cambios"}
 					</button>
 				</form>
 			)}
-
-			<div className="border-t border-slate-100 bg-slate-50 px-6 py-4">
-				<div className="flex items-center justify-between">
-					<h4 className="font-semibold text-slate-700">Días del itinerario</h4>
-
-					{isOwner && (
-						<button
-							onClick={() => setShowCreateDay(!showCreateDay)}
-							className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
-						>
-							{buttonText}
-						</button>
-					)}
-				</div>
-			</div>
 
 			{isOwner && showCreateDay && (
 				<div className="border-b border-slate-100 bg-slate-50 p-6">
@@ -137,24 +147,28 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 							setShowCreateDay(false);
 							refreshTrip();
 						}}
+						onCancel={() => setShowCreateDay(false)}
 					/>
 				</div>
 			)}
 
-			<div className="space-y-4 p-6">
+			{/* DÍAS */}
+			<div className="space-y-5 p-6">
 				{hasDays &&
 					itinerary.days.map((day) => (
 						<DayCard key={day.id} day={day} refreshTrip={refreshTrip} isOwner={isOwner} />
 					))}
 
 				{!hasDays && (
-					<div className="rounded-xl border-2 border-dashed border-slate-200 py-10 text-center">
-						<div className="mb-3 text-4xl">📅</div>
+					<div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-12 text-center">
+						<div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-3xl">
+							📅
+						</div>
 
-						<h5 className="font-semibold text-slate-700">Aún no hay días</h5>
+						<h4 className="text-lg font-semibold text-slate-800">Este itinerario todavía está vacío</h4>
 
-						<p className="mt-2 text-sm text-slate-500">
-							Añade el primer día para empezar a organizar este itinerario.
+						<p className="mt-2 max-w-md text-sm text-slate-500">
+							Crea el primer día para empezar a organizar las actividades de este itinerario.
 						</p>
 					</div>
 				)}
@@ -163,7 +177,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 			<ConfirmModal
 				isOpen={showDeleteModal}
 				title="Eliminar itinerario"
-				message="Se eliminarán todos sus días y actividades. ¿Quieres continuar?"
+				message="Se eliminarán también todos los días y actividades asociados. ¿Quieres continuar?"
 				onCancel={() => setShowDeleteModal(false)}
 				onConfirm={async () => {
 					await handleDelete();
