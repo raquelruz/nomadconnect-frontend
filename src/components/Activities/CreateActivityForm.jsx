@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Calendar, Clock, MapPin, Euro, FileText, Compass } from "lucide-react";
+import { Calendar, Clock, MapPin, Euro, FileText, Compass, X } from "lucide-react";
 import api from "../../api";
 
-export const CreateActivityForm = ({ dayId, onCreated }) => {
+export const CreateActivityForm = ({ dayId, onCreated, onCancel }) => {
 	const emptyForm = {
 		title: "",
 		description: "",
@@ -44,22 +44,30 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 	};
 
 	return (
-		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-			<div className="border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-6 py-5">
+		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+			<div className="flex items-center justify-between border-b border-slate-100 bg-linear-to-r from-blue-50 to-white p-4 sm:px-6 sm:py-5">
 				<div className="flex items-center gap-3">
 					<div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
 						<Compass size={20} />
 					</div>
 
 					<div>
-						<h4 className="text-lg font-bold text-slate-900">Nueva actividad</h4>
+						<h4 className="text-base font-bold text-slate-900 sm:text-lg">Nueva actividad</h4>
 
-						<p className="text-sm text-slate-500">Añade una actividad al itinerario.</p>
+						<p className="text-sm text-slate-500">Añade una actividad al día.</p>
 					</div>
 				</div>
+
+				<button
+					type="button"
+					onClick={onCancel}
+					className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-100"
+				>
+					<X size={18} />
+				</button>
 			</div>
 
-			<form onSubmit={handleSubmit} className="space-y-5 p-6">
+			<form onSubmit={handleSubmit} className="space-y-5 p-4 sm:p-6">
 				<div>
 					<label className="mb-2 block text-sm font-semibold text-slate-700">Título</label>
 
@@ -94,8 +102,7 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 						/>
 					</div>
 				</div>
-
-				<div className="grid gap-4 md:grid-cols-2">
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div>
 						<label className="mb-2 block text-sm font-semibold text-slate-700">Fecha</label>
 
@@ -131,7 +138,7 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 					</div>
 				</div>
 
-				<div className="grid gap-4 md:grid-cols-2">
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div>
 						<label className="mb-2 block text-sm font-semibold text-slate-700">Ubicación</label>
 
@@ -150,7 +157,7 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 					</div>
 
 					<div>
-						<label className="mb-2 block text-sm font-semibold text-slate-700">Precio</label>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Precio (€)</label>
 
 						<div className="relative">
 							<Euro size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -166,8 +173,15 @@ export const CreateActivityForm = ({ dayId, onCreated }) => {
 						</div>
 					</div>
 				</div>
+				<div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end">
+					<button
+						type="button"
+						onClick={onCancel}
+						className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-700 transition hover:bg-slate-100"
+					>
+						Cancelar
+					</button>
 
-				<div className="flex justify-end border-t border-slate-100 pt-5">
 					<button
 						type="submit"
 						disabled={loading}

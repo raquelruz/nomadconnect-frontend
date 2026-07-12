@@ -11,7 +11,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 	const [editing, setEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
-
 	const [form, setForm] = useState({
 		date: day.date?.slice(0, 10),
 	});
@@ -58,15 +57,17 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 	};
 
 	return (
-		<div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
-			<div className="flex items-center justify-between border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-6 py-5">
-				<div className="flex items-center gap-3">
-					<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
-						<FaCalendarAlt />
+		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md sm:rounded-3xl">
+			<div className="flex flex-col gap-5 border-b border-slate-100 bg-linear-to-r from-blue-50 to-white p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
+				<div className="flex min-w-0 items-center gap-3">
+					<div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-blue-600 text-white">
+						<span className="text-xl font-bold">{new Date(day.date).getDate()}</span>
 					</div>
 
-					<div>
-						<h4 className="text-lg font-bold capitalize text-slate-900">{formattedDate}</h4>
+					<div className="min-w-0">
+						<h4 className="wrap-break-word text-base font-bold capitalize text-slate-900 sm:text-lg">
+							{formattedDate}
+						</h4>
 
 						<div className="mt-1 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
 							{day.activities?.length || 0} actividades
@@ -75,10 +76,10 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 				</div>
 
 				{isOwner && (
-					<div className="flex items-center gap-3">
+					<div className="flex w-full items-center gap-2 sm:w-auto">
 						<button
 							onClick={() => setShowActivityForm(true)}
-							className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+							className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 sm:w-auto"
 						>
 							<Plus size={18} />
 							Añadir actividad
@@ -87,7 +88,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 						<button
 							onClick={() => setEditing(!editing)}
 							title={editing ? "Cancelar edición" : "Editar día"}
-							className="flex h-10 w-10 items-center justify-center rounded-full border border-primary-500 text-primary-600 transition hover:bg-blue-50"
+							className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50"
 						>
 							<Pencil size={18} />
 						</button>
@@ -95,7 +96,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 						<button
 							onClick={() => setShowDeleteModal(true)}
 							title="Eliminar día"
-							className="flex h-10 w-10 items-center justify-center rounded-full border border-error-500 text-error-500 transition hover:bg-red-50"
+							className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-white text-red-500 transition hover:bg-red-50"
 						>
 							<Trash2 size={18} />
 						</button>
@@ -104,7 +105,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 			</div>
 
 			{isOwner && editing && (
-				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-6">
+				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
 					<div className="space-y-4">
 						<div>
 							<label className="mb-2 block text-sm font-semibold text-slate-700">Fecha del día</label>
@@ -120,7 +121,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 
 						<button
 							disabled={loading}
-							className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+							className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50 sm:w-auto"
 						>
 							{loading ? "Guardando..." : "Guardar cambios"}
 						</button>
@@ -129,18 +130,19 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 			)}
 
 			{isOwner && showActivityForm && (
-				<div className="border-b border-slate-100 bg-slate-50 p-6">
+				<div className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
 					<CreateActivityForm
 						dayId={day.id}
 						onCreated={() => {
 							setShowActivityForm(false);
 							refreshTrip();
 						}}
+						onCancel={() => setShowActivityForm(false)}
 					/>
 				</div>
 			)}
 
-			<div className="space-y-4 p-6">
+			<div className="space-y-4 p-4 sm:p-6">
 				{hasActivities &&
 					day.activities.map((activity) => (
 						<ActivityCard
@@ -152,7 +154,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					))}
 
 				{!hasActivities && (
-					<div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center">
+					<div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center sm:px-6 sm:py-10">
 						<div className="mb-3 text-4xl">🗺️</div>
 
 						<h5 className="font-semibold text-slate-700">Este día está vacío</h5>
