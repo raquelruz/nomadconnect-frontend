@@ -137,6 +137,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 							setShowActivityForm(false);
 							refreshTrip();
 						}}
+						onCancel={() => setShowActivityForm(false)}
 					/>
 				</div>
 			)}
