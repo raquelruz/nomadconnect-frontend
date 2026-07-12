@@ -36,11 +36,11 @@ export const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <div className="flex items-center justify-between py-4 md:py-5">
                     <Link to="/" className="flex items-center gap-3 shrink-0 group">
-                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-text-primary shadow-lg transition-all duration-300 group-hover:scale-105 bg-gradient-to-br from-primary-600 to-primary-400">
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-text-primary shadow-lg transition-all duration-300 group-hover:scale-105 bg-linear-to-br from-primary-600 to-primary-400">
                             <FaRegCompass className="text-xl" />
                         </div>
                         <div className="flex flex-col leading-tight">
-                            <span className="text-lg font-semibold tracking-tight text-text-primary">VueltitApp</span>
+                            <span className="text-lg font-semibold tracking-tight text-text-primary">NomadConnect</span>
                             <span className="text-xs tracking-widest uppercase text-text-muted font-medium">
                                 Comunidad viajera
                             </span>

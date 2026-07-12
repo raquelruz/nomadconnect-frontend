@@ -42,7 +42,7 @@ export const ProfilePage = () => {
         formData.append("avatar", file);
 
         setUploadingAvatar(true);
-        api.patch(`/users/${profile.id}/avatar`, formData)
+        api.patch("/users/avatar", formData)
             .then((response) => setProfile(response.data))
             .catch((error) => setError(error.message || "Error subiendo el avatar"))
             .finally(() => setUploadingAvatar(false));

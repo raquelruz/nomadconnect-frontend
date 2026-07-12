@@ -51,7 +51,7 @@ export const RegisterPage = () => {
                             >
                                 <FaRegCompass className="text-2xl" />
                             </div>
-                            <span className="text-lg font-semibold text-primary">VueltitApp</span>
+                            <span className="text-lg font-semibold text-primary">NomadConnect</span>
                         </Link>
 
                         <h2 className=" font-bold text-gray-900">Únete a la aventura</h2>
@@ -73,7 +73,7 @@ export const RegisterPage = () => {
                                 placeholder="juanperez"
                                 value={form.username}
                                 onChange={(event) => setForm({ ...form, username: event.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
                         </div>
@@ -89,7 +89,7 @@ export const RegisterPage = () => {
                                 placeholder="juanperez@gmail.com"
                                 value={form.email}
                                 onChange={(event) => setForm({ ...form, email: event.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
                         </div>
@@ -105,7 +105,7 @@ export const RegisterPage = () => {
                                 placeholder="*******"
                                 value={form.password}
                                 onChange={(event) => setForm({ ...form, password: event.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
                         </div>
@@ -121,7 +121,7 @@ export const RegisterPage = () => {
                                 placeholder="Juan"
                                 value={form.name}
                                 onChange={(event) => setForm({ ...form, name: event.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
                         </div>
@@ -137,7 +137,7 @@ export const RegisterPage = () => {
                                 placeholder="Pérez"
                                 value={form.surname}
                                 onChange={(event) => setForm({ ...form, surname: event.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-opacity-20 transition-all text-sm"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:border-text-primary-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-(--color-primary) focus:ring-opacity-20 transition-all text-sm"
                                 required
                             />
                         </div>
