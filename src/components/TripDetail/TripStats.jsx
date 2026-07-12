@@ -1,6 +1,5 @@
 import { FaCalendarDays, FaUsers } from "react-icons/fa6";
-
-import { CalendarDays, Users, CircleCheck, Clock3, Flag } from "lucide-react";
+import { CircleCheck, Clock3, Flag } from "lucide-react";
 
 const calculateDuration = (startDate, endDate) => {
 	const start = new Date(startDate);
@@ -68,14 +67,14 @@ export const TripStats = ({ trip }) => {
 	];
 
 	return (
-		<div className="mt-10 grid grid-cols-3 gap-4">
+		<div className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3">
 			{stats.map((item) => {
 				const Icon = item.icon;
 
 				return (
 					<div
 						key={item.label}
-						className="flex flex-col items-center rounded-2xl bg-white p-6 text-center shadow-sm transition hover:shadow-md"
+						className="flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm transition hover:shadow-md sm:p-6"
 					>
 						<div
 							className={`mb-3 flex h-10 w-10 items-center justify-center rounded-full ${
@@ -85,7 +84,9 @@ export const TripStats = ({ trip }) => {
 							<Icon size={20} className={item.color ?? "text-slate-700"} />
 						</div>
 
-						<p className={`font-bold ${item.color ?? "text-slate-800"}`}>{item.value}</p>
+						<p className={`wrap-break-word text-lg font-bold ${item.color ?? "text-slate-800"}`}>
+							{item.value}
+						</p>
 
 						<p className="mt-1 text-sm text-slate-400">{item.label}</p>
 					</div>

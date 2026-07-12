@@ -53,20 +53,23 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 	};
 
 	return (
-		<div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md">
-			{/* HEADER */}
-			<div className="border-b border-slate-100 bg-gradient-to-r from-blue-50 to-white px-6 py-5">
-				<div className="flex items-start justify-between gap-6">
-					<div className="flex items-start gap-4">
-						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-2xl text-white">
+		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md sm:rounded-3xl">
+			<div className="border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-4 py-4 sm:px-6 sm:py-5">
+				<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+					<div className="flex items-start gap-3 sm:gap-4">
+						<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-xl text-white sm:h-12 sm:w-12 sm:rounded-2xl sm:text-2xl">
 							<IoIosAirplane />
 						</div>
 
-						<div>
-							<h3 className="text-2xl font-bold text-slate-900">{itinerary.title}</h3>
+						<div className="min-w-0 flex-1">
+							<h3 className="wrap-break-word text-xl font-bold text-slate-900 sm:text-2xl">
+								{itinerary.title}
+							</h3>
 
 							{itinerary.description && (
-								<p className="mt-2 max-w-2xl text-slate-500">{itinerary.description}</p>
+								<p className="mt-2 wrap-break-word text-sm text-slate-500 sm:max-w-2xl sm:text-base">
+									{itinerary.description}
+								</p>
 							)}
 
 							<div className="mt-3 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
@@ -76,10 +79,10 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 					</div>
 
 					{isOwner && (
-						<div className="flex gap-3">
+						<div className="flex flex-wrap gap-2 sm:gap-3">
 							<button
 								onClick={() => setShowCreateDay(true)}
-								className="inline-flex items-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+								className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 sm:w-auto"
 							>
 								<Plus size={18} />
 								Añadir día
@@ -88,7 +91,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 							<button
 								onClick={() => setEditing(!editing)}
 								title="Editar itinerario"
-								className="flex h-10 w-10 items-center justify-center rounded-full border border-blue-500 text-blue-600 transition hover:bg-blue-50"
+								className="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500 text-blue-600 transition hover:bg-blue-50 sm:rounded-full"
 							>
 								<Pencil size={18} />
 							</button>
@@ -96,7 +99,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 							<button
 								onClick={() => setShowDeleteModal(true)}
 								title="Eliminar itinerario"
-								className="flex h-10 w-10 items-center justify-center rounded-full border border-red-500 text-red-500 transition hover:bg-red-50"
+								className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-500 text-red-500 transition hover:bg-red-50 sm:rounded-full"
 							>
 								<Trash2 size={18} />
 							</button>
@@ -106,33 +109,41 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 			</div>
 
 			{isOwner && editing && (
-				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-6 space-y-4">
+				<form
+					onSubmit={handleUpdate}
+					className="space-y-4 border-b border-slate-100 bg-slate-50 p-4 sm:p-6"
+				>
 					<div>
-						<label className="mb-2 block text-sm font-semibold text-slate-700">Nombre</label>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">
+							Nombre
+						</label>
 
 						<input
 							name="title"
 							value={form.title}
 							onChange={handleChange}
-							className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-blue-500"
+							className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
 						/>
 					</div>
 
 					<div>
-						<label className="mb-2 block text-sm font-semibold text-slate-700">Descripción</label>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">
+							Descripción
+						</label>
 
 						<textarea
 							name="description"
 							value={form.description}
 							onChange={handleChange}
 							rows={4}
-							className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none resize-none focus:border-blue-500"
+							className="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
 						/>
 					</div>
 
 					<button
+						type="submit"
 						disabled={loading}
-						className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+						className="w-full rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50 sm:w-auto"
 					>
 						{loading ? "Guardando..." : "Guardar cambios"}
 					</button>
@@ -140,7 +151,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 			)}
 
 			{isOwner && showCreateDay && (
-				<div className="border-b border-slate-100 bg-slate-50 p-6">
+				<div className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
 					<CreateDayForm
 						itineraryId={itinerary.id}
 						onCreated={() => {
@@ -152,23 +163,30 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 				</div>
 			)}
 
-			{/* DÍAS */}
-			<div className="space-y-5 p-6">
+			<div className="space-y-4 p-4 sm:space-y-5 sm:p-6">
 				{hasDays &&
 					itinerary.days.map((day) => (
-						<DayCard key={day.id} day={day} refreshTrip={refreshTrip} isOwner={isOwner} />
+						<DayCard
+							key={day.id}
+							day={day}
+							refreshTrip={refreshTrip}
+							isOwner={isOwner}
+						/>
 					))}
 
 				{!hasDays && (
-					<div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-12 text-center">
-						<div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-3xl">
+					<div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center sm:px-6 sm:py-12">
+						<div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 text-2xl sm:h-16 sm:w-16 sm:text-3xl">
 							📅
 						</div>
 
-						<h4 className="text-lg font-semibold text-slate-800">Este itinerario todavía está vacío</h4>
+						<h4 className="text-base font-semibold text-slate-800 sm:text-lg">
+							Este itinerario todavía está vacío
+						</h4>
 
 						<p className="mt-2 max-w-md text-sm text-slate-500">
-							Crea el primer día para empezar a organizar las actividades de este itinerario.
+							Crea el primer día para empezar a organizar las actividades
+							de este itinerario.
 						</p>
 					</div>
 				)}
