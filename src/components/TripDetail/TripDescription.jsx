@@ -7,7 +7,7 @@ export const TripDescription = ({description}) => (
 			font-bold
 			text-blue-950
 		">
-			About this trip
+			Descripción
 		</h2>
 
 
