@@ -57,8 +57,9 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 	};
 
 	return (
-		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md sm:rounded-3xl">
-			<div className="flex flex-col gap-5 border-b border-slate-100 bg-linear-to-r from-blue-50 to-white p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
+		<div className="overflow-hidden rounded-2xl border-b border-slate-200 pb-6 last:border-b-0">
+			<div className="flex flex-col gap-5 rounded-2xl bg-blue-50/60 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+				{" "}
 				<div className="flex min-w-0 items-center gap-3">
 					<div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-blue-600 text-white">
 						<span className="text-xl font-bold">{new Date(day.date).getDate()}</span>
@@ -74,7 +75,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 						</div>
 					</div>
 				</div>
-
 				{isOwner && (
 					<div className="flex w-full items-center gap-2 sm:w-auto">
 						<button
@@ -103,10 +103,9 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					</div>
 				)}
 			</div>
-
 			{isOwner && editing && (
 				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
-					<div className="space-y-4">
+					<div className="space-y-3 pt-5">
 						<div>
 							<label className="mb-2 block text-sm font-semibold text-slate-700">Fecha del día</label>
 
@@ -128,7 +127,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					</div>
 				</form>
 			)}
-
 			{isOwner && showActivityForm && (
 				<div className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
 					<CreateActivityForm
@@ -141,7 +139,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					/>
 				</div>
 			)}
-
 			<div className="space-y-4 p-4 sm:p-6">
 				{hasActivities &&
 					day.activities.map((activity) => (
@@ -165,7 +162,6 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					</div>
 				)}
 			</div>
-
 			<ConfirmModal
 				isOpen={showDeleteModal}
 				title="Eliminar día"

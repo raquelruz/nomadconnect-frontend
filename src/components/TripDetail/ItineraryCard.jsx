@@ -55,31 +55,27 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 	return (
 		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md sm:rounded-3xl">
 			<div className="border-b border-slate-100 bg-linear-to-r from-blue-50 to-white px-4 py-4 sm:px-6 sm:py-5">
-				<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-					<div className="flex items-start gap-3 sm:gap-4">
-						<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-xl text-white sm:h-12 sm:w-12 sm:rounded-2xl sm:text-2xl">
+				<div className="flex flex-col gap-5 border-b border-slate-100 bg-linear-to-r from-blue-50 to-white p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
+					<div className="flex min-w-0 items-center gap-3">
+						<div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-3xl text-white">
 							<IoIosAirplane />
 						</div>
 
-						<div className="min-w-0 flex-1">
-							<h3 className="wrap-break-word text-xl font-bold text-slate-900 sm:text-2xl">
-								{itinerary.title}
-							</h3>
+						<div className="min-w-0">
+							<h3 className="truncate text-xl font-bold text-slate-900">{itinerary.title}</h3>
 
 							{itinerary.description && (
-								<p className="mt-2 wrap-break-word text-sm text-slate-500 sm:max-w-2xl sm:text-base">
-									{itinerary.description}
-								</p>
+								<p className="mt-1 text-sm text-slate-500">{itinerary.description}</p>
 							)}
 
-							<div className="mt-3 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+							<div className="mt-2 inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
 								{itinerary.days?.length || 0} días
 							</div>
 						</div>
 					</div>
 
 					{isOwner && (
-						<div className="flex flex-wrap gap-2 sm:gap-3">
+						<div className="flex w-full items-center gap-2 sm:w-auto">
 							<button
 								onClick={() => setShowCreateDay(true)}
 								className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 sm:w-auto"
@@ -90,16 +86,14 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 
 							<button
 								onClick={() => setEditing(!editing)}
-								title="Editar itinerario"
-								className="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500 text-blue-600 transition hover:bg-blue-50 sm:rounded-full"
+								className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50"
 							>
 								<Pencil size={18} />
 							</button>
 
 							<button
 								onClick={() => setShowDeleteModal(true)}
-								title="Eliminar itinerario"
-								className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-500 text-red-500 transition hover:bg-red-50 sm:rounded-full"
+								className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-white text-red-500 transition hover:bg-red-50"
 							>
 								<Trash2 size={18} />
 							</button>
@@ -109,14 +103,9 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 			</div>
 
 			{isOwner && editing && (
-				<form
-					onSubmit={handleUpdate}
-					className="space-y-4 border-b border-slate-100 bg-slate-50 p-4 sm:p-6"
-				>
+				<form onSubmit={handleUpdate} className="space-y-4 border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
 					<div>
-						<label className="mb-2 block text-sm font-semibold text-slate-700">
-							Nombre
-						</label>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Nombre</label>
 
 						<input
 							name="title"
@@ -127,9 +116,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 					</div>
 
 					<div>
-						<label className="mb-2 block text-sm font-semibold text-slate-700">
-							Descripción
-						</label>
+						<label className="mb-2 block text-sm font-semibold text-slate-700">Descripción</label>
 
 						<textarea
 							name="description"
@@ -166,12 +153,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 			<div className="space-y-4 p-4 sm:space-y-5 sm:p-6">
 				{hasDays &&
 					itinerary.days.map((day) => (
-						<DayCard
-							key={day.id}
-							day={day}
-							refreshTrip={refreshTrip}
-							isOwner={isOwner}
-						/>
+						<DayCard key={day.id} day={day} refreshTrip={refreshTrip} isOwner={isOwner} />
 					))}
 
 				{!hasDays && (
@@ -185,8 +167,7 @@ export const ItineraryCard = ({ itinerary, refreshTrip, isOwner }) => {
 						</h4>
 
 						<p className="mt-2 max-w-md text-sm text-slate-500">
-							Crea el primer día para empezar a organizar las actividades
-							de este itinerario.
+							Crea el primer día para empezar a organizar las actividades de este itinerario.
 						</p>
 					</div>
 				)}

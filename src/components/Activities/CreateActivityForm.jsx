@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Clock, MapPin, Euro, FileText, Compass, X } from "lucide-react";
+import { Calendar, Clock, MapPin, Euro, FileText, Compass, X, Image } from "lucide-react";
 import api from "../../api";
 
 export const CreateActivityForm = ({ dayId, onCreated, onCancel }) => {
@@ -14,6 +14,8 @@ export const CreateActivityForm = ({ dayId, onCreated, onCancel }) => {
 
 	const [form, setForm] = useState(emptyForm);
 	const [loading, setLoading] = useState(false);
+	const [images, setImages] = useState([]);
+	const [previews, setPreviews] = useState([]);
 
 	const handleChange = ({ target }) => {
 		setForm((prev) => ({
@@ -22,26 +24,52 @@ export const CreateActivityForm = ({ dayId, onCreated, onCancel }) => {
 		}));
 	};
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
+	const handleImagesChange = (event) => {
+		const files = Array.from(event.target.files);
 
-		try {
-			setLoading(true);
+		setImages(files);
 
-			const response = await api.post(`/activities/${dayId}`, {
-				...form,
-				price: Number(form.price),
-			});
+		const urls = files.map((file) => URL.createObjectURL(file));
 
-			onCreated?.(response.data);
-
-			setForm(emptyForm);
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
+		setPreviews(urls);
 	};
+
+const handleSubmit = async (event) => {
+	event.preventDefault();
+
+	try {
+		setLoading(true);
+
+		const formData = new FormData();
+
+		formData.append("title", form.title);
+		formData.append("description", form.description);
+		formData.append("date", form.date);
+		formData.append("time", form.time);
+		formData.append("location", form.location);
+		formData.append("price", form.price || "0");
+
+		images.forEach((image) => {
+			formData.append("images", image);
+		});
+
+		const response = await api.post(
+			`/activities/${dayId}`,
+			formData
+		);
+
+		onCreated?.(response.data);
+
+		setForm(emptyForm);
+		setImages([]);
+		setPreviews([]);
+
+	} catch (error) {
+		console.error(error);
+	} finally {
+		setLoading(false);
+	}
+};
 
 	return (
 		<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
@@ -102,6 +130,34 @@ export const CreateActivityForm = ({ dayId, onCreated, onCancel }) => {
 						/>
 					</div>
 				</div>
+
+				{/* IMÁGENES */}
+				<div>
+					<label className="mb-2 block text-sm font-semibold text-slate-700">Imágenes</label>
+
+					<div className="relative">
+						<Image size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+
+						<input
+							type="file"
+							multiple
+							accept="image/*"
+							onChange={handleImagesChange}
+							className="w-full rounded-xl border border-slate-300 py-3 pl-10 pr-4 text-sm outline-none transition file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-1 file:font-semibold file:text-blue-600 focus:border-blue-500"
+						/>
+					</div>
+
+					{previews.length > 0 && (
+						<div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+							{previews.map((preview) => (
+								<div key={preview} className="overflow-hidden rounded-xl border border-slate-200">
+									<img src={preview} alt="Preview" className="h-24 w-full object-cover" />
+								</div>
+							))}
+						</div>
+					)}
+				</div>
+
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div>
 						<label className="mb-2 block text-sm font-semibold text-slate-700">Fecha</label>
@@ -173,6 +229,7 @@ export const CreateActivityForm = ({ dayId, onCreated, onCancel }) => {
 						</div>
 					</div>
 				</div>
+
 				<div className="flex flex-col-reverse gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:justify-end">
 					<button
 						type="button"

@@ -1,12 +1,18 @@
 import { useState } from "react";
 import { Clock, MapPin, Pencil, Trash2, Euro, Compass } from "lucide-react";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import { ActivityViewer } from "./ActivityViewer";
+import { ActivityCarousel } from "./ActivityCarousel";
+import { ActivityActions } from "./ActivityActions";
+import { ActivityHeader } from "./ActivityHeader";
 import api from "../../api";
 
 export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 	const [editing, setEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [viewerOpen, setViewerOpen] = useState(false);
+	const [currentImage, setCurrentImage] = useState(0);
 
 	const [form, setForm] = useState({
 		title: activity.title,
@@ -49,6 +55,11 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 		}
 	};
 
+	const openViewer = (index = 0) => {
+		setCurrentImage(index);
+		setViewerOpen(true);
+	};
+
 	return (
 		<>
 			<div className="border-b border-slate-200 py-5 last:border-b-0">
@@ -58,56 +69,17 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 							<Compass size={20} />
 						</div>
 
-						<div className="min-w-0 flex-1">
-							<h5 className="text-lg font-semibold text-slate-900">{activity.title}</h5>
-
-							<div className="mt-3 flex flex-wrap gap-2">
-								<div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
-									<Clock size={14} />
-									{activity.time}
-								</div>
-
-								{activity.location && (
-									<div className="inline-flex max-w-full items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">
-										<MapPin size={14} className="shrink-0" />
-										<span className="truncate">{activity.location}</span>
-									</div>
-								)}
-
-								{activity.price > 0 && (
-									<div className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-1.5 text-sm font-semibold text-green-700">
-										<Euro size={14} />
-										{activity.price} €
-									</div>
-								)}
-							</div>
-
-							{activity.description && (
-								<p className="mt-4 text-sm leading-relaxed text-slate-600">{activity.description}</p>
-							)}
-						</div>
+						<ActivityHeader activity={activity} onImageClick={openViewer} />
 					</div>
 
-					{isOwner && (
-						<div className="flex shrink-0 gap-2 self-end md:self-start">
-							<button
-								onClick={() => setEditing(!editing)}
-								title={editing ? "Cancelar edición" : "Editar actividad"}
-								className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
-							>
-								<Pencil size={18} />
-							</button>
-
-							<button
-								onClick={() => setShowDeleteModal(true)}
-								title="Eliminar actividad"
-								className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-200 bg-white text-red-500 transition hover:border-red-300 hover:bg-red-50"
-							>
-								<Trash2 size={18} />
-							</button>
-						</div>
-					)}
+					<ActivityActions
+						isOwner={isOwner}
+						editing={editing}
+						onToggleEdit={() => setEditing(!editing)}
+						onDelete={() => setShowDeleteModal(true)}
+					/>
 				</div>
+
 				{isOwner && editing && (
 					<form onSubmit={handleUpdate} className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-5">
 						<h6 className="mb-5 text-base font-semibold text-slate-800">Editar actividad</h6>
@@ -196,6 +168,14 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 					</form>
 				)}
 			</div>
+
+			<ActivityViewer
+				isOpen={viewerOpen}
+				images={activity.images || []}
+				currentImage={currentImage}
+				setCurrentImage={setCurrentImage}
+				onClose={() => setViewerOpen(false)}
+			/>
 
 			<ConfirmModal
 				isOpen={showDeleteModal}
