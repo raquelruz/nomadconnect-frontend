@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Calendar, MapPin } from "lucide-react";
-import { TripCreator } from "./TripCreator";
+
+import { TripCreator } from "../TripDetail/TripCreator";
 import { TripMembersCard } from "../Members/TripMembersCard";
 
 export const TripHeader = ({ trip, user, refreshTrip }) => {
@@ -31,7 +32,7 @@ export const TripHeader = ({ trip, user, refreshTrip }) => {
 
 			<main className="mx-auto max-w-6xl px-4 sm:px-6">
 				<div className="relative -mt-10 rounded-2xl bg-white p-5 shadow-xl sm:-mt-20 sm:rounded-3xl sm:p-8">
-					<div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+					<div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
 						<div className="min-w-0 flex-1">
 							<h1 className="wrap-break-word text-3xl font-bold text-blue-950 sm:text-4xl">
 								{trip.title}
@@ -39,31 +40,33 @@ export const TripHeader = ({ trip, user, refreshTrip }) => {
 
 							<div className="mt-4 flex flex-col gap-3 text-slate-500 sm:flex-row sm:flex-wrap sm:gap-6">
 								<div className="flex items-center gap-2">
-									<MapPin size={18} className="shrink-0 text-blue-600" />
+									<MapPin size={18} className="text-blue-600" />
 
-									<span className="wrap-break-word font-medium">
+									<span className="font-medium">
 										{trip.city}, {trip.country}
 									</span>
 								</div>
 
 								<div className="flex items-center gap-2">
-									<Calendar size={18} className="shrink-0 text-blue-600" />
+									<Calendar size={18} className="text-blue-600" />
 
-									<span className="wrap-break-word font-medium">
+									<span className="font-medium">
 										{formatDate(trip.startDate)} — {formatDate(trip.endDate)}
 									</span>
 								</div>
 							</div>
+
+							{trip.owner && (
+								<div className="mt-6">
+									<TripCreator owner={trip.owner} />
+								</div>
+							)}
 						</div>
 
-						<TripMembersCard trip={trip} user={user} refreshTrip={refreshTrip} />
+						<div className="w-full lg:w-80">
+							<TripMembersCard trip={trip} user={user} refreshTrip={refreshTrip} />
+						</div>
 					</div>
-
-					{trip.owner && (
-						<div className="mt-6 sm:mt-8">
-							<TripCreator owner={trip.owner} />
-						</div>
-					)}
 				</div>
 			</main>
 		</>

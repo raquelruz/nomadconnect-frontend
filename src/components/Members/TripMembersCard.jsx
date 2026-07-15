@@ -1,58 +1,115 @@
-import { useState } from "react";
-import { Users } from "lucide-react";
-import { useTripMembers } from "../../hooks/useTripMembers";
-import { MembersAvatarGroup } from "./MembersAvatarsGroup";
-import { MembersInfo } from "./MembersInfo";
-import { JoinLeaveButton } from "./JoinLeaveButton";
-import { TripMembersModal } from "../ui/Modals/TripMembersModal";
+import { Users, UserPlus } from "lucide-react";
+import api from "../../api";
 
 export const TripMembersCard = ({ trip, user, refreshTrip }) => {
-	const [showMembersModal, setShowMembersModal] = useState(false);
+	const isOwner = trip.owner?.id === user?.id || trip.owner?._id === user?.id;
 
-	const { loading, isOwner, canJoin, canLeave, hasFreePlaces, joinTrip, leaveTrip } = useTripMembers(
-		trip,
-		user,
-		refreshTrip,
-	);
+	const isMember = trip.members?.some((member) => member.id === user?.id || member._id === user?.id);
+
+	const canJoin = user && !isOwner && !isMember && trip.visibility === "public";
+
+	const canLeave = user && isMember;
+
+	const handleJoin = async () => {
+		try {
+			await api.post(`/trips/${trip.id}/join`);
+			refreshTrip();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const handleLeave = async () => {
+		try {
+			await api.delete(`/trips/${trip.id}/leave`);
+			refreshTrip();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const members = trip.members || [];
+
+	const totalMembers = members.length + 1;
+
+	const maxMembers = trip.maxMembers || null;
+
+	const availablePlaces = maxMembers ? maxMembers - totalMembers : null;
 
 	return (
-		<>
-			<div className="w-full rounded-2xl border border-blue-100 bg-blue-50 p-5 lg:w-auto">
-				<div className="flex flex-col gap-5">
-					<button onClick={() => setShowMembersModal(true)} className="flex items-center gap-3 text-left">
-						<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
-							<Users size={18} />
-						</div>
+		<div className="rounded-2xl border border-blue-100 bg-blue-50 p-5">
+			<div className="flex items-center justify-between">
+				<div className="flex items-center gap-3">
+					<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
+						<Users size={18} />
+					</div>
 
-						<div>
-							<p className="text-xs font-medium uppercase tracking-wide text-slate-500">Participantes</p>
+					<div>
+						<p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Participantes</p>
 
-							<p className="text-xl font-bold text-slate-900">{trip.members?.length + 1}</p>
-						</div>
-					</button>
-
-					<MembersAvatarGroup owner={trip.owner} members={trip.members} />
-
-					<MembersInfo members={trip.members} maxMembers={trip.maxMembers} />
-
-					<JoinLeaveButton
-						isOwner={isOwner}
-						canJoin={canJoin}
-						canLeave={canLeave}
-						hasFreePlaces={hasFreePlaces}
-						loading={loading}
-						onJoin={joinTrip}
-						onLeave={leaveTrip}
-					/>
+						<p className="text-xl font-bold text-slate-900">
+							{totalMembers}
+							{maxMembers && ` / ${maxMembers}`}
+						</p>
+					</div>
 				</div>
 			</div>
 
-			<TripMembersModal
-				isOpen={showMembersModal}
-				onClose={() => setShowMembersModal(false)}
-				owner={trip.owner}
-				members={trip.members}
-			/>
-		</>
+			<div className="mt-5 flex items-center justify-between">
+				<div className="flex -space-x-3">
+					<img
+						src={trip.owner.avatar}
+						alt={trip.owner.username}
+						className="h-9 w-9 rounded-full border-2 border-white object-cover"
+					/>
+
+					{members.slice(0, 4).map((member) => (
+						<img
+							key={member.id || member._id}
+							src={member.avatar}
+							alt={member.username}
+							className="h-9 w-9 rounded-full border-2 border-white object-cover"
+						/>
+					))}
+
+					{members.length > 4 && (
+						<div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-slate-200 text-xs font-semibold text-slate-600">
+							+{members.length - 4}
+						</div>
+					)}
+				</div>
+
+				{availablePlaces !== null && (
+					<p className="text-xs font-medium text-slate-500">{availablePlaces} plazas libres</p>
+				)}
+			</div>
+
+			<div className="mt-5">
+				{canJoin && (
+					<button
+						onClick={handleJoin}
+						className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700"
+					>
+						<UserPlus size={18} />
+						Unirme al viaje
+					</button>
+				)}
+
+				{canLeave && (
+					<button
+						onClick={handleLeave}
+						className="w-full rounded-xl border border-red-300 bg-white px-4 py-3 font-semibold text-red-600 transition hover:bg-red-50"
+					>
+						Abandonar viaje
+					</button>
+				)}
+
+				{isOwner && (
+					<div className="rounded-xl bg-white px-4 py-3 text-center text-sm font-semibold text-blue-700">
+						Eres el organizador
+					</div>
+				)}
+			</div>
+		</div>
 	);
 };
