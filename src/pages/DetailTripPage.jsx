@@ -8,6 +8,7 @@ import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripItinerary } from "../components/TripDetail/TripItinerary";
 import { CreateItineraryForm } from "../components/TripDetail/CreateItineraryForm";
+import { TripMembersCard } from "../components/TripDetail/TripMembersCard";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -92,6 +93,30 @@ export const DetailTripPage = () => {
 
 	const isOwner = trip.owner?.id === user?.id || trip.owner?._id === user?.id;
 
+	const isMember = trip.members?.some((member) => member.id === user?.id || member._id === user?.id);
+
+	const canJoin = user && !isOwner && !isMember && trip.visibility === "public";
+
+	const canLeave = user && isMember;
+
+	const handleJoin = async () => {
+		try {
+			await api.post(`/trips/${trip.id}/join`);
+			getTrip();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const handleLeave = async () => {
+		try {
+			await api.delete(`/trips/${trip.id}/leave`);
+			getTrip();
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	return (
 		<div className="min-h-screen bg-slate-50 pb-16 sm:pb-20">
 			<div className="relative">
@@ -136,21 +161,7 @@ export const DetailTripPage = () => {
 							</div>
 						</div>
 
-						<div className="w-full rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 lg:w-auto">
-							<div className="flex items-center gap-3">
-								<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
-									<Users size={18} />
-								</div>
-
-								<div>
-									<p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-										Participantes
-									</p>
-
-									<p className="text-xl font-bold text-slate-900">{trip.members?.length || 1}</p>
-								</div>
-							</div>
-						</div>
+						<TripMembersCard trip={trip} user={user} refreshTrip={getTrip} />
 					</div>
 
 					<div className="mt-6 sm:mt-8">{trip.owner && <TripCreator owner={trip.owner} />}</div>
