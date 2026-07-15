@@ -6,6 +6,7 @@ import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
 import { TripItineraries } from "../components/Itineraries/TripItineraries";
+import { MembersList } from "../components/Members/MembersList";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
@@ -91,10 +92,12 @@ export const DetailTripPage = () => {
 		<div className="min-h-screen bg-slate-50 pb-16 sm:pb-20">
 			<main className="mx-auto max-w-6xl px-4 sm:px-6">
 				<TripHeader trip={trip} user={user} refreshTrip={getTrip} />
-				
+
 				<TripStats trip={trip} />
 
 				<TripDescription description={trip.description} />
+
+				<MembersList trip={trip} />
 
 				<TripItineraries trip={trip} isOwner={isOwner} refreshTrip={getTrip} />
 			</main>

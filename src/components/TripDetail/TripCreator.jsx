@@ -13,6 +13,7 @@ export const TripCreator = ({ owner }) => {
 				/>
 
 				<div className="min-w-0">
+					<p className="text-xs text-text-tertiary/60 font-bold uppercase">Creado por</p>
 					<p className="truncate font-semibold text-slate-800">{owner.name} {owner.surname}</p>
 
 					<p className="truncate text-sm text-slate-400">@{owner.username}</p>
