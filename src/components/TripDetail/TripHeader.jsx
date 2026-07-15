@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { Calendar, MapPin } from "lucide-react";
-
 import { TripCreator } from "./TripCreator";
-import { TripMembersCard } from "./TripMembersCard";
+import { TripMembersCard } from "../Members/TripMembersCard";
 
 export const TripHeader = ({ trip, user, refreshTrip }) => {
 	const formatDate = (date) => {
