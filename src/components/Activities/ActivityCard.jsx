@@ -1,49 +1,27 @@
 import { useState } from "react";
-import { Clock, MapPin, Pencil, Trash2, Euro, Compass } from "lucide-react";
-import { ConfirmModal } from "../ui/ConfirmModal";
-import { ActivityViewer } from "./ActivityViewer";
-import { ActivityCarousel } from "./ActivityCarousel";
-import { ActivityActions } from "./ActivityActions";
-import { ActivityHeader } from "./ActivityHeader";
+import { Compass } from "lucide-react";
 import api from "../../api";
 
+import { ActivityHeader } from "./ActivityHeader";
+import { ActivityActions } from "./ActivityActions";
+import { ActivityViewer } from "./ActivityViewer";
+import { EditActivityModal } from "../Modals/EditActivityModal";
+
+import { ConfirmModal } from "../ui/ConfirmModal";
+
 export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
-	const [editing, setEditing] = useState(false);
-	const [loading, setLoading] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [showEditModal, setShowEditModal] = useState(false);
 	const [viewerOpen, setViewerOpen] = useState(false);
 	const [currentImage, setCurrentImage] = useState(0);
 
-	const [form, setForm] = useState({
-		title: activity.title,
-		description: activity.description,
-		time: activity.time,
-		location: activity.location,
-		price: activity.price,
-	});
-
-	const handleChange = ({ target }) => {
-		setForm((prev) => ({
-			...prev,
-			[target.name]: target.value,
-		}));
+	const handleOpenViewer = (index = 0) => {
+		setCurrentImage(index);
+		setViewerOpen(true);
 	};
 
-	const handleUpdate = async (event) => {
-		event.preventDefault();
-
-		try {
-			setLoading(true);
-
-			await api.put(`/activities/${activity.id}`, form);
-
-			setEditing(false);
-			refreshTrip();
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
+	const handleCloseViewer = () => {
+		setViewerOpen(false);
 	};
 
 	const handleDelete = async () => {
@@ -55,11 +33,6 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 		}
 	};
 
-	const openViewer = (index = 0) => {
-		setCurrentImage(index);
-		setViewerOpen(true);
-	};
-
 	return (
 		<>
 			<div className="border-b border-slate-200 py-5 last:border-b-0">
@@ -69,104 +42,15 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 							<Compass size={20} />
 						</div>
 
-						<ActivityHeader activity={activity} onImageClick={openViewer} />
+						<ActivityHeader activity={activity} onImageClick={handleOpenViewer} />
 					</div>
 
 					<ActivityActions
 						isOwner={isOwner}
-						editing={editing}
-						onToggleEdit={() => setEditing(!editing)}
+						onToggleEdit={() => setShowEditModal(true)}
 						onDelete={() => setShowDeleteModal(true)}
 					/>
 				</div>
-
-				{isOwner && editing && (
-					<form onSubmit={handleUpdate} className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-						<h6 className="mb-5 text-base font-semibold text-slate-800">Editar actividad</h6>
-
-						<div className="space-y-4">
-							<div>
-								<label className="mb-2 block text-sm font-semibold text-slate-700">Título</label>
-
-								<input
-									name="title"
-									value={form.title}
-									onChange={handleChange}
-									className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-								/>
-							</div>
-
-							<div>
-								<label className="mb-2 block text-sm font-semibold text-slate-700">Descripción</label>
-
-								<textarea
-									name="description"
-									value={form.description}
-									onChange={handleChange}
-									rows={3}
-									className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-								/>
-							</div>
-
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-								<div>
-									<label className="mb-2 block text-sm font-semibold text-slate-700">Hora</label>
-
-									<input
-										type="time"
-										name="time"
-										value={form.time}
-										onChange={handleChange}
-										className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-									/>
-								</div>
-
-								<div>
-									<label className="mb-2 block text-sm font-semibold text-slate-700">Ubicación</label>
-
-									<input
-										name="location"
-										value={form.location}
-										onChange={handleChange}
-										className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-									/>
-								</div>
-
-								<div>
-									<label className="mb-2 block text-sm font-semibold text-slate-700">
-										Precio (€)
-									</label>
-
-									<input
-										type="number"
-										name="price"
-										value={form.price}
-										onChange={handleChange}
-										className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-									/>
-								</div>
-							</div>
-
-							<div className="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row">
-								<button
-									type="submit"
-									disabled={loading}
-									className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
-								>
-									{loading ? "Guardando..." : "Guardar cambios"}
-								</button>
-
-								<button
-									type="button"
-									onClick={() => setEditing(false)}
-									className="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-100"
-								>
-									Cancelar
-								</button>
-							</div>
-						</div>
-					</form>
-				)}
 			</div>
 
 			<ActivityViewer
@@ -174,7 +58,14 @@ export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
 				images={activity.images || []}
 				currentImage={currentImage}
 				setCurrentImage={setCurrentImage}
-				onClose={() => setViewerOpen(false)}
+				onClose={handleCloseViewer}
+			/>
+
+			<EditActivityModal
+				isOpen={showEditModal}
+				activity={activity}
+				refreshTrip={refreshTrip}
+				onClose={() => setShowEditModal(false)}
 			/>
 
 			<ConfirmModal

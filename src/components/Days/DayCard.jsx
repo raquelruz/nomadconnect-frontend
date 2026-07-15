@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CreateActivityForm } from "../Activities/CreateActivityForm";
+import { CreateActivityModal } from "../Modals/CreateActivityModal";
 import { ActivityCard } from "../Activities/ActivityCard";
 import { FaCalendarAlt } from "react-icons/fa";
 import { Pencil, Trash2, Plus } from "lucide-react";
@@ -7,7 +7,7 @@ import { ConfirmModal } from "../ui/ConfirmModal";
 import api from "../../api";
 
 export const DayCard = ({ day, refreshTrip, isOwner }) => {
-	const [showActivityForm, setShowActivityForm] = useState(false);
+	const [showCreateActivityModal, setShowCreateActivityModal] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -75,10 +75,11 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 						</div>
 					</div>
 				</div>
+
 				{isOwner && (
 					<div className="flex w-full items-center gap-2 sm:w-auto">
 						<button
-							onClick={() => setShowActivityForm(true)}
+							onClick={() => setShowCreateActivityModal(true)}
 							className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 sm:w-auto"
 						>
 							<Plus size={18} />
@@ -103,6 +104,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					</div>
 				)}
 			</div>
+
 			{isOwner && editing && (
 				<form onSubmit={handleUpdate} className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
 					<div className="space-y-3 pt-5">
@@ -127,18 +129,14 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					</div>
 				</form>
 			)}
-			{isOwner && showActivityForm && (
-				<div className="border-b border-slate-100 bg-slate-50 p-4 sm:p-6">
-					<CreateActivityForm
-						dayId={day.id}
-						onCreated={() => {
-							setShowActivityForm(false);
-							refreshTrip();
-						}}
-						onCancel={() => setShowActivityForm(false)}
-					/>
-				</div>
-			)}
+
+			<CreateActivityModal
+				isOpen={showCreateActivityModal}
+				dayId={day.id}
+				onCreated={refreshTrip}
+				onClose={() => setShowCreateActivityModal(false)}
+			/>
+
 			<div className="space-y-4 p-4 sm:p-6">
 				{hasActivities &&
 					day.activities.map((activity) => (
@@ -162,6 +160,7 @@ export const DayCard = ({ day, refreshTrip, isOwner }) => {
 					</div>
 				)}
 			</div>
+
 			<ConfirmModal
 				isOpen={showDeleteModal}
 				title="Eliminar día"
