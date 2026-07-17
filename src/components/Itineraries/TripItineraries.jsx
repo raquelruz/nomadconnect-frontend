@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { CreateItineraryForm } from "../TripDetail/CreateItineraryForm";
-import { TripItinerary } from "../TripDetail/TripItinerary";
+import { CreateItineraryForm } from "./CreateItineraryForm";
+import { ItineraryList } from "./ItineraryList";
 
 export const TripItineraries = ({ trip, isOwner, refreshTrip }) => {
 	const [showCreate, setShowCreate] = useState(false);
@@ -27,12 +27,14 @@ export const TripItineraries = ({ trip, isOwner, refreshTrip }) => {
 							setShowCreate(false);
 							refreshTrip();
 						}}
-						onCancel={() => setShowCreate(false)}
+						onCancel={() => {
+							setShowCreate(false);
+						}}
 					/>
 				</div>
 			)}
 
-			<TripItinerary itineraries={trip.itineraries} refreshTrip={refreshTrip} isOwner={isOwner} />
+			<ItineraryList itineraries={trip.itineraries} refreshTrip={refreshTrip} isOwner={isOwner} />
 		</section>
 	);
 };

@@ -1,7 +1,7 @@
 import { ItineraryCard } from "./ItineraryCard";
 import { FaMap } from "react-icons/fa";
 
-export const TripItinerary = ({ itineraries, refreshTrip, isOwner }) => {
+export const ItineraryList = ({ itineraries, refreshTrip, isOwner }) => {
 	if (!itineraries?.length) {
 		return (
 			<div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:mt-8 sm:p-10">
