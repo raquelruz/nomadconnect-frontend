@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
+
 import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
 import { TripItineraries } from "../components/Itineraries/TripItineraries";
 import { MembersList } from "../components/Members/MembersList";
+import { CommentsSection } from "../components/Comments/CommentsSection";
+
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
@@ -100,6 +103,8 @@ export const DetailTripPage = () => {
 				<MembersList trip={trip} />
 
 				<TripItineraries trip={trip} isOwner={isOwner} refreshTrip={getTrip} />
+
+				<CommentsSection trip={trip} user={user} />
 			</main>
 		</div>
 	);
