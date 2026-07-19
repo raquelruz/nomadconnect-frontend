@@ -7,7 +7,7 @@ export const MembersAvatarGroup = ({ owner, members = [], maxVisible = 4 }) => {
 	return (
 		<div className="flex items-center">
 			{visibleAvatars.map((member, index) => (
-				<div key={member.id || member._id} className={`relative ${index > 0 ? "-ml-3" : ""}`}>
+				<div key={member.id || member.id} className={`relative ${index > 0 ? "-ml-3" : ""}`}>
 					<img
 						src={member.avatar || "/default-avatar.png"}
 						alt={member.username}

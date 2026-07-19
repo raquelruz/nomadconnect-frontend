@@ -1,15 +1,16 @@
 import { DayCard } from "../Days/DayCard";
 
-export const DaysList = ({ days, refreshItinerary, refreshDay, isOwner }) => {
+export const DaysList = ({ days, refreshTrip, isOwner }) => {
+	console.log("DAYS:", days);
+
 	return (
-		<div className="mt-6 space-y-6">
+		<div className="space-y-8">
 			{days?.map((day, index) => (
 				<DayCard
-					key={day._id}
+					key={day.id}
 					day={day}
 					dayNumber={index + 1}
-					refreshItinerary={refreshItinerary}
-					refreshDay={refreshDay}
+					refreshItinerary={refreshTrip}
 					isOwner={isOwner}
 				/>
 			))}

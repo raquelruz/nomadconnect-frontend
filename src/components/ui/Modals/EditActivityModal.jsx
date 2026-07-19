@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Compass, X } from "lucide-react";
-import { ActivityForm } from "../Activities/ActivityForm";
-import api from "../../api";
+import { ActivityForm } from "../../Activities/ActivityForm";
+import api from "../../../api";
 
 
 export const EditActivityModal = ({ isOpen, activity, refreshTrip, onClose }) => {

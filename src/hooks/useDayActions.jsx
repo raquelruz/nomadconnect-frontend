@@ -8,7 +8,7 @@ export const useDayActions = ({ day, refreshItinerary }) => {
 		try {
 			setLoading(true);
 
-			await api.delete(`/days/${day._id}`);
+			await api.delete(`/days/${day.id}`);
 
 			refreshItinerary();
 		} catch (error) {
@@ -22,7 +22,7 @@ export const useDayActions = ({ day, refreshItinerary }) => {
 		try {
 			setLoading(true);
 
-			await api.put(`/days/${day._id}`, data);
+			await api.put(`/days/${day.id}`, data);
 
 			refreshItinerary();
 		} catch (error) {

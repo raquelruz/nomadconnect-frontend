@@ -8,7 +8,7 @@ export const useItineraryActions = ({ itinerary, refreshTrip }) => {
 		try {
 			setLoading(true);
 
-			await api.delete(`/itineraries/${itinerary._id}`);
+			await api.delete(`/itineraries/${itinerary.id}`);
 
 			refreshTrip();
 		} catch (error) {
@@ -22,7 +22,7 @@ export const useItineraryActions = ({ itinerary, refreshTrip }) => {
 		try {
 			setLoading(true);
 
-			await api.put(`/itineraries/${itinerary._id}`, data);
+			await api.put(`/itineraries/${itinerary.id}`, data);
 
 			refreshTrip();
 		} catch (error) {

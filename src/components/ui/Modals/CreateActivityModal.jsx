@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Compass, X } from "lucide-react";
-import { ActivityForm } from "../Activities/ActivityForm";
-import api from "../../api";
+import { ActivityForm } from "../../Activities/ActivityForm";
+import api from "../../../api";
 
-export const CreateActivityModal = ({ isOpen, dayId, onCreated, onClose }) => {
+export const CreateActivityModal = ({ isOpen, dayId, dayDate, onCreated, onClose }) => {
 	const emptyForm = {
 		title: "",
 		description: "",
-		date: "",
 		time: "",
 		location: "",
 		price: "",
@@ -36,6 +35,11 @@ export const CreateActivityModal = ({ isOpen, dayId, onCreated, onClose }) => {
 		setPreviews(urls);
 	};
 
+	const handleRemoveImage = (index) => {
+		setImages((prev) => prev.filter((_, i) => i !== index));
+		setPreviews((prev) => prev.filter((_, i) => i !== index));
+	};
+
 	const resetForm = () => {
 		setForm(emptyForm);
 		setImages([]);
@@ -57,7 +61,7 @@ export const CreateActivityModal = ({ isOpen, dayId, onCreated, onClose }) => {
 
 			formData.append("title", form.title);
 			formData.append("description", form.description);
-			formData.append("date", form.date);
+			formData.append("date", dayDate);
 			formData.append("time", form.time);
 			formData.append("location", form.location);
 			formData.append("price", form.price || "0");
@@ -114,10 +118,10 @@ export const CreateActivityModal = ({ isOpen, dayId, onCreated, onClose }) => {
 						onCancel={handleClose}
 						loading={loading}
 						submitText="Crear actividad"
-						showDate
 						showImages
 						previews={previews}
 						onImagesChange={handleImagesChange}
+						onRemoveImage={handleRemoveImage}
 					/>
 				</div>
 			</div>

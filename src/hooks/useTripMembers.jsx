@@ -7,13 +7,13 @@ export const useTripMembers = (trip, user, refreshTrip) => {
 	const isOwner = useMemo(() => {
 		if (!trip || !user) return false;
 
-		return trip.owner?.id === user.id || trip.owner?._id === user.id;
+		return trip.owner?.id === user.id || trip.owner?.id === user.id;
 	}, [trip, user]);
 
 	const isMember = useMemo(() => {
 		if (!trip || !user) return false;
 
-		return trip.members?.some((member) => member.id === user.id || member._id === user.id);
+		return trip.members?.some((member) => member.id === user.id || member.id === user.id);
 	}, [trip, user]);
 
 	const hasFreePlaces = useMemo(() => {

@@ -8,7 +8,7 @@ export const useActivityActions = ({ activity, refreshDay, onClose }) => {
 		try {
 			setLoading(true);
 
-			await api.delete(`/activities/${activity._id}`);
+			await api.delete(`/activities/${activity.id}`);
 
 			refreshDay();
 		} catch (error) {

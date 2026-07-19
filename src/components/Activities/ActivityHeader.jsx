@@ -1,22 +1,38 @@
-import { Clock, CalendarDays } from "lucide-react";
+import { Clock } from "lucide-react";
 
-export const ActivityHeader = ({ title, date, time }) => {
+export const ActivityHeader = ({ title, time }) => {
 	return (
 		<div>
-			<h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-			<div className=" flex gap-4 mt-2 text-sm text-gray-500">
-				<div className="flex gap-1 items-center">
-					<CalendarDays size={15} />
+			<div
+				className="
+					flex
+					items-center
+					gap-2
+				"
+			>
+				<Clock size={16} className="text-blue-500" />
 
-					<span>{new Date(date).toLocaleDateString()}</span>
-				</div>
-
-				<div className="flex gap-1 items-center">
-					<Clock size={15} />
-
-					<span>{time}</span>
-				</div>
+				<span
+					className="
+						text-sm
+						font-medium
+						text-blue-600
+					"
+				>
+					{time}
+				</span>
 			</div>
+
+			<h4
+				className="
+					mt-1
+					text-base
+					font-semibold
+					text-slate-800
+				"
+			>
+				{title}
+			</h4>
 		</div>
 	);
 };
