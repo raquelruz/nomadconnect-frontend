@@ -1,4 +1,4 @@
-import { DaySection } from "./DaySection";
+import { DaySection } from "../../Days/DaySection";
 
 export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip }) => {
 	if (!itinerary) {

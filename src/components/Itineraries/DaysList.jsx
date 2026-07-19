@@ -1,8 +1,6 @@
 import { DayCard } from "../Days/DayCard";
 
 export const DaysList = ({ days, refreshTrip, isOwner }) => {
-	console.log("DAYS:", days);
-
 	return (
 		<div className="space-y-8">
 			{days?.map((day, index) => (

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import api from "../api";
 
 export const useItineraryActions = ({ itinerary, refreshTrip }) => {
 	const [loading, setLoading] = useState(false);

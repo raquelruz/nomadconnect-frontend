@@ -9,12 +9,13 @@ import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
 import { MembersList } from "../components/Members/MembersList";
 import { CommentsSection } from "../components/Comments/CommentsSection";
-import { PlannerSidebar } from "../components/Planner/PlannerSidebar";
-import { PlannerContent } from "../components/Planner/PlannerContent";
-
+import { PlannerSidebar } from "../components/Planner/Sidebar/PlannerSidebar";
+import { PlannerContent } from "../components/Planner/Sidebar/PlannerContent";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
+
+import { CreateItineraryModal } from "../components/ui/Modals/CreateItineraryModal";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -27,6 +28,8 @@ export const DetailTripPage = () => {
 	const [selectedItinerary, setSelectedItinerary] = useState(null);
 	const [selectedDay, setSelectedDay] = useState(null);
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+	const [showCreateItinerary, setShowCreateItinerary] = useState(false);
 
 	const getTrip = async () => {
 		try {
@@ -133,6 +136,7 @@ export const DetailTripPage = () => {
 					refreshTrip={getTrip}
 					isOwner={isOwner}
 					onClose={() => setMobileSidebarOpen(false)}
+					onAddItinerary={() => setShowCreateItinerary(true)}
 				/>
 			</aside>
 
@@ -149,6 +153,19 @@ export const DetailTripPage = () => {
 
 				<div className="mx-auto max-w-6xl px-4 sm:px-6">
 					<TripDescription description={trip.description} />
+
+					{isOwner && showCreateItinerary && (
+						<div className="mb-6">
+							<CreateItineraryModal
+								isOpen={showCreateItinerary}
+								onClose={() => setShowCreateItinerary(false)}
+								onCreated={() => {
+									setShowCreateItinerary(false);
+									getTrip();
+								}}
+							/>
+						</div>
+					)}
 
 					<section className="mt-8 sm:mt-10">
 						<PlannerContent

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CreateItineraryForm } from "./CreateItineraryForm";
-import { PlannerLayout } from "../Planner/PlannerLayout";
+import { PlannerPage } from "../Planner/PlannerPage";
 
 export const TripItineraries = ({ trip, isOwner, refreshTrip }) => {
 	const [showCreate, setShowCreate] = useState(false);
@@ -23,14 +23,16 @@ export const TripItineraries = ({ trip, isOwner, refreshTrip }) => {
 				</div>
 			)}
 
-			<PlannerLayout
-				itineraries={itineraries}
-				selectedItinerary={selectedItinerary}
-				setSelectedItinerary={setSelectedItinerary}
-				isOwner={isOwner}
-				refreshTrip={refreshTrip}
-				onAddItinerary={() => setShowCreate(true)}
-			/>
+<PlannerPage
+	itineraries={itineraries}
+	selectedItinerary={selectedItinerary}
+	setSelectedItinerary={setSelectedItinerary}
+	isOwner={isOwner}
+	refreshTrip={refreshTrip}
+	onAddItinerary={() => {
+		setShowCreate(true);
+	}}
+/>
 		</section>
 	);
 };
