@@ -1,4 +1,4 @@
-import { DaySelector } from "../Days/DaySelector";
+import { DaysList } from "../Days/DaysList";
 
 export const ItinerarySelector = ({
 	itineraries,
@@ -20,7 +20,7 @@ export const ItinerarySelector = ({
 					</button>
 
 					{selectedItinerary?.id === itinerary.id && (
-						<DaySelector days={itinerary.days} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+						<DaysList days={itinerary.days} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
 					)}
 				</div>
 			))}

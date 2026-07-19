@@ -1,4 +1,4 @@
-import { DaySection } from "../../Days/DaySection";
+import { DayView } from "../Days/DayView";
 
 export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip }) => {
 	if (!itinerary) {
@@ -9,5 +9,5 @@ export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip })
 		return <div className="rounded-2xl border border-slate-200 bg-white p-6">Selecciona un día.</div>;
 	}
 
-	return <DaySection day={selectedDay} isOwner={isOwner} refreshTrip={refreshTrip} />;
+	return <DayView day={selectedDay} isOwner={isOwner} refreshDay={refreshTrip} />;
 };

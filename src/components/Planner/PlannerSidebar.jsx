@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { SidebarHeader } from "./SidebarHeader";
 import { SidebarFooter } from "./SidebarFooter";
-import { ItinerarySelector } from "../../Itineraries/ItinerarySelector";
+import { ItinerarySelector } from "../Itineraries/ItinerarySelector";
 
 export const PlannerSidebar = ({
 	itineraries,
