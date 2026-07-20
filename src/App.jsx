@@ -10,6 +10,7 @@ import { MyTripsPage } from "./pages/MyTripsPage.jsx";
 import { ProfilePage } from "./pages/ProfilePage.jsx";
 import { DetailTripPage } from "./pages/DetailTripPage.jsx";
 import { SettingsPage } from "./pages/SettingsPage.jsx";
+import { NotificationsPage } from "./pages/NotificationsPage.jsx";
 
 export const App = () => {
 	return (
@@ -40,6 +41,15 @@ export const App = () => {
 						element={
 							<ProtectedRoute>
 								<SettingsPage />
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
+						path="/notifications"
+						element={
+							<ProtectedRoute>
+								<NotificationsPage />
 							</ProtectedRoute>
 						}
 					/>
