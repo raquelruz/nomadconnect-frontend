@@ -9,6 +9,7 @@ import { ProtectedRoute } from "./auth/ProtectedRoute.jsx";
 import { MyTripsPage } from "./pages/MyTripsPage.jsx";
 import { ProfilePage } from "./pages/ProfilePage.jsx";
 import { DetailTripPage } from "./pages/DetailTripPage.jsx";
+import { SettingsPage } from "./pages/SettingsPage.jsx";
 
 export const App = () => {
 	return (
@@ -35,6 +36,15 @@ export const App = () => {
 					/>
 
 					<Route
+						path="/settings"
+						element={
+							<ProtectedRoute>
+								<SettingsPage />
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
 						path="/trips/:id"
 						element={
 							<ProtectedRoute>
@@ -42,7 +52,6 @@ export const App = () => {
 							</ProtectedRoute>
 						}
 					/>
-
 				</Routes>
 			</main>
 		</>
