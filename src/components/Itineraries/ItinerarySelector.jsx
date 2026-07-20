@@ -1,4 +1,4 @@
-import { DaysList } from "../Days/DaysList";
+import { ItineraryRow } from "./ItineraryRow";
 
 export const ItinerarySelector = ({
 	itineraries,
@@ -6,6 +6,9 @@ export const ItinerarySelector = ({
 	setSelectedItinerary,
 	selectedDay,
 	setSelectedDay,
+	isOwner,
+	refreshTrip,
+	onEditItinerary,
 }) => {
 	if (!itineraries || itineraries.length === 0) {
 		return <p className="text-sm text-slate-500">No hay itinerarios.</p>;
@@ -14,15 +17,17 @@ export const ItinerarySelector = ({
 	return (
 		<div className="flex flex-col gap-4">
 			{itineraries.map((itinerary) => (
-				<div key={itinerary.id}>
-					<button className="text-left" onClick={() => setSelectedItinerary(itinerary)}>
-						{itinerary.title}
-					</button>
-
-					{selectedItinerary?.id === itinerary.id && (
-						<DaysList days={itinerary.days} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
-					)}
-				</div>
+				<ItineraryRow
+					key={itinerary.id}
+					itinerary={itinerary}
+					isSelected={selectedItinerary?.id === itinerary.id}
+					onSelect={() => setSelectedItinerary(itinerary)}
+					selectedDay={selectedDay}
+					setSelectedDay={setSelectedDay}
+					isOwner={isOwner}
+					refreshTrip={refreshTrip}
+					onEdit={onEditItinerary}
+				/>
 			))}
 		</div>
 	);
