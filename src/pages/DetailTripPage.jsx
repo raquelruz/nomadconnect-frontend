@@ -120,12 +120,12 @@ export const DetailTripPage = () => {
 
 			<aside
 				className={`
-					fixed inset-y-0 left-0 z-50 w-72
-					border-r border-slate-200 bg-white
-					transition-transform duration-300
-					lg:sticky lg:top-0 lg:h-screen lg:w-60 lg:shrink-0 lg:translate-x-0
-					${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-				`}
+		fixed inset-y-0 left-0 z-50 w-72
+		border-r border-slate-200 bg-white
+		transition-transform duration-300
+		lg:sticky lg:top-22 lg:z-40 lg:h-[calc(100vh-88px)] lg:w-60 lg:shrink-0 lg:translate-x-0
+		${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+	`}
 			>
 				<PlannerSidebar
 					itineraries={itineraries}
