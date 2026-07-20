@@ -1,6 +1,6 @@
 import { ActivityCard } from "./ActivityCard";
 
-export const ActivityList = ({ activities, isOwner, refreshDay }) => {
+export const ActivityList = ({ activities, isOwner, refreshDay, onEditActivity }) => {
 	if (!activities || activities.length === 0) {
 		return (
 			<div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-10 text-center">
@@ -12,7 +12,13 @@ export const ActivityList = ({ activities, isOwner, refreshDay }) => {
 	return (
 		<div className="space-y-3">
 			{activities.map((activity) => (
-				<ActivityCard key={activity.id} activity={activity} isOwner={isOwner} refreshDay={refreshDay} />
+				<ActivityCard
+					key={activity.id}
+					activity={activity}
+					isOwner={isOwner}
+					refreshDay={refreshDay}
+					onEdit={() => onEditActivity?.(activity)}
+				/>
 			))}
 		</div>
 	);
