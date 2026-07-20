@@ -1,4 +1,4 @@
-import { MapPin, Trash2 } from "lucide-react";
+import { MapPin, Pencil, Trash2 } from "lucide-react";
 import { useActivityActions } from "../../hooks/useActivityActions";
 
 const formatTime = (time) => {
@@ -17,7 +17,7 @@ const formatTime = (time) => {
 	};
 };
 
-export const ActivityCard = ({ activity, refreshDay, isOwner }) => {
+export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 	const { deleteActivity, loading } = useActivityActions({
 		activity,
 		refreshDay,
@@ -46,14 +46,24 @@ export const ActivityCard = ({ activity, refreshDay, isOwner }) => {
 			</div>
 
 			{isOwner && (
-				<button
-					onClick={deleteActivity}
-					disabled={loading}
-					title="Eliminar actividad"
-					className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-300 opacity-0 transition hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 disabled:opacity-50"
-				>
-					<Trash2 size={15} />
-				</button>
+				<div className="flex shrink-0 gap-1 opacity-0 transition group-hover:opacity-100">
+					<button
+						onClick={onEdit}
+						title="Editar actividad"
+						className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition hover:bg-blue-50 hover:text-blue-500"
+					>
+						<Pencil size={15} />
+					</button>
+
+					<button
+						onClick={deleteActivity}
+						disabled={loading}
+						title="Eliminar actividad"
+						className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-300 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-50"
+					>
+						<Trash2 size={15} />
+					</button>
+				</div>
 			)}
 		</div>
 	);
