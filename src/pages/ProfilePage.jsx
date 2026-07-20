@@ -8,7 +8,7 @@ import { ProfileBio } from "../components/Profile/ProfileBio";
 import { ProfileStats } from "../components/Profile/ProfileStats";
 import { ProfileMeta } from "../components/Profile/ProfileMeta";
 import { TravelerBadge } from "../components/Profile/TravelerBadge";
-import { TripsGallery } from "../components/Trips/TripsGallery";
+import { TripsGallery } from "../components/MyTrips/TripsGallery"
 import { TripThumbnailProfile } from "../components/Profile/TripThumbnailProfile";
 
 export const ProfilePage = () => {

@@ -1,6 +1,6 @@
 import heroBg from "../assets/images/hero-bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import { SearchBar } from "../components/SearchBar";
+import { SearchBar } from "../components/Trips/SearchBar";
 
 export const HeroSection = () => {
         const navigate = useNavigate();

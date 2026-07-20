@@ -1,6 +1,6 @@
 import { Compass } from "lucide-react";
 import { ActivityForm } from "../../Activities/ActivityForm";
-import { ActivityModalShell } from "./ActivityModalShell";
+import { ModalShell } from "./ModalShell";
 import { useActivityForm } from "../../../hooks/useActivityForm";
 import { useActivityActions } from "../../../hooks/useActivityActions";
 
@@ -22,7 +22,7 @@ export const EditActivityModal = ({ isOpen, activity, refreshTrip, onClose }) =>
 	if (!isOpen || !activity) return null;
 
 	return (
-		<ActivityModalShell
+		<ModalShell
 			icon={Compass}
 			title="Editar actividad"
 			description="Modifica la información de la actividad."
@@ -36,6 +36,6 @@ export const EditActivityModal = ({ isOpen, activity, refreshTrip, onClose }) =>
 				loading={loading}
 				submitText="Guardar cambios"
 			/>
-		</ActivityModalShell>
+		</ModalShell>
 	);
 };

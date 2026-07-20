@@ -1,6 +1,6 @@
 import { Compass } from "lucide-react";
 import { ActivityForm } from "../../Activities/ActivityForm";
-import { ActivityModalShell } from "./ActivityModalShell";
+import { ModalShell } from "./ModalShell";
 import { useCreateActivity } from "../../../hooks/useCreateActivity";
 
 export const CreateActivityModal = ({ isOpen, dayId, dayDate, onCreated, onClose }) => {
@@ -10,7 +10,7 @@ export const CreateActivityModal = ({ isOpen, dayId, dayDate, onCreated, onClose
 	if (!isOpen) return null;
 
 	return (
-		<ActivityModalShell icon={Compass} title="Nueva actividad" description="Añade una actividad al día." onClose={close}>
+		<ModalShell icon={Compass} title="Nueva actividad" description="Añade una actividad al día." onClose={close}>
 			<ActivityForm
 				form={form}
 				onChange={handleChange}
@@ -23,6 +23,6 @@ export const CreateActivityModal = ({ isOpen, dayId, dayDate, onCreated, onClose
 				onImagesChange={handleImagesChange}
 				onRemoveImage={handleRemoveImage}
 			/>
-		</ActivityModalShell>
+		</ModalShell>
 	);
 };

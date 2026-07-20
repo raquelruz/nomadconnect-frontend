@@ -3,12 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import { FaExclamationCircle } from "react-icons/fa";
 import api from "../api";
 import { TripsFilterTabs } from "../components/Trips/TripsFilterTabs";
-import { MyTripsContent } from "../components/Trips/MyTripsContent";
+import { MyTripsContent } from "../components/MyTrips/MyTripsContent";
 import { getTripCounts, getDestinationCount, getTotalDays, getRecentPastTrips } from "../utils/tripStats";
 import { getTripPhase } from "../utils/tripPhase";
-import { MyTripsHeader } from "../components/Trips/MyTripsHeader";
+import { MyTripsHeader } from "../components/MyTrips/MyTripsHeader";
 import { CreateNewTripCard } from "../components/Trips/CreateNewTripCard";
-import { RecentMemories } from "../components/Trips/RecentsMemories";
+import { RecentMemories } from "../components/MyTrips/RecentsMemories";
 
 export const MyTripsPage = () => {
     const { id } = useParams();
