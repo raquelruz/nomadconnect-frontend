@@ -1,6 +1,7 @@
+// src/components/Navbar.jsx
 import { useCallback, useState } from "react";
 import { Link, NavLink as RouterNavLink } from "react-router-dom";
-import { FaHome, FaSearch, FaRegUser, FaRegCompass } from "react-icons/fa";
+import { FaHome, FaSearch, FaRegUser, FaRegCompass, FaCog } from "react-icons/fa";
 import { MdCardTravel } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
 import { ThemeButton } from "./Buttons/ThemeButton";
@@ -66,12 +67,6 @@ export const Navbar = () => {
                     </div>
 
                     <div className="flex items-center gap-2 md:gap-3">
-                        {user && (
-                            <LogoutButton
-                                baseClass="hidden md:inline-flex px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 active:scale-95"
-                                onClick={handleLogout}
-                            />
-                        )}
                         {!user && (
                             <>
                                 <Link
@@ -89,7 +84,20 @@ export const Navbar = () => {
                             </>
                         )}
 
+                        {user && (
+                            <Link
+                                to="/settings"
+                                title="Ajustes de la cuenta"
+                                aria-label="Ajustes de la cuenta"
+                                className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 text-text-secondary backdrop-blur-md shadow-md transition-all duration-300 ease-out hover:bg-white/10 hover:text-text-primary hover:shadow-lg active:scale-95"
+                            >
+                                <FaCog className="text-base" />
+                            </Link>
+                        )}
+
                         <ThemeButton />
+
+                        {user && <LogoutButton className="hidden md:flex" onClick={handleLogout} />}
 
                         <button
                             onClick={toggleMenu}
