@@ -25,7 +25,7 @@ export const PlannerSidebar = ({
 	});
 
 	return (
-		<aside className="sticky top-24 flex h-fit flex-col rounded-2xl border border-slate-200 bg-white p-4">
+		<aside className="sticky top-24 flex h-fit flex-col rounded-2xl bg-card p-4">
 			<SidebarHeader isOwner={isOwner} onAddItinerary={onAddItinerary} />
 
 			<div className="my-5 flex-1">
@@ -45,7 +45,7 @@ export const PlannerSidebar = ({
 
 			{editingItinerary &&
 				createPortal(
-					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-card/40 px-4">
 						<ItineraryEditForm
 							itinerary={editingItinerary}
 							updateItinerary={updateItinerary}
