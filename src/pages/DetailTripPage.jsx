@@ -1,29 +1,35 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Calendar, MapPin, Users } from "lucide-react";
+import { Menu } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
-import { TripCreator } from "../components/TripDetail/TripCreator";
+
 import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
-import { TripItinerary } from "../components/TripDetail/TripItinerary";
-import { CreateItineraryForm } from "../components/TripDetail/CreateItineraryForm";
+import { TripHeader } from "../components/TripDetail/TripHeader";
+import { MembersList } from "../components/Members/MembersList";
+import { CommentsSection } from "../components/Comments/CommentsSection";
+import { PlannerSidebar } from "../components/Planner/PlannerSidebar";
+import { PlannerContent } from "../components/Planner/PlannerContent";
+import { Loading } from "../components/ui/Loading";
+import { ErrorState } from "../components/ui/ErrorState";
+import { EmptyState } from "../components/ui/EmptyState";
+
+import { CreateItineraryModal } from "../components/ui/Modals/CreateItineraryModal";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
 	const { id } = useParams();
+
 	const [trip, setTrip] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const [showItineraryForm, setShowItineraryForm] = useState(false);
 
-	const formatDate = (date) => {
-		return new Date(date).toLocaleDateString("es-ES", {
-			day: "numeric",
-			month: "long",
-			year: "numeric",
-		});
-	};
+	const [selectedItinerary, setSelectedItinerary] = useState(null);
+	const [selectedDay, setSelectedDay] = useState(null);
+	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+	const [showCreateItinerary, setShowCreateItinerary] = useState(false);
 
 	const getTrip = async () => {
 		try {
@@ -43,151 +49,141 @@ export const DetailTripPage = () => {
 		getTrip();
 	}, [id]);
 
-	if (loading) {
-		return (
-			<div className="flex min-h-screen items-center justify-center bg-slate-50">
-				<div className="flex flex-col items-center gap-4">
-					<div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+	useEffect(() => {
+		if (!trip?.itineraries?.length) {
+			setSelectedItinerary(null);
+			return;
+		}
 
-					<p className="font-medium text-slate-600">Cargando viaje...</p>
-				</div>
-			</div>
-		);
+		const stillExists = trip.itineraries.some((itinerary) => itinerary.id === selectedItinerary?.id);
+
+		if (!stillExists) {
+			setSelectedItinerary(trip.itineraries[0]);
+			return;
+		}
+
+		const refreshed = trip.itineraries.find((itinerary) => itinerary.id === selectedItinerary.id);
+		setSelectedItinerary(refreshed);
+	}, [trip]);
+
+	useEffect(() => {
+		if (!selectedItinerary?.days?.length) {
+			setSelectedDay(null);
+			return;
+		}
+
+		const stillExists = selectedItinerary.days.some((day) => day.id === selectedDay?.id);
+
+		if (!stillExists) {
+			setSelectedDay(selectedItinerary.days[0]);
+			return;
+		}
+
+		const refreshed = selectedItinerary.days.find((day) => day.id === selectedDay.id);
+		setSelectedDay(refreshed);
+	}, [selectedItinerary]);
+
+	if (loading) {
+		return <Loading message="Cargando viaje..." />;
 	}
 
 	if (error) {
-		return (
-			<div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-				<div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-md sm:p-8">
-					<div className="mb-4 text-4xl">⚠️</div>
-
-					<h2 className="mb-2 text-xl font-semibold text-slate-800">Ha ocurrido un error</h2>
-
-					<p className="text-slate-500">{error}</p>
-				</div>
-			</div>
-		);
+		return <ErrorState title="Ha ocurrido un error" message={error} />;
 	}
 
 	if (!trip) {
 		return (
-			<div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
-				<div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-md sm:p-8">
-					<div className="mb-4 text-5xl">🌍</div>
-
-					<h2 className="mb-2 text-xl font-semibold text-slate-800">Viaje no encontrado</h2>
-
-					<p className="mb-6 text-slate-500">El viaje que buscas no existe o ha sido eliminado.</p>
-
+			<EmptyState
+				emoji="🌍"
+				title="Viaje no encontrado"
+				description="El viaje que buscas no existe o ha sido eliminado."
+				action={
 					<Link
 						to="/trips"
 						className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-white transition hover:bg-slate-700"
 					>
 						Volver a viajes
 					</Link>
-				</div>
-			</div>
+				}
+			/>
 		);
 	}
 
-	const isOwner = trip.owner?.id === user?.id || trip.owner?._id === user?.id;
+	const isOwner = trip.owner?.id === user?.id;
+	const itineraries = trip.itineraries || [];
 
 	return (
-		<div className="min-h-screen bg-slate-50 pb-16 sm:pb-20">
-			<div className="relative">
-				<img src={trip.image} alt={trip.title} className="h-56 w-full object-cover sm:h-72 lg:h-112.5" />
+		<div className="flex min-h-screen bg-slate-50">
+			{mobileSidebarOpen && (
+				<div onClick={() => setMobileSidebarOpen(false)} className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
+			)}
 
-				<Link
-					to="/trips"
-					className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow transition hover:shadow-lg sm:left-6 sm:top-6"
-				>
-					←
-				</Link>
+			<aside
+				className={`
+					fixed inset-y-0 left-0 z-50 w-72
+					border-r border-slate-200 bg-white
+					transition-transform duration-300
+					lg:sticky lg:top-0 lg:h-screen lg:w-60 lg:shrink-0 lg:translate-x-0
+					${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+				`}
+			>
+				<PlannerSidebar
+					itineraries={itineraries}
+					selectedItinerary={selectedItinerary}
+					setSelectedItinerary={setSelectedItinerary}
+					selectedDay={selectedDay}
+					setSelectedDay={setSelectedDay}
+					refreshTrip={getTrip}
+					isOwner={isOwner}
+					onClose={() => setMobileSidebarOpen(false)}
+					onAddItinerary={() => setShowCreateItinerary(true)}
+				/>
+			</aside>
 
-				<button className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow transition hover:shadow-lg sm:right-6 sm:top-6">
-					♡
-				</button>
-			</div>
+			<button
+				onClick={() => setMobileSidebarOpen(true)}
+				className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700 lg:hidden"
+				title="Ver itinerario"
+			>
+				<Menu size={22} />
+			</button>
 
-			<main className="mx-auto max-w-6xl px-4 sm:px-6">
-				<div className="relative -mt-10 rounded-2xl bg-white p-5 shadow-xl sm:-mt-20 sm:rounded-3xl sm:p-8">
-					<div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-						<div className="flex-1 min-w-0">
-							<h1 className="wrap-break-word text-3xl font-bold text-blue-950 sm:text-4xl">
-								{trip.title}
-							</h1>
+			<main className="min-w-0 flex-1 pb-16 sm:pb-20">
+				<TripHeader trip={trip} user={user} refreshTrip={getTrip} />
 
-							<div className="mt-4 flex flex-col gap-3 text-slate-500 sm:flex-row sm:flex-wrap sm:gap-6">
-								<div className="flex items-center gap-2">
-									<MapPin size={18} className="shrink-0 text-blue-600" />
+				<div className="mx-auto max-w-6xl px-4 sm:px-6">
+					<TripDescription description={trip.description} />
 
-									<span className="font-medium wrap-break-word">
-										{trip.city}, {trip.country}
-									</span>
-								</div>
-
-								<div className="flex items-center gap-2">
-									<Calendar size={18} className="shrink-0 text-blue-600" />
-
-									<span className="font-medium wrap-break-word">
-										{formatDate(trip.startDate)} — {formatDate(trip.endDate)}
-									</span>
-								</div>
-							</div>
-						</div>
-
-						<div className="w-full rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 lg:w-auto">
-							<div className="flex items-center gap-3">
-								<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
-									<Users size={18} />
-								</div>
-
-								<div>
-									<p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-										Participantes
-									</p>
-
-									<p className="text-xl font-bold text-slate-900">{trip.members?.length || 1}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div className="mt-6 sm:mt-8">{trip.owner && <TripCreator owner={trip.owner} />}</div>
-				</div>
-				<TripStats trip={trip} />
-
-				<TripDescription description={trip.description} />
-
-				{/* Itinerarios */}
-				<section className="mt-8 sm:mt-10">
-					<div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-						<h2 className="text-xl font-bold text-slate-800 sm:text-2xl">Itinerarios</h2>
-
-						{isOwner && !showItineraryForm && (
-							<button
-								onClick={() => setShowItineraryForm(true)}
-								className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 transition hover:bg-blue-100 sm:w-auto sm:py-2.5"
-							>
-								+ Añadir itinerario
-							</button>
-						)}
-					</div>
-
-					{isOwner && showItineraryForm && (
-						<div className="mb-6 sm:mb-8">
-							<CreateItineraryForm
+					{isOwner && showCreateItinerary && (
+						<div className="mb-6">
+							<CreateItineraryModal
+								isOpen={showCreateItinerary}
+								onClose={() => setShowCreateItinerary(false)}
 								onCreated={() => {
-									setShowItineraryForm(false);
+									setShowCreateItinerary(false);
 									getTrip();
 								}}
-								onCancel={() => setShowItineraryForm(false)}
 							/>
 						</div>
 					)}
 
-					<TripItinerary itineraries={trip.itineraries} refreshTrip={getTrip} isOwner={isOwner} />
-				</section>
+					<section className="mt-8 sm:mt-10">
+						<PlannerContent
+							itinerary={selectedItinerary}
+							selectedDay={selectedDay}
+							isOwner={isOwner}
+							refreshTrip={getTrip}
+							tripImage={trip.image}
+							tripLocation={`${trip.city}, ${trip.country}`}
+						/>
+					</section>
+
+					<TripStats trip={trip} />
+
+					<MembersList trip={trip} />
+
+					<CommentsSection trip={trip} user={user} />
+				</div>
 			</main>
 		</div>
 	);

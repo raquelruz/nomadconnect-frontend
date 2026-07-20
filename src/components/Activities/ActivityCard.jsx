@@ -1,212 +1,60 @@
-import { useState } from "react";
-import { Clock, MapPin, Pencil, Trash2, Euro, Compass } from "lucide-react";
-import { ConfirmModal } from "../ui/ConfirmModal";
-import api from "../../api";
+import { MapPin, Trash2 } from "lucide-react";
+import { useActivityActions } from "../../hooks/useActivityActions";
 
-export const ActivityCard = ({ activity, refreshTrip, isOwner }) => {
-	const [editing, setEditing] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
+const formatTime = (time) => {
+	if (!time) {
+		return { main: "--:--", period: "" };
+	}
 
-	const [form, setForm] = useState({
-		title: activity.title,
-		description: activity.description,
-		time: activity.time,
-		location: activity.location,
-		price: activity.price,
+	const [hourStr, minuteStr] = time.split(":");
+	const hour = parseInt(hourStr, 10);
+	const period = hour >= 12 ? "PM" : "AM";
+	const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+
+	return {
+		main: `${String(displayHour).padStart(2, "0")}:${minuteStr}`,
+		period,
+	};
+};
+
+export const ActivityCard = ({ activity, refreshDay, isOwner }) => {
+	const { deleteActivity, loading } = useActivityActions({
+		activity,
+		refreshDay,
 	});
 
-	const handleChange = ({ target }) => {
-		setForm((prev) => ({
-			...prev,
-			[target.name]: target.value,
-		}));
-	};
-
-	const handleUpdate = async (event) => {
-		event.preventDefault();
-
-		try {
-			setLoading(true);
-
-			await api.put(`/activities/${activity.id}`, form);
-
-			setEditing(false);
-			refreshTrip();
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const handleDelete = async () => {
-		try {
-			await api.delete(`/activities/${activity.id}`);
-			refreshTrip();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+	const time = formatTime(activity.time);
 
 	return (
-		<>
-			<div className="border-b border-slate-200 py-5 last:border-b-0">
-				<div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-					<div className="flex flex-1 gap-4">
-						<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-							<Compass size={20} />
-						</div>
-
-						<div className="min-w-0 flex-1">
-							<h5 className="text-lg font-semibold text-slate-900">{activity.title}</h5>
-
-							<div className="mt-3 flex flex-wrap gap-2">
-								<div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700">
-									<Clock size={14} />
-									{activity.time}
-								</div>
-
-								{activity.location && (
-									<div className="inline-flex max-w-full items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">
-										<MapPin size={14} className="shrink-0" />
-										<span className="truncate">{activity.location}</span>
-									</div>
-								)}
-
-								{activity.price > 0 && (
-									<div className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-1.5 text-sm font-semibold text-green-700">
-										<Euro size={14} />
-										{activity.price} €
-									</div>
-								)}
-							</div>
-
-							{activity.description && (
-								<p className="mt-4 text-sm leading-relaxed text-slate-600">{activity.description}</p>
-							)}
-						</div>
-					</div>
-
-					{isOwner && (
-						<div className="flex shrink-0 gap-2 self-end md:self-start">
-							<button
-								onClick={() => setEditing(!editing)}
-								title={editing ? "Cancelar edición" : "Editar actividad"}
-								className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600"
-							>
-								<Pencil size={18} />
-							</button>
-
-							<button
-								onClick={() => setShowDeleteModal(true)}
-								title="Eliminar actividad"
-								className="flex h-10 w-10 items-center justify-center rounded-xl border border-red-200 bg-white text-red-500 transition hover:border-red-300 hover:bg-red-50"
-							>
-								<Trash2 size={18} />
-							</button>
-						</div>
-					)}
-				</div>
-				{isOwner && editing && (
-					<form onSubmit={handleUpdate} className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-						<h6 className="mb-5 text-base font-semibold text-slate-800">Editar actividad</h6>
-
-						<div className="space-y-4">
-							<div>
-								<label className="mb-2 block text-sm font-semibold text-slate-700">Título</label>
-
-								<input
-									name="title"
-									value={form.title}
-									onChange={handleChange}
-									className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-								/>
-							</div>
-
-							<div>
-								<label className="mb-2 block text-sm font-semibold text-slate-700">Descripción</label>
-
-								<textarea
-									name="description"
-									value={form.description}
-									onChange={handleChange}
-									rows={3}
-									className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-								/>
-							</div>
-
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-								<div>
-									<label className="mb-2 block text-sm font-semibold text-slate-700">Hora</label>
-
-									<input
-										type="time"
-										name="time"
-										value={form.time}
-										onChange={handleChange}
-										className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-									/>
-								</div>
-
-								<div>
-									<label className="mb-2 block text-sm font-semibold text-slate-700">Ubicación</label>
-
-									<input
-										name="location"
-										value={form.location}
-										onChange={handleChange}
-										className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-									/>
-								</div>
-
-								<div>
-									<label className="mb-2 block text-sm font-semibold text-slate-700">
-										Precio (€)
-									</label>
-
-									<input
-										type="number"
-										name="price"
-										value={form.price}
-										onChange={handleChange}
-										className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500"
-									/>
-								</div>
-							</div>
-
-							<div className="flex flex-col gap-3 border-t border-slate-200 pt-5 sm:flex-row">
-								<button
-									type="submit"
-									disabled={loading}
-									className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
-								>
-									{loading ? "Guardando..." : "Guardar cambios"}
-								</button>
-
-								<button
-									type="button"
-									onClick={() => setEditing(false)}
-									className="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-100"
-								>
-									Cancelar
-								</button>
-							</div>
-						</div>
-					</form>
-				)}
+		<div className="group grid grid-cols-[64px_1fr_1fr_auto] items-center gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 transition hover:shadow-md sm:p-5">
+			<div>
+				<p className="text-base font-bold text-blue-600">{time.main}</p>
+				<p className="text-[11px] font-semibold text-slate-400">{time.period}</p>
 			</div>
 
-			<ConfirmModal
-				isOpen={showDeleteModal}
-				title="Eliminar actividad"
-				message="¿Seguro que quieres eliminar esta actividad? Esta acción no se puede deshacer."
-				onCancel={() => setShowDeleteModal(false)}
-				onConfirm={async () => {
-					await handleDelete();
-					setShowDeleteModal(false);
-				}}
-			/>
-		</>
+			<div className="min-w-0">
+				<p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Actividad</p>
+				<p className="truncate font-semibold text-slate-800">{activity.title}</p>
+			</div>
+
+			<div className="min-w-0">
+				<p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Ubicación</p>
+				<p className="flex items-center gap-1.5 truncate text-slate-600">
+					<MapPin size={13} className="shrink-0 text-slate-400" />
+					{activity.location || "—"}
+				</p>
+			</div>
+
+			{isOwner && (
+				<button
+					onClick={deleteActivity}
+					disabled={loading}
+					title="Eliminar actividad"
+					className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-300 opacity-0 transition hover:bg-red-50 hover:text-red-500 group-hover:opacity-100 disabled:opacity-50"
+				>
+					<Trash2 size={15} />
+				</button>
+			)}
+		</div>
 	);
 };
