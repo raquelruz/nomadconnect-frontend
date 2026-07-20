@@ -1,40 +1,15 @@
-import { useState } from "react";
-import api from "../api";
+import { useEntityActions } from "./useEntityActions";
 
 export const useDayActions = ({ day, refreshItinerary }) => {
-	const [loading, setLoading] = useState(false);
-
-	const deleteDay = async () => {
-		try {
-			setLoading(true);
-
-			await api.delete(`/days/${day.id}`);
-
-			refreshItinerary();
-		} catch (error) {
-			console.error("Error deleting day:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const updateDay = async (data) => {
-		try {
-			setLoading(true);
-
-			await api.put(`/days/${day.id}`, data);
-
-			refreshItinerary();
-		} catch (error) {
-			console.error("Error updating day:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
+	const { remove, update, loading } = useEntityActions({
+		resource: "days",
+		id: day.id,
+		onSuccess: refreshItinerary,
+	});
 
 	return {
-		deleteDay,
-		updateDay,
+		deleteDay: remove,
+		updateDay: update,
 		loading,
 	};
 };
