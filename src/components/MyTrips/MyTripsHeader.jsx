@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { FaMapMarkerAlt, FaSuitcaseRolling, FaCalendarAlt } from "react-icons/fa";
+// src/components/MyTrips/MyTripsHeader.jsx
+import { Luggage, MapPin, Calendar } from "lucide-react";
+import { UserAvatar } from "../ui/UserAvatar";
 
 const getTierLabel = (tripCount) => {
     if (tripCount === 0) return "Nuevo pasajero";
@@ -7,64 +8,41 @@ const getTierLabel = (tripCount) => {
     return "Viajero frecuente";
 };
 
-const StatChip = ({ icon, value, label }) => (
-    <div
-        className="flex items-center gap-3 rounded-xl px-4 py-3"
-        style={{ backgroundColor: "color-mix(in srgb, var(--color-primary-600) 8%, transparent)" }}
-    >
-        <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-bg-card"
-            style={{ color: "var(--color-primary-500)" }}
-        >
-            {icon}
+const StatChip = ({ icon: Icon, value, label }) => (
+    <div className="flex items-center gap-3 rounded-xl bg-primary-500/10 px-4 py-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-bg-card text-primary-500">
+            <Icon size={16} />
         </div>
         <div>
-            <p className="text-lg font-bold text-text leading-none">{value}</p>
-            <p className="text-[11px] text-text-muted mt-1">{label}</p>
+            <p className="text-lg font-bold leading-none text-text-primary">{value}</p>
+            <p className="mt-1 text-[11px] text-text-muted">{label}</p>
         </div>
     </div>
 );
 
 export const MyTripsHeader = ({ user, tripCount, destinationCount, totalDays, loading }) => {
-    const [mounted, setMounted] = useState(false);
     const displayName = user?.name ? `${user.name} ${user.surname || ""}`.trim() : "Viajero/a";
 
-    useEffect(() => {
-        const timer = setTimeout(() => setMounted(true), 50);
-        return () => clearTimeout(timer);
-    }, []);
-
     return (
-        <div className="bg-bg-card rounded-2xl border border-border shadow-sm p-6 sm:p-8">
-            <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-12">
-                {/* NOMBRE */}
-                <div className="shrink-0">
-                    <span
-                        className="inline-block text-[10px] text-text-secondary/60 py-1 rounded-full font-semibold uppercase tracking-widest"                    >
-                        {loading ? "…" : getTierLabel(tripCount)}
-                    </span>
-                    <h2 className="font-title text-xl sm:text-2xl font-bold text-text leading-tight whitespace-nowrap">
-                        {loading ? "Cargando…" : displayName}
-                    </h2>
+        <div className="rounded-2xl border border-border bg-bg-card p-6 shadow-sm sm:p-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-8">
+                <div className="flex shrink-0 items-center gap-4">
+                    <UserAvatar user={user} size="lg" />
+
+                    <div>
+                        <span className="inline-block rounded-full text-[10px] font-semibold uppercase tracking-widest text-primary-500">
+                            {loading ? "…" : getTierLabel(tripCount)}
+                        </span>
+                        <h2 className="font-title whitespace-nowrap text-xl font-bold leading-tight text-text-primary sm:text-2xl">
+                            {loading ? "Cargando…" : displayName}
+                        </h2>
+                    </div>
                 </div>
 
-                {/* ESTADÍSTICAS */}
-                <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-                    <StatChip
-                        icon={<FaSuitcaseRolling className="text-sm" />}
-                        value={loading ? "—" : tripCount}
-                        label="Viajes"
-                    />
-                    <StatChip
-                        icon={<FaMapMarkerAlt className="text-sm" />}
-                        value={loading ? "—" : destinationCount}
-                        label="Destinos"
-                    />
-                    <StatChip
-                        icon={<FaCalendarAlt className="text-sm" />}
-                        value={loading ? "—" : totalDays}
-                        label="Días de viaje"
-                    />
+                <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <StatChip icon={Luggage} value={loading ? "—" : tripCount} label="Viajes" />
+                    <StatChip icon={MapPin} value={loading ? "—" : destinationCount} label="Destinos" />
+                    <StatChip icon={Calendar} value={loading ? "—" : totalDays} label="Días de viaje" />
                 </div>
             </div>
         </div>

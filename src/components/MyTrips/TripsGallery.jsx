@@ -2,7 +2,7 @@ export const TripsGallery = ({ trips }) => {
     const tripsWithImage = trips.filter((trip) => trip.image);
 
     if (tripsWithImage.length === 0) {
-        return <p className="text-gray-400 text-sm">Aún no has subido fotos de tus viajes.</p>;
+        return <p className="text-text-muted text-sm">Aún no has subido fotos de tus viajes.</p>;
     }
 
     return (
