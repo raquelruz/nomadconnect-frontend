@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-export const ActivityModalShell = ({ icon: Icon, title, description, onClose, children }) => {
+export const ModalShell = ({ icon: Icon, title, description, onClose, children }) => {
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
 			<div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white">

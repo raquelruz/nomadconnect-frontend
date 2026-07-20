@@ -1,4 +1,4 @@
-import { TripCard } from "./TripCard";
+import { TripCard } from "../Trips/TripCard";
 import { TripsEmptyState } from "./TripsEmptyState";
 
 export const MyTripsContent = ({ trips, filteredTrips, onDelete }) => {
