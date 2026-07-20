@@ -18,12 +18,5 @@ export const useCommentEditor = ({ id, initialText, onSave }) => {
 		setEditing(false);
 	};
 
-	return {
-		editing,
-		text,
-		setText,
-		startEditing,
-		cancelEditing,
-		saveEditing,
-	};
+	return { editing, text, setText, startEditing, cancelEditing, saveEditing };
 };

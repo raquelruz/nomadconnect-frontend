@@ -1,3 +1,4 @@
+// src/components/Comments/CommentsSection.jsx
 import { CommentForm } from "./CommentForm";
 import { CommentItem } from "./CommentItem";
 import { useComments } from "../../hooks/useComments";
@@ -11,7 +12,7 @@ export const CommentsSection = ({ trip, user }) => {
 				<h2 className="text-xl font-bold text-slate-800">Comentarios ({threadComments.length})</h2>
 			</div>
 
-			{user && <CommentForm createComment={createComment} />}
+			{user && <CommentForm onSubmit={createComment} />}
 
 			{loading && <p className="text-sm text-slate-500">Cargando comentarios...</p>}
 

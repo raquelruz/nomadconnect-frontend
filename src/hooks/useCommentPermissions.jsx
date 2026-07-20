@@ -4,9 +4,5 @@ export const useCommentPermissions = (comment, trip, user) => {
 
 	const canDelete = isAuthor || isOwner;
 
-	return {
-		isAuthor,
-		isOwner,
-		canDelete,
-	};
+	return { isAuthor, isOwner, canDelete };
 };
