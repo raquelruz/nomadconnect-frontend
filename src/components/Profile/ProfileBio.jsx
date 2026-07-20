@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiEdit2 } from "react-icons/fi";
+import { Pencil } from "lucide-react";
 import api from "../../api";
 
 export const ProfileBio = ({ profile, onBioUpdated }) => {
@@ -19,27 +19,24 @@ export const ProfileBio = ({ profile, onBioUpdated }) => {
 
     if (editing) {
         return (
-            <div className="mt-4">
+            <div className="mt-3">
                 <textarea
                     value={bioDraft}
                     onChange={(event) => setBioDraft(event.target.value)}
                     placeholder="Cuéntanos algo sobre ti..."
-                    rows={4}
+                    rows={3}
                     autoFocus
-                    className="w-full text-sm text-gray-700 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition"
+                    className="w-full rounded-xl border border-border bg-bg-secondary p-3 text-sm text-text-primary outline-none transition focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10"
                 />
-                <div className="flex gap-4 mt-2">
+                <div className="mt-2 flex gap-4">
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                        className="text-xs font-semibold text-primary-500 hover:text-primary-600 disabled:opacity-50"
                     >
                         {saving ? "Guardando..." : "Guardar"}
                     </button>
-                    <button
-                        onClick={() => setEditing(false)}
-                        className="text-xs text-gray-400 hover:text-gray-600"
-                    >
+                    <button onClick={() => setEditing(false)} className="text-xs text-text-muted hover:text-text-secondary">
                         Cancelar
                     </button>
                 </div>
@@ -49,13 +46,13 @@ export const ProfileBio = ({ profile, onBioUpdated }) => {
 
     if (profile.bio) {
         return (
-            <div className="mt-4">
-                <p className="text-sm text-gray-600 leading-relaxed">{profile.bio}</p>
+            <div className="mt-3">
+                <p className="text-sm leading-relaxed text-text-secondary">{profile.bio}</p>
                 <button
                     onClick={() => setEditing(true)}
-                    className="flex items-center gap-1 mt-1.5 text-xs font-medium text-primary-600 hover:text-primary-700"
+                    className="mt-1.5 flex items-center gap-1 text-xs font-medium text-primary-500 hover:text-primary-600"
                 >
-                    <FiEdit2 size={12} />
+                    <Pencil size={12} />
                     Editar biografía
                 </button>
             </div>
@@ -63,10 +60,7 @@ export const ProfileBio = ({ profile, onBioUpdated }) => {
     }
 
     return (
-        <button
-            onClick={() => setEditing(true)}
-            className="mt-4 text-sm text-primary-600 hover:text-primary-700 font-medium"
-        >
+        <button onClick={() => setEditing(true)} className="mt-3 text-sm font-medium text-primary-500 hover:text-primary-600">
             + Añadir biografía
         </button>
     );

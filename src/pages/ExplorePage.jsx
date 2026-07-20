@@ -6,6 +6,7 @@ import { TripCard } from "../components/Trips/TripCard";
 import { ExploreHeader } from "../components/Trips/ExploreHeader";
 import { CreateTripModal } from "../components/ui/Modals/CreateTripsModal";
 import { useAuth } from "../auth/AuthContext";
+import { Loading } from "../components/ui/Loading";
 
 export const ExplorePage = () => {
     const { user } = useAuth();
@@ -55,7 +56,7 @@ export const ExplorePage = () => {
         }
     };
 
-    if (loading) return <p className="text-gray-500">Cargando viajes...</p>;
+    if (loading) return <Loading message="Cargando viajes..." />;
 
     return (
         <div className="min-h-screen bg-bg-primary">

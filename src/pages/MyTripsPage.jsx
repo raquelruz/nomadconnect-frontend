@@ -9,6 +9,7 @@ import { getTripPhase } from "../utils/tripPhase";
 import { MyTripsHeader } from "../components/MyTrips/MyTripsHeader";
 import { CreateNewTripCard } from "../components/Trips/CreateNewTripCard";
 import { RecentMemories } from "../components/MyTrips/RecentsMemories";
+import { Loading } from "../components/ui/Loading";
 
 export const MyTripsPage = () => {
 	const { id } = useParams();
@@ -70,6 +71,8 @@ export const MyTripsPage = () => {
 	const recentMemories = getRecentPastTrips(trips);
 
 	const filteredTrips = activeFilter === "all" ? trips : trips.filter((trip) => getTripPhase(trip) === activeFilter);
+
+        if (loading) return <Loading message="Cargando mis viajes..." />;
 
 	return (
 		<div className="min-h-screen bg-bg-primary">

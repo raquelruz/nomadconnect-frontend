@@ -2,8 +2,9 @@
 import { AtSign, Mail, User, UserRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import { useProfile } from "../hooks/useProfile";
-import { EditableAccountField } from "../components/Profile/EditableAccountField";
+import { EditableAccountField } from "../components/Settings/EditableAccountField";
 import { RoleBadge } from "../components/Profile/RoleBadge";
+import { Loading } from "../components/ui/Loading";
 
 const FIELDS = [
 	{ field: "username", label: "Usuario", icon: AtSign },
@@ -17,7 +18,7 @@ export const SettingsPage = () => {
 	const { profile, setProfile, loading, error } = useProfile(tokenUser?.id);
 
 	if (loading) {
-		return <p className="mx-auto max-w-2xl px-4 py-12 text-sm text-text-muted">Cargando ajustes...</p>;
+		return <Loading message="Cargando ajustes..."/>;
 	}
 
 	if (error) {
