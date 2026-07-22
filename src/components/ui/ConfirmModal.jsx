@@ -1,12 +1,18 @@
-export const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, loading = false }) => {
+import { createPortal } from "react-dom";
+
+export const ConfirmModal = ({ isOpen, title, message, error, onConfirm, onCancel, loading = false }) => {
 	if (!isOpen) return null;
 
-	return (
+	return createPortal(
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
 			<div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
 				<h3 className="text-xl font-bold text-slate-900">{title}</h3>
 
 				<p className="mt-3 text-slate-500">{message}</p>
+
+				{error && (
+					<p className="mt-3 text-sm font-medium text-red-500">{error}</p>
+				)}
 
 				<div className="mt-6 flex justify-end gap-3">
 					<button
@@ -26,6 +32,7 @@ export const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, load
 					</button>
 				</div>
 			</div>
-		</div>
+		</div>,
+		document.body
 	);
 };

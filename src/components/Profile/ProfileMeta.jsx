@@ -11,10 +11,6 @@ export const ProfileMeta = ({ profile, onProfileUpdated }) => {
 
     const languages = profile.languages || [];
 
-    const memberSince = profile.createdAt
-        ? new Date(profile.createdAt).toLocaleDateString("es-ES", { month: "long", year: "numeric" })
-        : null;
-
     const saveLanguages = (updatedLanguages) => {
         setSaving(true);
         api.put(`/users/${profile.id}`, { ...profile, languages: updatedLanguages })
@@ -45,30 +41,23 @@ export const ProfileMeta = ({ profile, onProfileUpdated }) => {
     };
 
     return (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400 mb-2">Idiomas</p>
-            <div className="flex flex-wrap items-center gap-2">
-                {languages.map((language) => (
-                    <LanguageChip
-                        key={language}
-                        language={language}
-                        saving={saving}
-                        onRemove={() => handleRemoveLanguage(language)}
-                    />
-                ))}
-
-                <AddLanguageControl
-                    adding={adding}
-                    newLanguage={newLanguage}
-                    onStartAdding={handleStartAdding}
-                    onChangeLanguage={setNewLanguage}
-                    onConfirm={handleAddLanguage}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+            {languages.map((language) => (
+                <LanguageChip
+                    key={language}
+                    language={language}
+                    saving={saving}
+                    onRemove={() => handleRemoveLanguage(language)}
                 />
-            </div>
+            ))}
 
-            {memberSince && (
-                <p className="text-xs text-gray-400 mt-3">Miembro desde {memberSince}</p>
-            )}
+            <AddLanguageControl
+                adding={adding}
+                newLanguage={newLanguage}
+                onStartAdding={handleStartAdding}
+                onChangeLanguage={setNewLanguage}
+                onConfirm={handleAddLanguage}
+            />
         </div>
     );
 };
