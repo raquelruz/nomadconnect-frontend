@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../api";
+import api from "../../api";
 
 export const useEntityActions = ({ resource, id, onSuccess }) => {
 	const [loading, setLoading] = useState(false);

@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Menu } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
 
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
+import { TripPlannerSidebar } from "../components/TripDetail/TripPlannerSidebar";
+import { TripModals } from "../components/TripDetail/TripModals";
 import { MembersList } from "../components/Members/MembersList";
 import { CommentsSection } from "../components/Comments/CommentsSection";
-import { PlannerSidebar } from "../components/Planner/PlannerSidebar";
 import { PlannerContent } from "../components/Planner/PlannerContent";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
-
-import { CreateItineraryModal } from "../components/ui/Modals/CreateItineraryModal";
-import { CreateDayModal } from "../components/ui/Modals/CreateDayModal";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -115,34 +112,19 @@ export const DetailTripPage = () => {
 
 	return (
 		<div className="flex min-h-screen bg-bg-card/95">
-			{mobileSidebarOpen && (
-				<div onClick={() => setMobileSidebarOpen(false)} className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
-			)}
-
-			<aside
-				className={` fixed inset-y-0 left-0 z-50 w-72 border-r border-text-primary/10 bg-bg-card transition-transform duration-300 lg:sticky lg:top-22 lg:z-40 lg:h-[calc(100vh-88px)] lg:w-60 lg:shrink-0 lg:translate-x-0 ${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-			>
-				<PlannerSidebar
-					itineraries={itineraries}
-					selectedItinerary={selectedItinerary}
-					setSelectedItinerary={setSelectedItinerary}
-					selectedDay={selectedDay}
-					setSelectedDay={setSelectedDay}
-					refreshTrip={getTrip}
-					isOwner={isOwner}
-					onClose={() => setMobileSidebarOpen(false)}
-					onAddItinerary={() => setShowCreateItinerary(true)}
-					onCreateDay={() => setShowCreateDay(true)}
-				/>
-			</aside>
-
-			<button
-				onClick={() => setMobileSidebarOpen(true)}
-				className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg transition hover:bg-primary-700 lg:hidden"
-				title="Ver itinerario"
-			>
-				<Menu size={22} />
-			</button>
+			<TripPlannerSidebar
+				itineraries={itineraries}
+				selectedItinerary={selectedItinerary}
+				setSelectedItinerary={setSelectedItinerary}
+				selectedDay={selectedDay}
+				setSelectedDay={setSelectedDay}
+				isOwner={isOwner}
+				refreshTrip={getTrip}
+				mobileOpen={mobileSidebarOpen}
+				setMobileOpen={setMobileSidebarOpen}
+				onAddItinerary={() => setShowCreateItinerary(true)}
+				onCreateDay={() => setShowCreateDay(true)}
+			/>
 
 			<main className="min-w-0 flex-1 pb-16 sm:pb-20">
 				<TripHeader trip={trip} user={user} refreshTrip={getTrip} />
@@ -150,30 +132,15 @@ export const DetailTripPage = () => {
 				<div className="mx-auto max-w-6xl px-4 sm:px-6">
 					<TripDescription description={trip.description} />
 
-					{isOwner && showCreateItinerary && (
-						<div className="mb-6">
-							<CreateItineraryModal
-								isOpen={showCreateItinerary}
-								onClose={() => setShowCreateItinerary(false)}
-								onCreated={() => {
-									setShowCreateItinerary(false);
-									getTrip();
-								}}
-							/>
-						</div>
-					)}
-
-					{isOwner && showCreateDay && (
-						<CreateDayModal
-							isOpen={showCreateDay}
-							itineraryId={selectedItinerary?.id}
-							onClose={() => setShowCreateDay(false)}
-							onCreated={() => {
-								setShowCreateDay(false);
-								getTrip();
-							}}
-						/>
-					)}
+					<TripModals
+						isOwner={isOwner}
+						showCreateItinerary={showCreateItinerary}
+						onCloseCreateItinerary={() => setShowCreateItinerary(false)}
+						showCreateDay={showCreateDay}
+						onCloseCreateDay={() => setShowCreateDay(false)}
+						itineraryId={selectedItinerary?.id}
+						onCreated={getTrip}
+					/>
 
 					<section className="mt-8 sm:mt-10">
 						<PlannerContent

@@ -4,8 +4,8 @@ import { CommentActions } from "./CommentActions";
 import { CommentCard } from "./CommentCard";
 import { CommentEditableBody } from "./CommentEditableBody";
 import { CommentForm } from "./CommentForm";
-import { useCommentEditor } from "../../hooks/useCommentEditor";
-import { useCommentPermissions } from "../../hooks/useCommentPermissions";
+import { useCommentEditor } from "../../hooks/Comments/useCommentEditor";
+import { useCommentPermissions } from "../../hooks/Comments/useCommentPermissions";
 import { getRepliesButtonText } from "../../utils/comments";
 
 export const CommentItem = ({ comment, user, trip, editComment, deleteComment, replyComment }) => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MapPin, Clock } from "lucide-react";
-import { useActivityActions } from "../../hooks/useActivityActions";
+import { useActivityActions } from "../../hooks/Activities/useActivityActions";
 import { ActivityActions } from "./ActivityActions";
 import { ActivityCarousel } from "./ActivityCarousel";
 import { ActivityViewer } from "./ActivityViewer";

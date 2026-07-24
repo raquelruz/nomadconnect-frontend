@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import api from "../api";
+import api from "../../api"
 
 export const useComments = (tripId) => {
 	const [comments, setComments] = useState([]);

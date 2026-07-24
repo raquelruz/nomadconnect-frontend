@@ -1,7 +1,7 @@
 import { Map, ChevronDown, Plus } from "lucide-react";
 import { DaysList } from "../Days/DaysList";
 import { ItineraryActions } from "./ItineraryActions";
-import { useItineraryActions } from "../../hooks/useItineraryActions";
+import { useItineraryActions } from "../../hooks/Itineraries/useItineraryActions";
 
 export const ItineraryRow = ({
 	itinerary,

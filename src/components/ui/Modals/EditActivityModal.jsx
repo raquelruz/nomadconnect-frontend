@@ -1,8 +1,8 @@
 import { Compass } from "lucide-react";
 import { ActivityForm } from "../../Activities/ActivityForm";
 import { ModalShell } from "./ModalShell";
-import { useActivityForm } from "../../../hooks/useActivityForm";
-import { useActivityActions } from "../../../hooks/useActivityActions";
+import { useActivityForm } from "../../../hooks/Activities/useActivityForm";
+import { useActivityActions } from "../../../hooks/Activities/useActivityActions";
 
 export const EditActivityModal = ({ isOpen, activity, refreshTrip, onClose }) => {
 	const { form, handleChange } = useActivityForm(activity, isOpen);

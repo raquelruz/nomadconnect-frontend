@@ -1,8 +1,8 @@
 import { CommentCard } from "./CommentCard";
 import { CommentActions } from "./CommentActions";
 import { CommentEditableBody } from "./CommentEditableBody";
-import { useCommentEditor } from "../../hooks/useCommentEditor";
-import { useCommentPermissions } from "../../hooks/useCommentPermissions";
+import { useCommentEditor } from "../../hooks/Comments/useCommentEditor";
+import { useCommentPermissions } from "../../hooks/Comments/useCommentPermissions";
 
 export const ReplyItem = ({ reply, user, trip, editComment, deleteComment }) => {
 	const { editing, text, setText, startEditing, cancelEditing, saveEditing } = useCommentEditor({

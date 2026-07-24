@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-
 import { SidebarHeader } from "./SidebarHeader";
 import { SidebarFooter } from "./SidebarFooter";
 import { ItinerarySelector } from "../Itineraries/ItinerarySelector";
 import { ItineraryEditForm } from "../Itineraries/ItineraryEditForm";
-import { useItineraryActions } from "../../hooks/useItineraryActions";
+import { useItineraryActions } from "../../hooks/Itineraries/useItineraryActions";
 
 export const PlannerSidebar = ({
 	itineraries,

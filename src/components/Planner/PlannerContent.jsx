@@ -4,7 +4,7 @@ import { DayView } from "../Days/DayView";
 import { DayEditForm } from "../Days/DayEditForm";
 import { CreateActivityModal } from "../ui/Modals/CreateActivityModal";
 import { EditActivityModal } from "../ui/Modals/EditActivityModal";
-import { useDayActions } from "../../hooks/useDayActions";
+import { useDayActions } from "../../hooks/Days/useDayActions";
 
 export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip, onCreateDay }) => {
 	const [showEditDay, setShowEditDay] = useState(false);
