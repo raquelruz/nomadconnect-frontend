@@ -1,0 +1,2 @@
+export const navIconButtonClass =
+	"relative flex items-center justify-center w-10 h-10 rounded-full bg-text-primary/5 border border-border text-text-secondary backdrop-blur-md shadow-md transition-all duration-300 ease-out hover:bg-text-primary/10 hover:text-text-primary hover:shadow-lg active:scale-95";

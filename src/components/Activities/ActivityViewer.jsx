@@ -1,7 +1,20 @@
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
+import { useImageCarousel } from "../../hooks/useImageCarousel";
 
-export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentImage, onClose }) => {
+export const ActivityViewer = ({
+	isOpen,
+	images = [],
+	currentImage: initialImage,
+	setCurrentImage: setParentImage,
+	onClose,
+}) => {
+	const { currentImage, setCurrentImage, next, previous } = useImageCarousel(images, initialImage);
+
+	useEffect(() => {
+		setParentImage(currentImage);
+	}, [currentImage, setParentImage]);
+
 	useEffect(() => {
 		if (!isOpen) return;
 
@@ -9,14 +22,8 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 
 		const handleKeyDown = (event) => {
 			if (event.key === "Escape") onClose();
-
-			if (event.key === "ArrowRight") {
-				setCurrentImage((prev) => (prev + 1) % images.length);
-			}
-
-			if (event.key === "ArrowLeft") {
-				setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-			}
+			if (event.key === "ArrowRight") next();
+			if (event.key === "ArrowLeft") previous();
 		};
 
 		window.addEventListener("keydown", handleKeyDown);
@@ -25,7 +32,7 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 			document.body.style.overflow = "";
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [isOpen, images.length, onClose, setCurrentImage]);
+	}, [isOpen, onClose, next, previous]);
 
 	if (!isOpen || images.length === 0) return null;
 

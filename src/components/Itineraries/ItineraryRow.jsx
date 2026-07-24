@@ -1,7 +1,7 @@
 import { Map, ChevronDown, Plus } from "lucide-react";
 import { DaysList } from "../Days/DaysList";
 import { ItineraryActions } from "./ItineraryActions";
-import { useItineraryActions } from "../../hooks/useItineraryActions";
+import { useItineraryActions } from "../../hooks/Itineraries/useItineraryActions";
 
 export const ItineraryRow = ({
 	itinerary,
@@ -26,7 +26,7 @@ export const ItineraryRow = ({
 				<button className="flex min-w-0 flex-1 items-center gap-2" onClick={onSelect}>
 					<span
 						className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
-							isSelected ? "bg-primary-600 text-white" : "bg-slate-100 text-slate-500"
+							isSelected ? "bg-primary-600 text-white" : "bg-text-primary/5 text-text-primary/50"
 						}`}
 					>
 						<Map size={13} />
@@ -34,7 +34,7 @@ export const ItineraryRow = ({
 
 					<span
 						className={`truncate text-left text-sm font-semibold ${
-							isSelected ? "text-blue-700" : "text-slate-700"
+							isSelected ? "text-primary-400" : "text-text-primary/80"
 						}`}
 					>
 						{itinerary.title}
@@ -42,9 +42,7 @@ export const ItineraryRow = ({
 
 					<ChevronDown
 						size={14}
-						className={`ml-auto shrink-0 text-slate-400 transition-transform ${
-							isSelected ? "rotate-180" : ""
-						}`}
+						className={`ml-auto shrink-0 text-text-primary/40 transition-transform ${isSelected ? "rotate-180" : ""}`}
 					/>
 				</button>
 

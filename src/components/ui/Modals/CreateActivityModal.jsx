@@ -1,7 +1,7 @@
 import { Compass } from "lucide-react";
 import { ActivityForm } from "../../Activities/ActivityForm";
 import { ModalShell } from "./ModalShell";
-import { useCreateActivity } from "../../../hooks/useCreateActivity";
+import { useCreateActivity } from "../../../hooks/Activities/useCreateActivity";
 
 export const CreateActivityModal = ({ isOpen, dayId, dayDate, onCreated, onClose }) => {
 	const { form, handleChange, previews, handleImagesChange, handleRemoveImage, loading, handleSubmit, close } =

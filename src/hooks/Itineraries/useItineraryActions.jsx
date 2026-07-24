@@ -1,4 +1,4 @@
-import { useEntityActions } from "./useEntityActions";
+import { useEntityActions } from "../Shared/useEntityActions";
 
 export const useItineraryActions = ({ itinerary, refreshTrip }) => {
 	const { remove, update, loading } = useEntityActions({

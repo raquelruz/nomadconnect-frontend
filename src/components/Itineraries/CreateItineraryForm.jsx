@@ -1,9 +1,10 @@
+import { FormActions } from "../ui/FormActions";
+
 export const CreateItineraryForm = ({ form, loading, onChange, onSubmit, onCancel }) => {
 	return (
 		<form onSubmit={onSubmit} className="space-y-5 sm:space-y-6">
 			<div>
 				<label className="mb-2 block text-sm font-medium text-text-primary/80">Nombre</label>
-
 				<input
 					type="text"
 					name="title"
@@ -17,7 +18,6 @@ export const CreateItineraryForm = ({ form, loading, onChange, onSubmit, onCance
 
 			<div>
 				<label className="mb-2 block text-sm font-medium text-text-primary/80">Descripción</label>
-
 				<textarea
 					name="description"
 					value={form.description}
@@ -28,25 +28,13 @@ export const CreateItineraryForm = ({ form, loading, onChange, onSubmit, onCance
 				/>
 			</div>
 
-			<div className="flex justify-end gap-2">
-				{onCancel && (
-					<button
-						type="button"
-						onClick={onCancel}
-						className="rounded-xl px-4 py-2.5 text-sm font-semibold text-text-primary/60 transition hover:bg-text-primary/5"
-					>
-						Cancelar
-					</button>
-				)}
-
-				<button
-					type="submit"
-					disabled={loading}
-					className="w-full rounded-xl bg-primary-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm shadow-primary-600/30 transition hover:bg-primary-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100 sm:w-auto"
-				>
-					{loading ? "Creando..." : "Crear itinerario"}
-				</button>
-			</div>
+			<FormActions
+				onCancel={onCancel}
+				submitLabel="Crear itinerario"
+				loadingLabel="Creando..."
+				loading={loading}
+				fullWidthSubmit
+			/>
 		</form>
 	);
 };

@@ -1,8 +1,7 @@
-// src/components/Comments/CommentsSection.jsx
 import { MessageSquare } from "lucide-react";
 import { CommentForm } from "./CommentForm";
 import { CommentItem } from "./CommentItem";
-import { useComments } from "../../hooks/useComments";
+import { useComments } from "../../hooks/Comments/useComments";
 
 export const CommentsSection = ({ trip, user }) => {
 	const { loading, threadComments, createComment, editComment, deleteComment, replyComment } = useComments(trip.id);

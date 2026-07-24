@@ -1,7 +1,6 @@
-// src/pages/SettingsPage.jsx
 import { AtSign, Mail, User, UserRound } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
-import { useProfile } from "../hooks/useProfile";
+import { useProfile } from "../hooks/Profile/useProfile";
 import { EditableAccountField } from "../components/Settings/EditableAccountField";
 import { RoleBadge } from "../components/Profile/RoleBadge";
 import { Loading } from "../components/ui/Loading";

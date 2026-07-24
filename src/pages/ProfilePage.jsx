@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Camera, Loader } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
-import { useProfile } from "../hooks/useProfile";
+import { useProfile } from "../hooks/Profile/useProfile";
 import { UserAvatar } from "../components/ui/UserAvatar";
 import { ProfileBio } from "../components/Profile/ProfileBio";
 import { ProfileStats } from "../components/Profile/ProfileStats";

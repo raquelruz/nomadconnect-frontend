@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
-
 import { SidebarHeader } from "./SidebarHeader";
 import { SidebarFooter } from "./SidebarFooter";
 import { ItinerarySelector } from "../Itineraries/ItinerarySelector";
 import { ItineraryEditForm } from "../Itineraries/ItineraryEditForm";
-import { useItineraryActions } from "../../hooks/useItineraryActions";
+import { ModalOverlay } from "../ui/ModalOverlay";
+import { useItineraryActions } from "../../hooks/Itineraries/useItineraryActions";
 
 export const PlannerSidebar = ({
 	itineraries,
@@ -16,7 +16,7 @@ export const PlannerSidebar = ({
 	isOwner,
 	onAddItinerary,
 	refreshTrip,
-	onCreateDay
+	onCreateDay,
 }) => {
 	const [editingItinerary, setEditingItinerary] = useState(null);
 
@@ -47,14 +47,14 @@ export const PlannerSidebar = ({
 
 			{editingItinerary &&
 				createPortal(
-					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+					<ModalOverlay>
 						<ItineraryEditForm
 							itinerary={editingItinerary}
 							updateItinerary={updateItinerary}
 							loading={loading}
 							onClose={() => setEditingItinerary(null)}
 						/>
-					</div>,
+					</ModalOverlay>,
 					document.body,
 				)}
 		</aside>

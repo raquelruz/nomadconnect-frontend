@@ -4,10 +4,11 @@ import { Link, NavLink as RouterNavLink } from "react-router-dom";
 import { FaHome, FaSearch, FaRegUser, FaRegCompass, FaCog } from "react-icons/fa";
 import { MdCardTravel } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
-import { ThemeButton } from "./Buttons/ThemeButton";
+import { ThemeButton } from "./ui/Buttons/ThemeButton";
 import { MobileMenu } from "./MobileMenu";
-import { LogoutButton } from "./Buttons/LogoutButton";
+import { LogoutButton } from "./ui/Buttons/LogoutButton";
 import { NotificationButton } from "./Notifications/NotificationButton";
+import { navIconButtonClass } from "./ui/Buttons/navIconButtonsStyles";
 
 export const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -34,11 +35,11 @@ export const Navbar = () => {
 	}, [logout, closeMenu]);
 
 	return (
-		<nav className="sticky top-0 z-50 bg-bg-primary backdrop-blur-md shadow-lg border-b border-border">
+		<nav className="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-md shadow-lg border-b border-border">
 			<div className="max-w-7xl mx-auto px-4 md:px-8">
 				<div className="flex items-center justify-between py-4 md:py-5">
 					<Link to="/" className="flex items-center gap-3 shrink-0 group">
-						<div className="w-10 h-10 rounded-xl flex items-center justify-center text-text-primary shadow-lg transition-all duration-300 group-hover:scale-105 bg-linear-to-br from-primary-600 to-primary-400">
+						<div className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md shadow-primary-600/30 transition-all duration-300 group-hover:scale-105 bg-linear-to-br from-primary-600 to-primary-400">
 							<FaRegCompass className="text-xl" />
 						</div>
 						<div className="flex flex-col leading-tight">
@@ -55,14 +56,14 @@ export const Navbar = () => {
 								key={link.path}
 								to={link.path}
 								className={({ isActive }) =>
-									`relative px-3 py-2 text-sm font-medium flex items-center gap-1.5 group ${isActive ? "text-primary" : "text-text-primary"}`
+									`relative px-3 py-2 text-sm font-medium flex items-center gap-1.5 group ${isActive ? "text-primary-500" : "text-text-secondary hover:text-text-primary"}`
 								}
 							>
 								<span className="text-base opacity-70 group-hover:opacity-100 transition-opacity">
 									{link.icon}
 								</span>
 								<span>{link.label}</span>
-								<span className="absolute left-3 right-3 -bottom-0.5 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left bg-text-primary" />
+								<span className="absolute left-3 right-3 -bottom-0.5 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left bg-primary-500" />
 							</RouterNavLink>
 						))}
 					</div>
@@ -90,7 +91,7 @@ export const Navbar = () => {
 								to="/settings"
 								title="Ajustes de la cuenta"
 								aria-label="Ajustes de la cuenta"
-								className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 text-text-secondary backdrop-blur-md shadow-md transition-all duration-300 ease-out hover:bg-white/10 hover:text-text-primary hover:shadow-lg active:scale-95"
+								className={`hidden md:flex ${navIconButtonClass}`}
 							>
 								<FaCog className="text-base" />
 							</Link>

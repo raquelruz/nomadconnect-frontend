@@ -94,7 +94,7 @@ export const MyTripsPage = () => {
 						)}
 
 						{error && (
-							<div className="flex items-center gap-2 rounded-xl border border-error/30 bg-error/10 text-error px-4 py-3 text-sm mb-6">
+							<div className="flex items-center gap-2 rounded-xl border border-error-500/30 bg-error-500/10 text-error-500 px-4 py-3 text-sm mb-6">
 								<FaExclamationCircle className="shrink-0" />
 								{error}
 							</div>
