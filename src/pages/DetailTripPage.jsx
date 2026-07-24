@@ -13,7 +13,8 @@ import { PlannerContent } from "../components/Planner/PlannerContent";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
-import { TaskChecklist } from "../components/Tasks/TaskChecklistModal";
+import { TaskChecklist } from "../components/Tasks/TaskChecklist";
+import { useTripMembers } from "../hooks/useTripMembers";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -82,6 +83,8 @@ export const DetailTripPage = () => {
 		setSelectedDay(refreshed);
 	}, [selectedItinerary]);
 
+	const { isOwner, isMember } = useTripMembers(trip, user, getTrip);
+
 	if (loading) {
 		return <Loading message="Cargando viaje..." />;
 	}
@@ -108,7 +111,6 @@ export const DetailTripPage = () => {
 		);
 	}
 
-	const isOwner = trip.owner?.id === user?.id;
 	const itineraries = trip.itineraries || [];
 
 	return (
@@ -157,6 +159,7 @@ export const DetailTripPage = () => {
 
 					<section>
 						<TaskChecklist trip={trip} user={user} isOwner={isOwner} />
+
 					</section>
 
 					<MembersList trip={trip} />

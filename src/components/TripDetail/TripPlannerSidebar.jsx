@@ -8,6 +8,7 @@ export const TripPlannerSidebar = ({
 	selectedDay,
 	setSelectedDay,
 	isOwner,
+	isMember,
 	refreshTrip,
 	mobileOpen,
 	setMobileOpen,
@@ -33,6 +34,7 @@ export const TripPlannerSidebar = ({
 					setSelectedDay={setSelectedDay}
 					refreshTrip={refreshTrip}
 					isOwner={isOwner}
+					isMember={isMember}
 					onClose={() => setMobileOpen(false)}
 					onAddItinerary={onAddItinerary}
 					onCreateDay={onCreateDay}
