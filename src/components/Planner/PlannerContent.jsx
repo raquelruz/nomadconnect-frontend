@@ -4,6 +4,7 @@ import { DayView } from "../Days/DayView";
 import { DayEditForm } from "../Days/DayEditForm";
 import { CreateActivityModal } from "../ui/Modals/CreateActivityModal";
 import { EditActivityModal } from "../ui/Modals/EditActivityModal";
+import { ModalOverlay } from "../ui/ModalOverlay";
 import { useDayActions } from "../../hooks/Days/useDayActions";
 
 export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip, onCreateDay }) => {
@@ -64,14 +65,14 @@ export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip, o
 			/>
 
 			{showEditDay && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+				<ModalOverlay>
 					<DayEditForm
 						day={selectedDay}
 						updateDay={updateDay}
 						loading={loading}
 						onClose={() => setShowEditDay(false)}
 					/>
-				</div>
+				</ModalOverlay>
 			)}
 
 			<CreateActivityModal
