@@ -1,5 +1,4 @@
-// src/components/Itineraries/ItineraryRow.jsx
-import { Map, ChevronDown } from "lucide-react";
+import { Map, ChevronDown, Plus } from "lucide-react";
 import { DaysList } from "../Days/DaysList";
 import { ItineraryActions } from "./ItineraryActions";
 import { useItineraryActions } from "../../hooks/useItineraryActions";
@@ -13,6 +12,7 @@ export const ItineraryRow = ({
 	isOwner,
 	refreshTrip,
 	onEdit,
+	onCreateDay,
 }) => {
 	const { deleteItinerary, loading } = useItineraryActions({ itinerary, refreshTrip });
 
@@ -54,8 +54,20 @@ export const ItineraryRow = ({
 			</div>
 
 			{isSelected && (
-				<div className="pb-2 pl-4 pr-4" >
+				<div className="pb-2 pl-4 pr-4">
 					<DaysList days={itinerary.days} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+				</div>
+			)}
+
+			{isOwner && (
+				<div className="px-4 pb-3">
+					<button
+						onClick={() => onCreateDay?.(itinerary)}
+						className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-primary-200 bg-primary-50/40 py-2 text-xs font-semibold text-primary-600 transition hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
+					>
+						<Plus size={13} />
+						Crear día
+					</button>
 				</div>
 			)}
 		</div>

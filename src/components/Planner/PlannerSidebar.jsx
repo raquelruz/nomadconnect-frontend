@@ -16,6 +16,7 @@ export const PlannerSidebar = ({
 	isOwner,
 	onAddItinerary,
 	refreshTrip,
+	onCreateDay
 }) => {
 	const [editingItinerary, setEditingItinerary] = useState(null);
 
@@ -38,6 +39,7 @@ export const PlannerSidebar = ({
 					isOwner={isOwner}
 					refreshTrip={refreshTrip}
 					onEditItinerary={setEditingItinerary}
+					onCreateDay={onCreateDay}
 				/>
 			</div>
 

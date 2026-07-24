@@ -139,6 +139,7 @@ export const DetailTripPage = () => {
 					isOwner={isOwner}
 					onClose={() => setMobileSidebarOpen(false)}
 					onAddItinerary={() => setShowCreateItinerary(true)}
+					onCreateDay={() => setShowCreateDay(true)}
 				/>
 			</aside>
 
