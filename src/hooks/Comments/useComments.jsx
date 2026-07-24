@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import api from "../../api"
+import api from "../../api";
 
 export const useComments = (tripId) => {
 	const [comments, setComments] = useState([]);
@@ -8,9 +8,7 @@ export const useComments = (tripId) => {
 	const getComments = useCallback(async () => {
 		try {
 			setLoading(true);
-
 			const { data } = await api.get(`/comments/trip/${tripId}`);
-
 			setComments(data);
 		} catch (error) {
 			console.error(error);
@@ -20,97 +18,42 @@ export const useComments = (tripId) => {
 	}, [tripId]);
 
 	useEffect(() => {
-		if (!tripId) {
-			return;
-		}
-
+		if (!tripId) return;
 		getComments();
 	}, [tripId, getComments]);
 
-	const createComment = async (text) => {
+	const runAndRefresh = async (request) => {
 		try {
-			await api.post("/comments", {
-				text,
-				targetId: tripId,
-				targetModel: "trips",
-			});
-
+			await request();
 			getComments();
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
-	const replyComment = async (text, parentComment) => {
-		try {
-			await api.post("/comments", {
-				text,
-				targetId: tripId,
-				targetModel: "trips",
-				parentComment,
-			});
+	const createComment = (text) =>
+		runAndRefresh(() => api.post("/comments", { text, targetId: tripId, targetModel: "trips" }));
 
-			getComments();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+	const replyComment = (text, parentComment) =>
+		runAndRefresh(() => api.post("/comments", { text, targetId: tripId, targetModel: "trips", parentComment }));
 
-	const editComment = async (commentId, text) => {
-		try {
-			await api.put(`/comments/${commentId}`, {
-				text,
-			});
+	const editComment = (commentId, text) => runAndRefresh(() => api.put(`/comments/${commentId}`, { text }));
 
-			getComments();
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
-	const deleteComment = async (commentId) => {
-		try {
-			await api.delete(`/comments/${commentId}`);
-
-			getComments();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+	const deleteComment = (commentId) => runAndRefresh(() => api.delete(`/comments/${commentId}`));
 
 	const threadComments = useMemo(() => {
 		const parents = comments.filter((comment) => !comment.parentComment);
 
 		return parents.map((comment) => {
 			const replies = comments.filter((reply) => {
-				if (!reply.parentComment) {
-					return false;
-				}
-
-				let parentId = reply.parentComment;
-
-				if (typeof parentId === "object") {
-					parentId = parentId.id;
-				}
-
+				if (!reply.parentComment) return false;
+				const parentId = typeof reply.parentComment === "object" ? reply.parentComment.id : reply.parentComment;
 				return parentId === comment.id;
 			});
 
-			return {
-				...comment,
-				replies,
-			};
+			return { ...comment, replies };
 		});
 	}, [comments]);
 
-	return {
-		loading,
-		comments,
-		threadComments,
-		getComments,
-		createComment,
-		replyComment,
-		editComment,
-		deleteComment,
-	};
+	return { loading, comments, threadComments, getComments, createComment, replyComment, editComment, deleteComment };
 };
