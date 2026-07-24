@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
-
 import { useNotifications } from "../../hooks/useNotifications";
 import { NotificationDropdown } from "./NotificationDropdown";
+import { navIconButtonClass } from "../ui/Buttons/navIconButtonsStyles";
 
 export const NotificationButton = () => {
 	const [open, setOpen] = useState(false);
@@ -50,7 +50,7 @@ export const NotificationButton = () => {
 				aria-label="Notificaciones"
 				aria-haspopup="true"
 				aria-expanded={open}
-				className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 text-text-secondary backdrop-blur-md shadow-md transition-all duration-300 hover:bg-white/10 hover:text-text-primary hover:shadow-lg active:scale-95"
+				className={navIconButtonClass}
 			>
 				<Bell size={18} />
 

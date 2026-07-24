@@ -4,10 +4,11 @@ import { Link, NavLink as RouterNavLink } from "react-router-dom";
 import { FaHome, FaSearch, FaRegUser, FaRegCompass, FaCog } from "react-icons/fa";
 import { MdCardTravel } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
-import { ThemeButton } from "./Buttons/ThemeButton";
+import { ThemeButton } from "./ui/Buttons/ThemeButton";
 import { MobileMenu } from "./MobileMenu";
-import { LogoutButton } from "./Buttons/LogoutButton";
+import { LogoutButton } from "./ui/Buttons/LogoutButton";
 import { NotificationButton } from "./Notifications/NotificationButton";
+import { navIconButtonClass } from "./ui/Buttons/navIconButtonsStyles";
 
 export const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +35,7 @@ export const Navbar = () => {
 	}, [logout, closeMenu]);
 
 	return (
-		<nav className="sticky top-0 z-50 bg-bg-primary backdrop-blur-md shadow-lg border-b border-border">
+		<nav className="sticky top-0 z-50 bg-bg-primary/80 backdrop-blur-md shadow-lg border-b border-border">
 			<div className="max-w-7xl mx-auto px-4 md:px-8">
 				<div className="flex items-center justify-between py-4 md:py-5">
 					<Link to="/" className="flex items-center gap-3 shrink-0 group">
@@ -90,7 +91,7 @@ export const Navbar = () => {
 								to="/settings"
 								title="Ajustes de la cuenta"
 								aria-label="Ajustes de la cuenta"
-								className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-text-primary/5 border border-border text-text-secondary backdrop-blur-md shadow-md transition-all duration-300 ease-out hover:bg-text-primary/10 hover:text-text-primary hover:shadow-lg active:scale-95"
+								className={`hidden md:flex ${navIconButtonClass}`}
 							>
 								<FaCog className="text-base" />
 							</Link>

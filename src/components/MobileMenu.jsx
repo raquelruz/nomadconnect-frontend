@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { LogoutButton } from "./Buttons/LogoutButton";
+import { LogoutButton } from "./ui/Buttons/LogoutButton";
 
 export const MobileMenu = ({ links, closeMenu, user, handleLogout }) => {
     return (
