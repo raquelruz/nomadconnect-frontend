@@ -10,11 +10,11 @@ export const useEntityActions = ({ resource, id, onSuccess }) => {
 
 			const response = await request();
 
-			onSuccess?.();
+			onSuccess?.(response?.data);
 
 			return response?.data;
 		} catch (error) {
-			console.error(`Error in ${resource}/${id}:`, error);
+			console.error(`Error in ${resource}/${id ?? ""}:`, error);
 		} finally {
 			setLoading(false);
 		}
@@ -24,5 +24,7 @@ export const useEntityActions = ({ resource, id, onSuccess }) => {
 
 	const update = (data) => run(() => api.put(`/${resource}/${id}`, data));
 
-	return { remove, update, loading };
+	const create = (parentId, data) => run(() => api.post(`/${resource}/${parentId}`, data));
+
+	return { remove, update, create, loading };
 };
