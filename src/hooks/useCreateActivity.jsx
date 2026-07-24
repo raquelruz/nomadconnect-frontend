@@ -56,15 +56,5 @@ export const useCreateActivity = ({ dayId, dayDate, onCreated, onClose }) => {
 		}
 	};
 
-	return {
-		form,
-		handleChange,
-		images,
-		previews,
-		handleImagesChange,
-		handleRemoveImage,
-		loading,
-		handleSubmit,
-		close,
-	};
+	return { form, handleChange, images, previews, handleImagesChange, handleRemoveImage, loading, handleSubmit, close };
 };

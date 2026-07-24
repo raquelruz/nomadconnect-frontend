@@ -3,8 +3,8 @@ import { ActivityCard } from "./ActivityCard";
 export const ActivityList = ({ activities, isOwner, refreshDay, onEditActivity }) => {
 	if (!activities || activities.length === 0) {
 		return (
-			<div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-10 text-center">
-				<p className="text-sm text-slate-400">Todavía no hay actividades para este día.</p>
+			<div className="rounded-2xl border border-dashed border-slate-200 bg-bg-card py-10 text-center">
+				<p className="text-sm text-text-primary">Todavía no hay actividades para este día.</p>
 			</div>
 		);
 	}
