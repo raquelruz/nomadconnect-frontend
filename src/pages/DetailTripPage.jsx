@@ -16,6 +16,7 @@ import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
 
 import { CreateItineraryModal } from "../components/ui/Modals/CreateItineraryModal";
+import { CreateDayModal } from "../components/ui/Modals/CreateDayModal";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -30,6 +31,7 @@ export const DetailTripPage = () => {
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	const [showCreateItinerary, setShowCreateItinerary] = useState(false);
+	const [showCreateDay, setShowCreateDay] = useState(false);
 
 	const getTrip = async () => {
 		try {
@@ -167,6 +169,18 @@ export const DetailTripPage = () => {
 						</div>
 					)}
 
+					{isOwner && showCreateDay && (
+						<CreateDayModal
+							isOpen={showCreateDay}
+							itineraryId={selectedItinerary?.id}
+							onClose={() => setShowCreateDay(false)}
+							onCreated={() => {
+								setShowCreateDay(false);
+								getTrip();
+							}}
+						/>
+					)}
+
 					<section className="mt-8 sm:mt-10">
 						<PlannerContent
 							itinerary={selectedItinerary}
@@ -175,6 +189,7 @@ export const DetailTripPage = () => {
 							refreshTrip={getTrip}
 							tripImage={trip.image}
 							tripLocation={`${trip.city}, ${trip.country}`}
+							onCreateDay={() => setShowCreateDay(true)}
 						/>
 					</section>
 

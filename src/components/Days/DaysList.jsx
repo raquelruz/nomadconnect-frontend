@@ -1,4 +1,3 @@
-// src/components/Days/DaysList.jsx
 export const DaysList = ({ days, selectedDay, setSelectedDay }) => {
 	if (!days || days.length === 0) {
 		return <p className="px-3 py-2 text-xs text-slate-400">No hay días creados</p>;
