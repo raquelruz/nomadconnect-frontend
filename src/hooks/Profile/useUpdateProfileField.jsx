@@ -3,18 +3,24 @@ import api from "../../api";
 
 export const useUpdateProfileField = (profile, onUpdated) => {
 	const [saving, setSaving] = useState(false);
+	const [error, setError] = useState(null);
 
-	const updateField = async (field, value) => {
+	const updateField = (field, value) => {
 		setSaving(true);
-		try {
-			const response = await api
-				.put(`/users/${profile.id}`, { ...profile, [field]: value });
-			onUpdated(response.data);
-			return response.data;
-		} finally {
-			return setSaving(false);
-		}
+		setError(null);
+
+		return api
+			.put(`/users/${profile.id}`, { ...profile, [field]: value })
+			.then((response) => {
+				onUpdated(response.data);
+				return response.data;
+			})
+			.catch((err) => {
+				setError(err.response?.data?.message || "No se pudo guardar el cambio");
+				throw err;
+			})
+			.finally(() => setSaving(false));
 	};
 
-	return { updateField, saving };
+	return { updateField, saving, error };
 };

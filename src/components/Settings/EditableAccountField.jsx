@@ -1,31 +1,22 @@
 import { useState } from "react";
 import { Pencil, Check, X } from "lucide-react";
-import api from "../../api";
+import { useUpdateProfileField } from "../../hooks/Profile/useUpdateProfileField";
 
 export const EditableAccountField = ({ profile, field, label, icon: Icon, onUpdated }) => {
 	const [editing, setEditing] = useState(false);
 	const [draft, setDraft] = useState(profile[field] || "");
-	const [saving, setSaving] = useState(false);
-	const [fieldError, setFieldError] = useState(null);
+	const { updateField, saving, error: fieldError } = useUpdateProfileField(profile, onUpdated);
 
 	const handleSave = () => {
-		setSaving(true);
-		setFieldError(null);
-
-		api.put(`/users/${profile.id}`, { ...profile, [field]: draft })
-			.then((response) => {
-				onUpdated(response.data);
-				setEditing(false);
-			})
-			.catch((error) => {
-				setFieldError(error.response?.data?.message || "Ese valor ya está en uso");
-			})
-			.finally(() => setSaving(false));
+		updateField(field, draft)
+			.then(() => setEditing(false))
+			.catch(() => {
+				// el error ya queda expuesto vía fieldError; no cerramos el modo edición
+			});
 	};
 
 	const handleCancel = () => {
 		setDraft(profile[field] || "");
-		setFieldError(null);
 		setEditing(false);
 	};
 

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { CalendarPlus, X } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
 import api from "../../../api";
 import { CreateDayForm } from "../../Days/CreateDayForm";
+import { ModalShell } from "./ModalShell";
 
 export const CreateDayModal = ({ isOpen, itineraryId, onCreated, onClose }) => {
 	const emptyForm = {
@@ -55,39 +56,8 @@ export const CreateDayModal = ({ isOpen, itineraryId, onCreated, onClose }) => {
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-			<div className="w-full max-w-md rounded-2xl bg-bg-card">
-				<div className="flex items-center justify-between border-b border-text-primary/10 p-6">
-					<div className="flex items-center gap-3">
-						<div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
-							<CalendarPlus size={20} />
-						</div>
-
-						<div>
-							<h2 className="text-lg font-bold text-text-primary">Nuevo día</h2>
-							<p className="text-sm text-text-primary/60">Añade un día a este itinerario.</p>
-						</div>
-					</div>
-
-					<button
-						type="button"
-						onClick={handleClose}
-						className="flex h-9 w-9 items-center justify-center rounded-full text-text-primary/50 transition hover:bg-text-primary/5 hover:text-text-primary"
-					>
-						<X size={18} />
-					</button>
-				</div>
-
-				<div className="p-6">
-					<CreateDayForm
-						form={form}
-						loading={loading}
-						onChange={handleChange}
-						onSubmit={handleSubmit}
-						onCancel={handleClose}
-					/>
-				</div>
-			</div>
-		</div>
+		<ModalShell icon={CalendarPlus} title="Nuevo día" description="Añade un día a este itinerario." onClose={handleClose}>
+			<CreateDayForm form={form} loading={loading} onChange={handleChange} onSubmit={handleSubmit} onCancel={handleClose} />
+		</ModalShell>
 	);
 };
