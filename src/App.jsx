@@ -17,7 +17,7 @@ export const App = () => {
 		<>
 			<Navbar />
 
-			<main>
+			<main className="bg-bg-primary">
 				<Routes>
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/register" element={<RegisterPage />} />
