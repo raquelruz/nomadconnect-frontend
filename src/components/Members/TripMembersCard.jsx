@@ -1,39 +1,12 @@
 import { Users, UserPlus, Crown } from "lucide-react";
-import api from "../../api";
+import { useTripMembers } from "../../hooks/useTripMembers";
 
 export const TripMembersCard = ({ trip, user, refreshTrip }) => {
-	const isOwner = trip.owner?.id === user?.id || trip.owner?._id === user?.id;
-
-	const isMember = trip.members?.some((member) => member.id === user?.id || member._id === user?.id);
-
-	const canJoin = user && !isOwner && !isMember && trip.visibility === "public";
-
-	const canLeave = user && isMember;
-
-	const handleJoin = async () => {
-		try {
-			await api.post(`/trips/${trip.id}/join`);
-			refreshTrip();
-		} catch (error) {
-			console.error(error);
-		}
-	};
-
-	const handleLeave = async () => {
-		try {
-			await api.delete(`/trips/${trip.id}/leave`);
-			refreshTrip();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+	const { isOwner, canJoin, canLeave, loading, joinTrip, leaveTrip } = useTripMembers(trip, user, refreshTrip);
 
 	const members = trip.members || [];
-
 	const totalMembers = members.length + 1;
-
 	const maxMembers = trip.maxMembers || null;
-
 	const availablePlaces = maxMembers ? maxMembers - totalMembers : null;
 
 	return (
@@ -45,7 +18,6 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 
 				<div>
 					<p className="text-xs font-bold uppercase tracking-wide text-text-primary/40">Participantes</p>
-
 					<p className="text-xl font-bold text-text-primary">
 						{totalMembers}
 						{maxMembers && <span className="text-text-primary/40"> / {maxMembers}</span>}
@@ -85,20 +57,22 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 			<div className="mt-5">
 				{canJoin && (
 					<button
-						onClick={handleJoin}
-						className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-primary-600/30 transition hover:bg-primary-700 active:scale-[0.98]"
+						onClick={joinTrip}
+						disabled={loading}
+						className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-primary-600/30 transition hover:bg-primary-700 active:scale-[0.98] disabled:opacity-50"
 					>
 						<UserPlus size={18} />
-						Unirme al viaje
+						{loading ? "Uniéndote..." : "Unirme al viaje"}
 					</button>
 				)}
 
 				{canLeave && (
 					<button
-						onClick={handleLeave}
-						className="w-full rounded-xl border border-red-500/25 px-4 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/10"
+						onClick={leaveTrip}
+						disabled={loading}
+						className="w-full rounded-xl border border-red-500/25 px-4 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/10 disabled:opacity-50"
 					>
-						Abandonar viaje
+						{loading ? "Abandonando..." : "Abandonar viaje"}
 					</button>
 				)}
 
