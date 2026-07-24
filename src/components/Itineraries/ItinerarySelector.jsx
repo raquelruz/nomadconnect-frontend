@@ -12,7 +12,7 @@ export const ItinerarySelector = ({
 	onCreateDay,
 }) => {
 	if (!itineraries || itineraries.length === 0) {
-		return <p className="text-sm text-slate-500">No hay itinerarios.</p>;
+		return <p className="text-sm text-text-primary/50">No hay itinerarios.</p>;
 	}
 
 	return (

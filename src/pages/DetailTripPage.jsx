@@ -4,7 +4,6 @@ import { Menu } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
 
-import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
 import { MembersList } from "../components/Members/MembersList";
@@ -102,7 +101,7 @@ export const DetailTripPage = () => {
 				action={
 					<Link
 						to="/trips"
-						className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-white transition hover:bg-slate-700"
+						className="inline-flex items-center justify-center rounded-xl bg-primary-600 px-5 py-2.5 text-white transition hover:bg-primary-700"
 					>
 						Volver a viajes
 					</Link>
@@ -115,19 +114,13 @@ export const DetailTripPage = () => {
 	const itineraries = trip.itineraries || [];
 
 	return (
-		<div className="flex min-h-screen bg-slate-50">
+		<div className="flex min-h-screen bg-bg-card/95">
 			{mobileSidebarOpen && (
 				<div onClick={() => setMobileSidebarOpen(false)} className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
 			)}
 
 			<aside
-				className={`
-		fixed inset-y-0 left-0 z-50 w-72
-		border-r border-slate-200 bg-white
-		transition-transform duration-300
-		lg:sticky lg:top-22 lg:z-40 lg:h-[calc(100vh-88px)] lg:w-60 lg:shrink-0 lg:translate-x-0
-		${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-	`}
+				className={` fixed inset-y-0 left-0 z-50 w-72 border-r border-text-primary/10 bg-bg-card transition-transform duration-300 lg:sticky lg:top-22 lg:z-40 lg:h-[calc(100vh-88px)] lg:w-60 lg:shrink-0 lg:translate-x-0 ${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
 			>
 				<PlannerSidebar
 					itineraries={itineraries}
@@ -145,7 +138,7 @@ export const DetailTripPage = () => {
 
 			<button
 				onClick={() => setMobileSidebarOpen(true)}
-				className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700 lg:hidden"
+				className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-primary-600 text-white shadow-lg transition hover:bg-primary-700 lg:hidden"
 				title="Ver itinerario"
 			>
 				<Menu size={22} />
@@ -193,8 +186,6 @@ export const DetailTripPage = () => {
 							onCreateDay={() => setShowCreateDay(true)}
 						/>
 					</section>
-
-					<TripStats trip={trip} />
 
 					<MembersList trip={trip} />
 

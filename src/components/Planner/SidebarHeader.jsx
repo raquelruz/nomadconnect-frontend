@@ -11,7 +11,7 @@ export const SidebarHeader = ({ isOwner, onAddItinerary }) => {
 				<button
 					onClick={onAddItinerary}
 					title="Nuevo itinerario"
-					className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-primary-600 transition hover:bg-primary-100"
+					className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-white transition hover:bg-primary-100"
 				>
 					<Plus size={16} />
 				</button>

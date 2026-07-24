@@ -19,7 +19,7 @@ export const ItineraryRow = ({
 	return (
 		<div
 			className={`rounded-xl border transition ${
-				isSelected ? "border-blue-100 bg-blue-50/60" : "border-transparent"
+				isSelected ? "border-primary-500/25 bg-primary-500/10" : "border-transparent"
 			}`}
 		>
 			<div className="flex items-center gap-2 p-2">
@@ -63,7 +63,7 @@ export const ItineraryRow = ({
 				<div className="px-4 pb-3">
 					<button
 						onClick={() => onCreateDay?.(itinerary)}
-						className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-primary-200 bg-primary-50/40 py-2 text-xs font-semibold text-primary-600 transition hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700"
+						className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-primary-500/25 bg-primary-500/10 py-2 text-xs font-semibold text-primary-400 transition hover:border-primary-500/40 hover:bg-primary-500/15 hover:text-primary-300"
 					>
 						<Plus size={13} />
 						Crear día
