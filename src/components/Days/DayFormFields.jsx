@@ -11,6 +11,7 @@ export const DayFormFields = ({ title, date, onTitleChange, onDateChange }) => {
 
 				<input
 					type="text"
+					name="title"
 					value={title}
 					onChange={onTitleChange}
 					placeholder="Ej. Llegada y check-in"
@@ -26,6 +27,7 @@ export const DayFormFields = ({ title, date, onTitleChange, onDateChange }) => {
 
 				<input
 					type="date"
+					name="date"
 					value={date}
 					onChange={onDateChange}
 					required
