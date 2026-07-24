@@ -1,23 +1,22 @@
 import { UserAvatar } from "../ui/UserAvatar";
 
-export const CommentCard = ({ user, reply = false, children }) => {
-	const classes = ["rounded-xl border p-4"];
-
-	if (reply) {
-		classes.push("border-blue-100 bg-blue-50");
-	}
-
-	if (!reply) {
-		classes.push("border-slate-200 bg-slate-50");
-	}
-
+export const CommentCard = ({ user, date, reply = false, children }) => {
 	return (
-		<div className={classes.join(" ")}>
+		<div
+			className={`rounded-2xl p-4 transition ${
+				reply
+					? "border-l-2 border-primary-300 bg-primary-500/3 pl-4"
+					: "border border-text-primary/10 bg-bg-card"
+			}`}
+		>
 			<div className="flex gap-3">
 				<UserAvatar user={user} />
 
-				<div className="flex-1">
-					<p className="font-semibold text-slate-800">{user?.username}</p>
+				<div className="min-w-0 flex-1">
+					<div className="flex items-baseline gap-2">
+						<p className="truncate font-semibold text-text-primary">{user?.username}</p>
+						<span className="shrink-0 text-xs text-text-primary/40">{date}</span>
+					</div>
 
 					{children}
 				</div>

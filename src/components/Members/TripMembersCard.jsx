@@ -1,4 +1,4 @@
-import { Users, UserPlus } from "lucide-react";
+import { Users, UserPlus, Crown } from "lucide-react";
 import api from "../../api";
 
 export const TripMembersCard = ({ trip, user, refreshTrip }) => {
@@ -37,21 +37,19 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 	const availablePlaces = maxMembers ? maxMembers - totalMembers : null;
 
 	return (
-		<div className="rounded-2xl border border-blue-100 bg-blue-50 p-5">
-			<div className="flex items-center justify-between">
-				<div className="flex items-center gap-3">
-					<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
-						<Users size={18} />
-					</div>
+		<div className="rounded-2xl border border-primary-500/15 bg-primary-500/4 p-5">
+			<div className="flex items-center gap-3">
+				<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm shadow-primary-600/30">
+					<Users size={18} />
+				</div>
 
-					<div>
-						<p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Participantes</p>
+				<div>
+					<p className="text-xs font-bold uppercase tracking-wide text-text-primary/40">Participantes</p>
 
-						<p className="text-xl font-bold text-slate-900">
-							{totalMembers}
-							{maxMembers && ` / ${maxMembers}`}
-						</p>
-					</div>
+					<p className="text-xl font-bold text-text-primary">
+						{totalMembers}
+						{maxMembers && <span className="text-text-primary/40"> / {maxMembers}</span>}
+					</p>
 				</div>
 			</div>
 
@@ -60,7 +58,7 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 					<img
 						src={trip.owner.avatar}
 						alt={trip.owner.username}
-						className="h-9 w-9 rounded-full border-2 border-white object-cover"
+						className="h-9 w-9 rounded-full object-cover ring-2 ring-bg-card"
 					/>
 
 					{members.slice(0, 4).map((member) => (
@@ -68,19 +66,19 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 							key={member.id || member._id}
 							src={member.avatar}
 							alt={member.username}
-							className="h-9 w-9 rounded-full border-2 border-white object-cover"
+							className="h-9 w-9 rounded-full object-cover ring-2 ring-bg-card"
 						/>
 					))}
 
 					{members.length > 4 && (
-						<div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-slate-200 text-xs font-semibold text-slate-600">
+						<div className="flex h-9 w-9 items-center justify-center rounded-full bg-text-primary/10 text-xs font-semibold text-text-primary/70 ring-2 ring-bg-card">
 							+{members.length - 4}
 						</div>
 					)}
 				</div>
 
 				{availablePlaces !== null && (
-					<p className="text-xs font-medium text-slate-500">{availablePlaces} plazas libres</p>
+					<p className="text-xs font-medium text-text-primary/50">{availablePlaces} plazas libres</p>
 				)}
 			</div>
 
@@ -88,7 +86,7 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 				{canJoin && (
 					<button
 						onClick={handleJoin}
-						className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700"
+						className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-primary-600/30 transition hover:bg-primary-700 active:scale-[0.98]"
 					>
 						<UserPlus size={18} />
 						Unirme al viaje
@@ -98,14 +96,15 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 				{canLeave && (
 					<button
 						onClick={handleLeave}
-						className="w-full rounded-xl border border-red-300 bg-white px-4 py-3 font-semibold text-red-600 transition hover:bg-red-50"
+						className="w-full rounded-xl border border-red-500/25 px-4 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/10"
 					>
 						Abandonar viaje
 					</button>
 				)}
 
 				{isOwner && (
-					<div className="rounded-xl bg-white px-4 py-3 text-center text-sm font-semibold text-blue-700">
+					<div className="flex items-center justify-center gap-1.5 rounded-xl bg-bg-card px-4 py-3 text-sm font-semibold text-primary-400">
+						<Crown size={15} />
 						Eres el organizador
 					</div>
 				)}

@@ -1,5 +1,4 @@
-// src/components/Itineraries/ItineraryRow.jsx
-import { Map, ChevronDown } from "lucide-react";
+import { Map, ChevronDown, Plus } from "lucide-react";
 import { DaysList } from "../Days/DaysList";
 import { ItineraryActions } from "./ItineraryActions";
 import { useItineraryActions } from "../../hooks/useItineraryActions";
@@ -13,13 +12,14 @@ export const ItineraryRow = ({
 	isOwner,
 	refreshTrip,
 	onEdit,
+	onCreateDay,
 }) => {
 	const { deleteItinerary, loading } = useItineraryActions({ itinerary, refreshTrip });
 
 	return (
 		<div
 			className={`rounded-xl border transition ${
-				isSelected ? "border-blue-100 bg-blue-50/60" : "border-transparent"
+				isSelected ? "border-primary-500/25 bg-primary-500/10" : "border-transparent"
 			}`}
 		>
 			<div className="flex items-center gap-2 p-2">
@@ -54,8 +54,20 @@ export const ItineraryRow = ({
 			</div>
 
 			{isSelected && (
-				<div className="pb-2 pl-4 pr-4" >
+				<div className="pb-2 pl-4 pr-4">
 					<DaysList days={itinerary.days} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+				</div>
+			)}
+
+			{isOwner && (
+				<div className="px-4 pb-3">
+					<button
+						onClick={() => onCreateDay?.(itinerary)}
+						className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-primary-500/25 bg-primary-500/10 py-2 text-xs font-semibold text-primary-400 transition hover:border-primary-500/40 hover:bg-primary-500/15 hover:text-primary-300"
+					>
+						<Plus size={13} />
+						Crear día
+					</button>
 				</div>
 			)}
 		</div>

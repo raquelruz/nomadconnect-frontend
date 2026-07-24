@@ -24,8 +24,8 @@ export const CommentItem = ({ comment, user, trip, editComment, deleteComment, r
 	const repliesButtonText = getRepliesButtonText(comment.replies.length, showReplies);
 
 	return (
-		<div className="space-y-4">
-			<CommentCard user={comment.author}>
+		<div className="space-y-3">
+			<CommentCard user={comment.author} date={createdAt}>
 				<CommentEditableBody
 					editing={editing}
 					text={text}
@@ -35,18 +35,19 @@ export const CommentItem = ({ comment, user, trip, editComment, deleteComment, r
 					onCancel={cancelEditing}
 				/>
 
-				<CommentActions
-					date={createdAt}
-					canReply
-					canEdit={isAuthor}
-					canDelete={canDelete}
-					onReply={() => setReplying((value) => !value)}
-					onEdit={startEditing}
-					onDelete={() => deleteComment(comment.id)}
-				/>
+				{!editing && (
+					<CommentActions
+						canReply
+						canEdit={isAuthor}
+						canDelete={canDelete}
+						onReply={() => setReplying((value) => !value)}
+						onEdit={startEditing}
+						onDelete={() => deleteComment(comment.id)}
+					/>
+				)}
 
 				{replying && (
-					<div className="mt-4">
+					<div className="mt-3">
 						<CommentForm
 							onSubmit={(replyText) => replyComment(replyText, comment.id)}
 							placeholder={`Responder a ${comment.author?.username}...`}
@@ -60,23 +61,18 @@ export const CommentItem = ({ comment, user, trip, editComment, deleteComment, r
 				)}
 
 				{comment.replies.length > 0 && (
-					<div className="mt-5 flex items-center gap-4">
-						<div className="h-px flex-1 bg-slate-200" />
-
-						<button
-							type="button"
-							onClick={() => setShowReplies((value) => !value)}
-							className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
-						>
-							{repliesButtonText}
-						</button>
-
-						<div className="h-px flex-1 bg-slate-200" />
-					</div>
+					<button
+						type="button"
+						onClick={() => setShowReplies((value) => !value)}
+						className="mt-3 flex items-center gap-2 text-xs font-semibold text-primary-600 transition hover:text-primary-700"
+					>
+						<span className="h-px w-4 bg-primary-200" />
+						{repliesButtonText}
+					</button>
 				)}
 
 				{showReplies && (
-					<div className="mt-4 space-y-3">
+					<div className="mt-3 space-y-3">
 						{comment.replies.map((reply) => (
 							<ReplyItem
 								key={reply.id}

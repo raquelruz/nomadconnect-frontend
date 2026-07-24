@@ -40,7 +40,7 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 	return (
 		<div
 			onClick={onClose}
-			className="fixed inset-0 z-999 flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
+			className="fixed inset-0 z-999 flex items-center justify-center bg-bg-card/95 p-4 backdrop-blur-sm"
 		>
 			<button
 				onClick={onClose}
@@ -82,7 +82,7 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 
 			{images.length > 1 && (
 				<>
-					<div className="absolute bottom-20 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
+					<div className="absolute bottom-20 rounded-full bg-black/50 px-4 py-2 text-sm text-text-primary">
 						{currentImage + 1} / {images.length}
 					</div>
 

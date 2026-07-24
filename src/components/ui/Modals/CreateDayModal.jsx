@@ -1,16 +1,12 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { IoIosAirplane } from "react-icons/io";
-import { X } from "lucide-react";
-import api from "../../../api"
-import { CreateItineraryForm } from "../../Itineraries/CreateItineraryForm";
+import { CalendarPlus, X } from "lucide-react";
+import api from "../../../api";
+import { CreateDayForm } from "../../Days/CreateDayForm";
 
-export const CreateItineraryModal = ({ isOpen, onCreated, onClose }) => {
-	const { id } = useParams();
-
+export const CreateDayModal = ({ isOpen, itineraryId, onCreated, onClose }) => {
 	const emptyForm = {
 		title: "",
-		description: "",
+		date: "",
 	};
 
 	const [form, setForm] = useState(emptyForm);
@@ -38,9 +34,9 @@ export const CreateItineraryModal = ({ isOpen, onCreated, onClose }) => {
 		try {
 			setLoading(true);
 
-			const response = await api.post(`/itineraries/${id}`, {
+			const response = await api.post(`/days/${itineraryId}`, {
 				title: form.title,
-				description: form.description,
+				date: form.date,
 			});
 
 			onCreated?.(response.data);
@@ -60,16 +56,16 @@ export const CreateItineraryModal = ({ isOpen, onCreated, onClose }) => {
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-			<div className="w-full max-w-2xl rounded-2xl bg-bg-card shadow-xl">
+			<div className="w-full max-w-md rounded-2xl bg-bg-card">
 				<div className="flex items-center justify-between border-b border-text-primary/10 p-6">
 					<div className="flex items-center gap-3">
-						<div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm shadow-primary-600/30">
-							<IoIosAirplane size={20} />
+						<div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
+							<CalendarPlus size={20} />
 						</div>
 
 						<div>
-							<h2 className="text-lg font-bold text-text-primary">Nuevo itinerario</h2>
-							<p className="text-sm text-text-primary/60">Crea un itinerario para organizar el viaje.</p>
+							<h2 className="text-lg font-bold text-text-primary">Nuevo día</h2>
+							<p className="text-sm text-text-primary/60">Añade un día a este itinerario.</p>
 						</div>
 					</div>
 
@@ -83,7 +79,7 @@ export const CreateItineraryModal = ({ isOpen, onCreated, onClose }) => {
 				</div>
 
 				<div className="p-6">
-					<CreateItineraryForm
+					<CreateDayForm
 						form={form}
 						loading={loading}
 						onChange={handleChange}

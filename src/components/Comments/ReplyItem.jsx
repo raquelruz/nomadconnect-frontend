@@ -16,26 +16,19 @@ export const ReplyItem = ({ reply, user, trip, editComment, deleteComment }) => 
 	const createdAt = new Date(reply.createdAt).toLocaleDateString("es-ES");
 
 	return (
-		<div className="ml-10">
-			<CommentCard user={reply.author} reply>
-				<CommentEditableBody
-					editing={editing}
-					text={text}
-					setText={setText}
-					displayText={reply.text}
-					onSave={saveEditing}
-					onCancel={cancelEditing}
-				/>
+		<CommentCard user={reply.author} date={createdAt} reply>
+			<CommentEditableBody
+				editing={editing}
+				text={text}
+				setText={setText}
+				displayText={reply.text}
+				onSave={saveEditing}
+				onCancel={cancelEditing}
+			/>
 
-				<CommentActions
-					date={createdAt}
-					canReply={false}
-					canEdit={isAuthor}
-					canDelete={canDelete}
-					onEdit={startEditing}
-					onDelete={() => deleteComment(reply.id)}
-				/>
-			</CommentCard>
-		</div>
+			{!editing && (
+				<CommentActions canReply={false} canEdit={isAuthor} canDelete={canDelete} onEdit={startEditing} onDelete={() => deleteComment(reply.id)} />
+			)}
+		</CommentCard>
 	);
 };
