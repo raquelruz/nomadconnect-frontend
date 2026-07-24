@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Calendar, Compass, X } from "lucide-react";
+import { FormActions } from "../ui/FormActions";
 
 export const ItineraryEditForm = ({ itinerary, updateItinerary, loading, onClose }) => {
 	const [title, setTitle] = useState(itinerary.title || "");
@@ -83,23 +84,7 @@ export const ItineraryEditForm = ({ itinerary, updateItinerary, loading, onClose
 					</div>
 				</div>
 
-				<div className="flex justify-end gap-2 pt-2">
-					<button
-						type="button"
-						onClick={onClose}
-						className="rounded-xl px-4 py-2.5 text-sm font-semibold text-text-primary/70 transition hover:bg-text-primary/5"
-					>
-						Cancelar
-					</button>
-
-					<button
-						type="submit"
-						disabled={loading}
-						className="rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-primary-600/30 transition hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
-					>
-						{loading ? "Guardando..." : "Guardar"}
-					</button>
-				</div>
+				<FormActions onCancel={onClose} submitLabel="Guardar" loadingLabel="Guardando..." loading={loading} />
 			</form>
 		</div>
 	);
