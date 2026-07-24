@@ -1,22 +1,17 @@
 import { useState, useRef } from "react";
-import api from "../../api";
+import { useUpdateProfileField } from "../../hooks/Profile/useUpdateProfileField";
 import { LanguageChip } from "./LanguageChip";
 import { AddLanguageControl } from "./AddLanguageControl";
 
 export const ProfileMeta = ({ profile, onProfileUpdated }) => {
-    const [adding, setAdding] = useState(false);
-    const [newLanguage, setNewLanguage] = useState("");
-    const [saving, setSaving] = useState(false);
-    const hasSubmitted = useRef(false);
+	const [adding, setAdding] = useState(false);
+	const [newLanguage, setNewLanguage] = useState("");
+	const hasSubmitted = useRef(false);
+	const { updateField, saving } = useUpdateProfileField(profile, onProfileUpdated);
 
-    const languages = profile.languages || [];
+	const languages = profile.languages || [];
 
-    const saveLanguages = (updatedLanguages) => {
-        setSaving(true);
-        api.put(`/users/${profile.id}`, { ...profile, languages: updatedLanguages })
-            .then((response) => onProfileUpdated(response.data))
-            .finally(() => setSaving(false));
-    };
+	const saveLanguages = (updatedLanguages) => updateField("languages", updatedLanguages);
 
     const handleStartAdding = () => {
         hasSubmitted.current = false;

@@ -1,21 +1,15 @@
 import { useState } from "react";
 import { Pencil } from "lucide-react";
-import api from "../../api";
+import { useUpdateProfileField } from "../../hooks/Profile/useUpdateProfileField";
 
 export const ProfileBio = ({ profile, onBioUpdated }) => {
-    const [editing, setEditing] = useState(false);
-    const [bioDraft, setBioDraft] = useState(profile.bio || "");
-    const [saving, setSaving] = useState(false);
+	const [editing, setEditing] = useState(false);
+	const [bioDraft, setBioDraft] = useState(profile.bio || "");
+	const { updateField, saving } = useUpdateProfileField(profile, onBioUpdated);
 
-    const handleSave = () => {
-        setSaving(true);
-        api.put(`/users/${profile.id}`, { ...profile, bio: bioDraft })
-            .then((response) => {
-                onBioUpdated(response.data);
-                setEditing(false);
-            })
-            .finally(() => setSaving(false));
-    };
+	const handleSave = () => {
+		updateField("bio", bioDraft).then(() => setEditing(false));
+	};
 
     if (editing) {
         return (
