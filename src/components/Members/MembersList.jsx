@@ -15,7 +15,7 @@ export const MembersList = ({ trip }) => {
 				{members.map((member, index) => (
 					<div
 						key={member.id}
-						className="flex items-center gap-2.5 rounded-xl border border-text-primary/5 bg-text-primary/[0.02] p-2.5 transition hover:bg-text-primary/5"
+						className="flex items-center gap-2.5 rounded-xl border border-text-primary/5 bg-text-primary/2 p-2.5 transition hover:bg-text-primary/5"
 					>
 						<img
 							src={member.avatar}
