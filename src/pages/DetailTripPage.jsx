@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Menu } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
 
-import { TripStats } from "../components/TripDetail/TripStats";
 import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
+import { TripPlannerSidebar } from "../components/TripDetail/TripPlannerSidebar";
+import { TripModals } from "../components/TripDetail/TripModals";
 import { MembersList } from "../components/Members/MembersList";
 import { CommentsSection } from "../components/Comments/CommentsSection";
-import { PlannerSidebar } from "../components/Planner/PlannerSidebar";
 import { PlannerContent } from "../components/Planner/PlannerContent";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
-
-import { CreateItineraryModal } from "../components/ui/Modals/CreateItineraryModal";
+import { TaskChecklist } from "../components/Tasks/TaskChecklist";
+import { useTripMembers } from "../hooks/useTripMembers";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -30,6 +29,7 @@ export const DetailTripPage = () => {
 	const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	const [showCreateItinerary, setShowCreateItinerary] = useState(false);
+	const [showCreateDay, setShowCreateDay] = useState(false);
 
 	const getTrip = async () => {
 		try {
@@ -83,6 +83,8 @@ export const DetailTripPage = () => {
 		setSelectedDay(refreshed);
 	}, [selectedItinerary]);
 
+	const { isOwner, isMember } = useTripMembers(trip, user, getTrip);
+
 	if (loading) {
 		return <Loading message="Cargando viaje..." />;
 	}
@@ -100,7 +102,7 @@ export const DetailTripPage = () => {
 				action={
 					<Link
 						to="/trips"
-						className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-2.5 text-white transition hover:bg-slate-700"
+						className="inline-flex items-center justify-center rounded-xl bg-primary-600 px-5 py-2.5 text-white transition hover:bg-primary-700"
 					>
 						Volver a viajes
 					</Link>
@@ -109,44 +111,23 @@ export const DetailTripPage = () => {
 		);
 	}
 
-	const isOwner = trip.owner?.id === user?.id;
 	const itineraries = trip.itineraries || [];
 
 	return (
-		<div className="flex min-h-screen bg-slate-50">
-			{mobileSidebarOpen && (
-				<div onClick={() => setMobileSidebarOpen(false)} className="fixed inset-0 z-40 bg-black/40 lg:hidden" />
-			)}
-
-			<aside
-				className={`
-					fixed inset-y-0 left-0 z-50 w-72
-					border-r border-slate-200 bg-white
-					transition-transform duration-300
-					lg:sticky lg:top-0 lg:h-screen lg:w-60 lg:shrink-0 lg:translate-x-0
-					${mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-				`}
-			>
-				<PlannerSidebar
-					itineraries={itineraries}
-					selectedItinerary={selectedItinerary}
-					setSelectedItinerary={setSelectedItinerary}
-					selectedDay={selectedDay}
-					setSelectedDay={setSelectedDay}
-					refreshTrip={getTrip}
-					isOwner={isOwner}
-					onClose={() => setMobileSidebarOpen(false)}
-					onAddItinerary={() => setShowCreateItinerary(true)}
-				/>
-			</aside>
-
-			<button
-				onClick={() => setMobileSidebarOpen(true)}
-				className="fixed bottom-6 right-6 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition hover:bg-blue-700 lg:hidden"
-				title="Ver itinerario"
-			>
-				<Menu size={22} />
-			</button>
+		<div className="flex min-h-screen bg-bg-card/95">
+			<TripPlannerSidebar
+				itineraries={itineraries}
+				selectedItinerary={selectedItinerary}
+				setSelectedItinerary={setSelectedItinerary}
+				selectedDay={selectedDay}
+				setSelectedDay={setSelectedDay}
+				isOwner={isOwner}
+				refreshTrip={getTrip}
+				mobileOpen={mobileSidebarOpen}
+				setMobileOpen={setMobileSidebarOpen}
+				onAddItinerary={() => setShowCreateItinerary(true)}
+				onCreateDay={() => setShowCreateDay(true)}
+			/>
 
 			<main className="min-w-0 flex-1 pb-16 sm:pb-20">
 				<TripHeader trip={trip} user={user} refreshTrip={getTrip} />
@@ -154,18 +135,15 @@ export const DetailTripPage = () => {
 				<div className="mx-auto max-w-6xl px-4 sm:px-6">
 					<TripDescription description={trip.description} />
 
-					{isOwner && showCreateItinerary && (
-						<div className="mb-6">
-							<CreateItineraryModal
-								isOpen={showCreateItinerary}
-								onClose={() => setShowCreateItinerary(false)}
-								onCreated={() => {
-									setShowCreateItinerary(false);
-									getTrip();
-								}}
-							/>
-						</div>
-					)}
+					<TripModals
+						isOwner={isOwner}
+						showCreateItinerary={showCreateItinerary}
+						onCloseCreateItinerary={() => setShowCreateItinerary(false)}
+						showCreateDay={showCreateDay}
+						onCloseCreateDay={() => setShowCreateDay(false)}
+						itineraryId={selectedItinerary?.id}
+						onCreated={getTrip}
+					/>
 
 					<section className="mt-8 sm:mt-10">
 						<PlannerContent
@@ -175,10 +153,14 @@ export const DetailTripPage = () => {
 							refreshTrip={getTrip}
 							tripImage={trip.image}
 							tripLocation={`${trip.city}, ${trip.country}`}
+							onCreateDay={() => setShowCreateDay(true)}
 						/>
 					</section>
 
-					<TripStats trip={trip} />
+					<section>
+						<TaskChecklist trip={trip} user={user} isOwner={isOwner} />
+
+					</section>
 
 					<MembersList trip={trip} />
 

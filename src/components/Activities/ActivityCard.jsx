@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MapPin, Clock } from "lucide-react";
-import { useActivityActions } from "../../hooks/useActivityActions";
+import { useActivityActions } from "../../hooks/Activities/useActivityActions";
 import { ActivityActions } from "./ActivityActions";
 import { ActivityCarousel } from "./ActivityCarousel";
 import { ActivityViewer } from "./ActivityViewer";
@@ -38,7 +38,7 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 
 	return (
 		<>
-			<div className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 transition hover:shadow-md sm:flex-row">
+			<div className="flex flex-col overflow-hidden rounded-2xl bg-bg-card shadow-sm ring-1 ring-slate-100 transition hover:shadow-md sm:flex-row">
 				<div className="sm:w-56 sm:shrink-0">
 					{images.length > 0 ? (
 						<ActivityCarousel
@@ -49,7 +49,7 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 							height="h-40 sm:h-full"
 						/>
 					) : (
-						<div className="flex h-40 items-center justify-center bg-slate-50 text-slate-300 sm:h-full">
+						<div className="flex h-40 items-center justify-center bg-bg-card/90 text-text-primary sm:h-full">
 							<Clock size={22} />
 						</div>
 					)}
@@ -63,7 +63,7 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 								{time || "Sin hora"}
 							</div>
 
-							<h4 className="mt-0.5 truncate text-lg font-bold text-slate-900">{activity.title}</h4>
+							<h4 className="mt-0.5 truncate text-lg font-bold text-text-primary">{activity.title}</h4>
 						</div>
 
 						<ActivityActions

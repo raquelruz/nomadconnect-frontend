@@ -23,16 +23,16 @@ export const TripItineraries = ({ trip, isOwner, refreshTrip }) => {
 				</div>
 			)}
 
-<PlannerPage
-	itineraries={itineraries}
-	selectedItinerary={selectedItinerary}
-	setSelectedItinerary={setSelectedItinerary}
-	isOwner={isOwner}
-	refreshTrip={refreshTrip}
-	onAddItinerary={() => {
-		setShowCreate(true);
-	}}
-/>
+			<PlannerPage
+				itineraries={itineraries}
+				selectedItinerary={selectedItinerary}
+				setSelectedItinerary={setSelectedItinerary}
+				isOwner={isOwner}
+				refreshTrip={refreshTrip}
+				onAddItinerary={() => {
+					setShowCreate(true);
+				}}
+			/>
 		</section>
 	);
 };

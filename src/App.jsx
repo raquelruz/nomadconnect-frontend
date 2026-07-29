@@ -9,13 +9,15 @@ import { ProtectedRoute } from "./auth/ProtectedRoute.jsx";
 import { MyTripsPage } from "./pages/MyTripsPage.jsx";
 import { ProfilePage } from "./pages/ProfilePage.jsx";
 import { DetailTripPage } from "./pages/DetailTripPage.jsx";
+import { SettingsPage } from "./pages/SettingsPage.jsx";
+import { NotificationsPage } from "./pages/NotificationsPage.jsx";
 
 export const App = () => {
 	return (
 		<>
 			<Navbar />
 
-			<main>
+			<main className="bg-bg-primary">
 				<Routes>
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/register" element={<RegisterPage />} />
@@ -35,6 +37,24 @@ export const App = () => {
 					/>
 
 					<Route
+						path="/settings"
+						element={
+							<ProtectedRoute>
+								<SettingsPage />
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
+						path="/notifications"
+						element={
+							<ProtectedRoute>
+								<NotificationsPage />
+							</ProtectedRoute>
+						}
+					/>
+
+					<Route
 						path="/trips/:id"
 						element={
 							<ProtectedRoute>
@@ -42,7 +62,6 @@ export const App = () => {
 							</ProtectedRoute>
 						}
 					/>
-
 				</Routes>
 			</main>
 		</>

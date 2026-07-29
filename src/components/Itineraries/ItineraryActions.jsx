@@ -10,7 +10,7 @@ export const ItineraryActions = ({ onEdit, onDelete, deleting = false }) => {
 					onEdit();
 				}}
 				title="Editar itinerario"
-				className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400 transition hover:bg-blue-50 hover:text-blue-600"
+				className="flex h-8 w-8 items-center justify-center rounded-full bg-text-primary/5 text-text-primary/40 transition hover:bg-primary-500/15 hover:text-primary-400"
 			>
 				<Pencil size={15} />
 			</button>
@@ -23,7 +23,7 @@ export const ItineraryActions = ({ onEdit, onDelete, deleting = false }) => {
 				}}
 				disabled={deleting}
 				title="Eliminar itinerario"
-				className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+				className="flex h-8 w-8 items-center justify-center rounded-full bg-text-primary/5 text-text-primary/40 transition hover:bg-red-500/15 hover:text-red-400 disabled:opacity-50"
 			>
 				<Trash2 size={15} />
 			</button>

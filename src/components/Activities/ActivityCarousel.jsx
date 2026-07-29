@@ -1,25 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useImageCarousel } from "../../hooks/useImageCarousel";
 
 export const ActivityCarousel = ({ images = [], title, onImageClick, badge, height = "h-72" }) => {
-	const [currentImage, setCurrentImage] = useState(0);
+	const { currentImage, setCurrentImage, next, previous } = useImageCarousel(images);
 
 	useEffect(() => {
-		if (currentImage >= images.length) {
-			setCurrentImage(0);
-		}
-	}, [images, currentImage]);
+		if (currentImage >= images.length) setCurrentImage(0);
+	}, [images, currentImage, setCurrentImage]);
 
 	if (!images?.length) return null;
 
 	const nextImage = (event) => {
 		event.stopPropagation();
-		setCurrentImage((prev) => (prev + 1) % images.length);
+		next();
 	};
 
 	const previousImage = (event) => {
 		event.stopPropagation();
-		setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+		previous();
 	};
 
 	const handleImageClick = () => {

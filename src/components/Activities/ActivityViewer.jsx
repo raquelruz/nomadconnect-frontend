@@ -1,7 +1,20 @@
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect } from "react";
+import { useImageCarousel } from "../../hooks/useImageCarousel";
 
-export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentImage, onClose }) => {
+export const ActivityViewer = ({
+	isOpen,
+	images = [],
+	currentImage: initialImage,
+	setCurrentImage: setParentImage,
+	onClose,
+}) => {
+	const { currentImage, setCurrentImage, next, previous } = useImageCarousel(images, initialImage);
+
+	useEffect(() => {
+		setParentImage(currentImage);
+	}, [currentImage, setParentImage]);
+
 	useEffect(() => {
 		if (!isOpen) return;
 
@@ -9,14 +22,8 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 
 		const handleKeyDown = (event) => {
 			if (event.key === "Escape") onClose();
-
-			if (event.key === "ArrowRight") {
-				setCurrentImage((prev) => (prev + 1) % images.length);
-			}
-
-			if (event.key === "ArrowLeft") {
-				setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-			}
+			if (event.key === "ArrowRight") next();
+			if (event.key === "ArrowLeft") previous();
 		};
 
 		window.addEventListener("keydown", handleKeyDown);
@@ -25,7 +32,7 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 			document.body.style.overflow = "";
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [isOpen, images.length, onClose, setCurrentImage]);
+	}, [isOpen, onClose, next, previous]);
 
 	if (!isOpen || images.length === 0) return null;
 
@@ -40,7 +47,7 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 	return (
 		<div
 			onClick={onClose}
-			className="fixed inset-0 z-999 flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
+			className="fixed inset-0 z-999 flex items-center justify-center bg-bg-card/95 p-4 backdrop-blur-sm"
 		>
 			<button
 				onClick={onClose}
@@ -82,7 +89,7 @@ export const ActivityViewer = ({ isOpen, images = [], currentImage, setCurrentIm
 
 			{images.length > 1 && (
 				<>
-					<div className="absolute bottom-20 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
+					<div className="absolute bottom-20 rounded-full bg-black/50 px-4 py-2 text-sm text-text-primary">
 						{currentImage + 1} / {images.length}
 					</div>
 

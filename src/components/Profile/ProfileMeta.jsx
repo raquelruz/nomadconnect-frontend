@@ -1,26 +1,17 @@
 import { useState, useRef } from "react";
-import api from "../../api";
+import { useUpdateProfileField } from "../../hooks/Profile/useUpdateProfileField";
 import { LanguageChip } from "./LanguageChip";
 import { AddLanguageControl } from "./AddLanguageControl";
 
 export const ProfileMeta = ({ profile, onProfileUpdated }) => {
-    const [adding, setAdding] = useState(false);
-    const [newLanguage, setNewLanguage] = useState("");
-    const [saving, setSaving] = useState(false);
-    const hasSubmitted = useRef(false);
+	const [adding, setAdding] = useState(false);
+	const [newLanguage, setNewLanguage] = useState("");
+	const hasSubmitted = useRef(false);
+	const { updateField, saving } = useUpdateProfileField(profile, onProfileUpdated);
 
-    const languages = profile.languages || [];
+	const languages = profile.languages || [];
 
-    const memberSince = profile.createdAt
-        ? new Date(profile.createdAt).toLocaleDateString("es-ES", { month: "long", year: "numeric" })
-        : null;
-
-    const saveLanguages = (updatedLanguages) => {
-        setSaving(true);
-        api.put(`/users/${profile.id}`, { ...profile, languages: updatedLanguages })
-            .then((response) => onProfileUpdated(response.data))
-            .finally(() => setSaving(false));
-    };
+	const saveLanguages = (updatedLanguages) => updateField("languages", updatedLanguages);
 
     const handleStartAdding = () => {
         hasSubmitted.current = false;
@@ -45,30 +36,23 @@ export const ProfileMeta = ({ profile, onProfileUpdated }) => {
     };
 
     return (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400 mb-2">Idiomas</p>
-            <div className="flex flex-wrap items-center gap-2">
-                {languages.map((language) => (
-                    <LanguageChip
-                        key={language}
-                        language={language}
-                        saving={saving}
-                        onRemove={() => handleRemoveLanguage(language)}
-                    />
-                ))}
-
-                <AddLanguageControl
-                    adding={adding}
-                    newLanguage={newLanguage}
-                    onStartAdding={handleStartAdding}
-                    onChangeLanguage={setNewLanguage}
-                    onConfirm={handleAddLanguage}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+            {languages.map((language) => (
+                <LanguageChip
+                    key={language}
+                    language={language}
+                    saving={saving}
+                    onRemove={() => handleRemoveLanguage(language)}
                 />
-            </div>
+            ))}
 
-            {memberSince && (
-                <p className="text-xs text-gray-400 mt-3">Miembro desde {memberSince}</p>
-            )}
+            <AddLanguageControl
+                adding={adding}
+                newLanguage={newLanguage}
+                onStartAdding={handleStartAdding}
+                onChangeLanguage={setNewLanguage}
+                onConfirm={handleAddLanguage}
+            />
         </div>
     );
 };

@@ -15,15 +15,11 @@ export const getTripPhase = (trip) => {
     return "ongoing";
 };
 
-// Combina la fecha con el campo real 'status' del backend.
-// Un viaje ya terminado por fecha puede seguir "pending" si el owner no lo cerró.
 export const getStampInfo = (trip) => {
     const phase = getTripPhase(trip);
 
     if (phase === "upcoming") return { label: "Próximo", tone: "upcoming" };
     if (phase === "ongoing") return { label: "En curso", tone: "ongoing" };
 
-    return trip.status === "completed"
-        ? { label: "Finalizado", tone: "completed" }
-        : { label: "Pendiente de cerrar", tone: "pendingClose" };
+    return { label: "Finalizado", tone: "completed" };
 };

@@ -1,170 +1,156 @@
+// src/pages/ProfilePage.jsx
 import { useEffect, useState } from "react";
+import { Camera, Loader } from "lucide-react";
 import { useAuth } from "../auth/AuthContext";
 import api from "../api";
-import { EditableAccountField } from "../components/Profile/EditableAccountField";
-import { RoleBadge } from "../components/Profile/RoleBadge";
-import { ProfileAvatar } from "../components/Profile/ProfileAvatar";
+import { useProfile } from "../hooks/Profile/useProfile";
+import { UserAvatar } from "../components/ui/UserAvatar";
 import { ProfileBio } from "../components/Profile/ProfileBio";
 import { ProfileStats } from "../components/Profile/ProfileStats";
 import { ProfileMeta } from "../components/Profile/ProfileMeta";
 import { TravelerBadge } from "../components/Profile/TravelerBadge";
-import { TripsGallery } from "../components/Trips/TripsGallery";
+import { TripsGallery } from "../components/MyTrips/TripsGallery";
 import { TripThumbnailProfile } from "../components/Profile/TripThumbnailProfile";
+import { Loading } from "../components/ui/Loading";
 
 export const ProfilePage = () => {
-    const { user: tokenUser } = useAuth();
-    const [profile, setProfile] = useState(null);
-    const [trips, setTrips] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [uploadingAvatar, setUploadingAvatar] = useState(false);
+	const { user: tokenUser } = useAuth();
+	const { profile, setProfile, loading: profileLoading, error: profileError } = useProfile(tokenUser?.id);
 
-    useEffect(() => {
-        if (!tokenUser?.id) return;
-        setLoading(true);
-        Promise.all([
-            api.get(`/users/${tokenUser.id}`),
-            api.get(`/trips/my-trips/${tokenUser.id}`),
-        ])
-            .then(([profileResponse, tripsResponse]) => {
-                setProfile(profileResponse.data);
-                setTrips(tripsResponse.data);
-            })
-            .catch((error) => setError(error.message || "Error cargando el perfil"))
-            .finally(() => setLoading(false));
-    }, [tokenUser?.id]);
+	const [trips, setTrips] = useState([]);
+	const [tripsLoading, setTripsLoading] = useState(true);
+	const [tripsError, setTripsError] = useState(null);
+	const [uploadingAvatar, setUploadingAvatar] = useState(false);
+	const [avatarError, setAvatarError] = useState(null);
 
-    const handleAvatarChange = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
+	useEffect(() => {
+		if (!tokenUser?.id) return;
 
-        const formData = new FormData();
-        formData.append("avatar", file);
+		setTripsLoading(true);
 
-        setUploadingAvatar(true);
-        api.patch("/users/avatar", formData)
-            .then((response) => setProfile(response.data))
-            .catch((error) => setError(error.message || "Error subiendo el avatar"))
-            .finally(() => setUploadingAvatar(false));
-    };
+		api.get(`/trips/my-trips/${tokenUser.id}`)
+			.then((response) => setTrips(response.data))
+			.catch((error) => setTripsError(error.message || "Error cargando los viajes"))
+			.finally(() => setTripsLoading(false));
+	}, [tokenUser?.id]);
 
-    if (loading) return <p className="text-gray-500">Cargando perfil...</p>;
+	const handleAvatarChange = (event) => {
+		const file = event.target.files[0];
+		if (!file) return;
 
-    if (error) {
-        return <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm">{error}</div>;
-    }
+		const formData = new FormData();
+		formData.append("avatar", file);
 
-    if (!profile) return <p className="text-gray-500">No se ha encontrado el perfil.</p>;
+		setUploadingAvatar(true);
+		setAvatarError(null);
 
-    const hasTrips = trips.length > 0;
-    const recentTrips = trips.slice(0, 3);
+		api.patch("/users/avatar", formData)
+			.then((response) => setProfile(response.data))
+			.catch((error) => setAvatarError(error.message || "Error subiendo el avatar"))
+			.finally(() => setUploadingAvatar(false));
+	};
 
-    return (
-        <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                {/* Card izquierda: avatar + bio + stats */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-                        <div className="relative shrink-0 w-fit mx-auto sm:mx-0">
-                            <ProfileAvatar profile={profile} />
-                            <label
-                                className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 flex items-center justify-center cursor-pointer ring-4 ring-white transition"
-                                title="Cambiar foto"
-                            >
-                                <span className="text-white text-xs">
-                                    {uploadingAvatar ? "…" : "✎"}
-                                </span>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={handleAvatarChange}
-                                    disabled={uploadingAvatar}
-                                />
-                            </label>
-                        </div>
+	const loading = profileLoading || tripsLoading;
+	const error = profileError || tripsError;
 
-                        <div className="flex-1 text-center sm:text-left">
-                            <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-                                <h2 className="text-xl font-bold text-gray-900">
-                                    {profile.fullName || profile.username}
-                                </h2>
-                                <TravelerBadge tripsCount={trips.length} />
-                            </div>
-                            <p className="text-gray-400 text-sm mt-0.5">@{profile.username}</p>
+	if (loading) return <Loading message="Cargando perfil..."/>;
 
-                            <ProfileBio profile={profile} onBioUpdated={setProfile} />
-                        </div>
-                    </div>
+	if (error) {
+		return (
+			<div className="max-w-3xl px-4 py-12">
+				<div className="rounded-xl border border-error-500/20 bg-error-500/10 p-4 text-sm text-error-500">
+					{error}
+				</div>
+			</div>
+		);
+	}
 
-                    <ProfileStats trips={trips} />
-                    <ProfileMeta profile={profile} onProfileUpdated={setProfile} />
-                </div>
+	if (!profile)
+		return <p className="mx-auto max-w-3xl px-4 py-12 text-sm text-text-muted">No se ha encontrado el perfil.</p>;
 
-                {/* Card derecha: datos de la cuenta */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-bold text-gray-900">Datos de la cuenta</h3>
-                        <RoleBadge role={profile.role} />
-                    </div>
-                    <dl>
-                        <EditableAccountField
-                            profile={profile}
-                            field="username"
-                            label="Usuario"
-                            onUpdated={setProfile}
-                        />
-                        <EditableAccountField
-                            profile={profile}
-                            field="email"
-                            label="Email"
-                            onUpdated={setProfile}
-                        />
-                        <EditableAccountField
-                            profile={profile}
-                            field="name"
-                            label="Nombre"
-                            onUpdated={setProfile}
-                        />
-                        <EditableAccountField
-                            profile={profile}
-                            field="surname"
-                            label="Apellido"
-                            onUpdated={setProfile}
-                        />
-                    </dl>
-                </div>
-            </div>
+	const hasTrips = trips.length > 0;
+	const recentTrips = trips.slice(0, 3);
+	const memberSince = profile.createdAt
+		? new Date(profile.createdAt).toLocaleDateString("es-ES", { month: "long", year: "numeric" })
+		: null;
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-                <h3 className="font-bold text-gray-900 mb-4">Galería de aventuras</h3>
-                <TripsGallery trips={trips} />
-            </div>
+	return (
+		<div className="mx-auto max-w-3xl px-4 py-10">
+			<div className="rounded-2xl border border-border bg-bg-card p-6 sm:p-7">
+				<div className="flex gap-4">
+					<div className="relative shrink-0">
+						<UserAvatar user={profile} size="xl" />
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-                <h3 className="font-bold text-gray-900 mb-4">Mis últimos viajes</h3>
+						<label
+							className="absolute -bottom-1 -right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full border border-border bg-bg-card text-text-secondary shadow-sm transition hover:text-primary-500"
+							title="Cambiar foto"
+						>
+							<Camera size={13} />
+							<input
+								type="file"
+								accept="image/*"
+								className="hidden"
+								onChange={handleAvatarChange}
+								disabled={uploadingAvatar}
+							/>
+						</label>
+					</div>
 
-                {!hasTrips && <p className="text-gray-400 text-sm">Aún no tienes viajes.</p>}
+					<div className="min-w-0 flex-1">
+						<div className="flex flex-wrap items-center gap-2">
+							<h2 className="text-lg font-semibold text-text-primary">
+								{profile.name ? `${profile.name} ${profile.surname || ""}`.trim() : profile.username}
+							</h2>
+							<TravelerBadge tripsCount={trips.length} />
+						</div>
 
-                {hasTrips && (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        {recentTrips.map((trip) => (
-                            <div
-                                key={trip.id}
-                                className="rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition cursor-pointer"
-                            >
-                                <TripThumbnailProfile trip={trip} />
-                                <div className="p-3">
-                                    <p className="text-sm font-medium text-gray-900 truncate">{trip.title}</p>
-                                    {trip.destination && (
-                                        <p className="text-xs text-gray-400 truncate">{trip.destination}</p>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+						<p className="mt-0.5 text-sm text-text-muted">
+							@{profile.username}
+							{memberSince && <> · Miembro desde {memberSince}</>}
+						</p>
+
+						{uploadingAvatar && <p className="mt-1 text-xs text-text-muted">Subiendo foto...</p>}
+						{avatarError && <p className="mt-1 text-xs text-error-500">{avatarError}</p>}
+
+						<ProfileBio profile={profile} onBioUpdated={setProfile} />
+						<ProfileMeta profile={profile} onProfileUpdated={setProfile} />
+					</div>
+				</div>
+
+				<ProfileStats trips={trips} />
+			</div>
+
+			<div className="mt-6 rounded-2xl border border-border bg-bg-card p-6 sm:p-7">
+				<h3 className="mb-4 text-sm font-semibold text-text-primary">Galería de aventuras</h3>
+				<TripsGallery trips={trips} />
+			</div>
+
+			<div className="mt-6 rounded-2xl border border-border bg-bg-card p-6 sm:p-7">
+				<h3 className="mb-4 text-sm font-semibold text-text-primary">Mis últimos viajes</h3>
+
+				{!hasTrips && <p className="text-sm text-text-muted">Aún no tienes viajes.</p>}
+
+				{hasTrips && (
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+						{recentTrips.map((trip) => (
+							<div
+								key={trip.id}
+								className="cursor-pointer overflow-hidden rounded-xl border border-border transition hover:shadow-md"
+							>
+								<TripThumbnailProfile trip={trip} />
+								<div className="p-3">
+									<p className="truncate text-sm font-medium text-text-primary">{trip.title}</p>
+									{trip.city && (
+										<p className="truncate text-xs text-text-muted">
+											{trip.city}, {trip.country}
+										</p>
+									)}
+								</div>
+							</div>
+						))}
+					</div>
+				)}
+			</div>
+		</div>
+	);
 };

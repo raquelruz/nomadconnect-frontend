@@ -1,10 +1,12 @@
-import { useState, useEffect, useContext } from "react";
+// src/pages/ExplorePage.jsx
+import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../api";
-import { CreateTripForm } from "../components/Trips/CreateTripForm";
 import { TripCard } from "../components/Trips/TripCard";
-import { ExploreHeader } from "../components/ExploreHeader";
+import { ExploreHeader } from "../components/Trips/ExploreHeader";
+import { CreateTripModal } from "../components/ui/Modals/CreateTripsModal";
 import { useAuth } from "../auth/AuthContext";
+import { Loading } from "../components/ui/Loading";
 
 export const ExplorePage = () => {
     const { user } = useAuth();
@@ -12,13 +14,12 @@ export const ExplorePage = () => {
 
     const [trips, setTrips] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showForm, setShowForm] = useState(false);
+    const [showCreateTrip, setShowCreateTrip] = useState(false);
 
     const [searchParams] = useSearchParams();
     const search = searchParams.get("search") || "";
     const date = searchParams.get("date") || "";
 
-    // Cargar viajes con búsqueda y filtros
     const loadTrips = async () => {
         setLoading(true);
 
@@ -42,7 +43,6 @@ export const ExplorePage = () => {
         loadTrips();
     }, [search, date]);
 
-    // Eliminar viaje
     const remove = async (id) => {
         if (!confirm("¿Eliminar este viaje? Se borrarán también sus tareas, comentarios y updates.")) {
             return;
@@ -56,50 +56,39 @@ export const ExplorePage = () => {
         }
     };
 
-    if (loading) return <p className="text-gray-500">Cargando viajes...</p>;
+    if (loading) return <Loading message="Cargando viajes..." />;
 
     return (
         <div className="min-h-screen bg-bg-primary">
-            <ExploreHeader />
+            <ExploreHeader tripCount={trips.length} />
 
-            <div className="max-w-7xl mx-auto px-8 py-10">
-                <div className="mb-6 flex justify-between items-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-gray-200 shadow-sm text-sm text-gray-600">
-                        <span className="w-2 h-2 rounded-full bg-primary"></span>
-                        {trips.length} viajes encontrados
+            <div className="max-w-7xl mx-auto px-8 pb-10 pt-8">
+                <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+                    <div>
+                        <h2 className="text-base font-semibold text-text-primary">Viajes públicos</h2>
+                        <p className="text-sm text-text-secondary">
+                            {search || date ? "Resultados según tu búsqueda" : "Explora lo que la comunidad está organizando"}
+                        </p>
                     </div>
 
                     {user && (
                         <button
-                            onClick={() => setShowForm(!showForm)}
-                            className={`px-6 py-2 rounded-lg text-sm font-medium duration-200 ${
-                                showForm
-                                    ? "bg-error-500 hover:bg-error-600 text-white"
-                                    : "bg-primary-500 hover:bg-color-primary-hover text-white"
-                            }`}
+                            onClick={() => setShowCreateTrip(true)}
+                            className="shrink-0 rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-primary-700"
                         >
-                            {showForm ? "✕ Cancelar" : "+ Nuevo viaje"}
+                            + Nuevo viaje
                         </button>
                     )}
 
                     {!user && (
                         <button
                             onClick={() => navigate("/login")}
-                            className="bg-color-primary hover:bg-color-primary-hover text-text-primary px-6 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                            className="shrink-0 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-text-primary transition-colors duration-200 hover:bg-bg-secondary"
                         >
                             Inicia sesión
                         </button>
                     )}
                 </div>
-
-                {user && showForm && (
-                    <CreateTripForm
-                        onSuccess={() => {
-                            setShowForm(false);
-                            loadTrips();
-                        }}
-                    />
-                )}
 
                 {trips.length === 0 && (
                     <p className="text-text-secondary text-center py-12">No hay viajes públicos todavía.</p>
@@ -107,6 +96,15 @@ export const ExplorePage = () => {
 
                 {trips.length > 0 && <TripCard trips={trips} onDelete={remove} />}
             </div>
+
+            <CreateTripModal
+                isOpen={showCreateTrip}
+                onClose={() => setShowCreateTrip(false)}
+                onSuccess={() => {
+                    setShowCreateTrip(false);
+                    loadTrips();
+                }}
+            />
         </div>
     );
 };

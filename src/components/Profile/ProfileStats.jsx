@@ -1,20 +1,21 @@
-const Stat = ({ value, label }) => {
-    return (
-        <div className="text-center sm:text-left">
-            <div className="text-lg font-medium text-primary-500">{value}</div>
-            <div className="text-xs text-gray-400">{label}</div>
-        </div>
-    );
-};
+import { getTotalDays } from "../../utils/tripStats";
+
+const Stat = ({ value, label, divider = false }) => (
+	<div className={`text-center ${divider ? "border-x border-border" : ""}`}>
+		<div className="text-xl font-semibold text-text-primary">{value}</div>
+		<div className="mt-0.5 text-[11px] text-text-muted">{label}</div>
+	</div>
+);
 
 export const ProfileStats = ({ trips }) => {
-    const countriesVisited = new Set(trips.map((trip) => trip.country).filter(Boolean)).size;
+	const countriesVisited = new Set(trips.map((trip) => trip.country).filter(Boolean)).size;
+	const totalDays = getTotalDays(trips);
 
-    return (
-        <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-100">
-            <Stat value={trips.length} label="Viajes creados" />
-            <Stat value={countriesVisited} label="Países visitados" />
-            <Stat value="—" label="Actividades" />
-        </div>
-    );
+	return (
+		<div className="mt-5 grid grid-cols-3 gap-2 border-t border-border pt-5">
+			<Stat value={trips.length} label="Viajes" />
+			<Stat value={countriesVisited} label="Países" divider />
+			<Stat value={totalDays} label="Días viajando" />
+		</div>
+	);
 };

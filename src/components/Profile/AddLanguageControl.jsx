@@ -1,4 +1,4 @@
-import { FiPlus } from "react-icons/fi";
+import { Plus } from "lucide-react";
 
 export const AddLanguageControl = ({ adding, newLanguage, onStartAdding, onChangeLanguage, onConfirm }) => {
     if (adding) {
@@ -10,7 +10,7 @@ export const AddLanguageControl = ({ adding, newLanguage, onStartAdding, onChang
                 onBlur={onConfirm}
                 autoFocus
                 placeholder="Idioma..."
-                className="text-xs w-24 border border-gray-200 rounded-full px-2.5 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                className="w-24 rounded-full border border-border bg-bg-secondary px-2.5 py-1 text-xs text-text-primary outline-none transition focus:ring-2 focus:ring-primary-500/20"
             />
         );
     }
@@ -18,9 +18,9 @@ export const AddLanguageControl = ({ adding, newLanguage, onStartAdding, onChang
     return (
         <button
             onClick={onStartAdding}
-            className="flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 pl-2.5 pr-3 py-1 rounded-full border border-dashed border-indigo-200"
+            className="flex items-center gap-1 rounded-full border border-dashed border-primary-500/30 py-1 pl-2.5 pr-3 text-xs font-medium text-primary-500 transition hover:bg-primary-500/10"
         >
-            <FiPlus size={12} />
+            <Plus size={12} />
             Añadir
         </button>
     );

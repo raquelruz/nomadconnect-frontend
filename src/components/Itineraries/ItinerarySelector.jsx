@@ -9,9 +9,10 @@ export const ItinerarySelector = ({
 	isOwner,
 	refreshTrip,
 	onEditItinerary,
+	onCreateDay,
 }) => {
 	if (!itineraries || itineraries.length === 0) {
-		return <p className="text-sm text-slate-500">No hay itinerarios.</p>;
+		return <p className="text-sm text-text-primary/50">No hay itinerarios.</p>;
 	}
 
 	return (
@@ -27,6 +28,7 @@ export const ItinerarySelector = ({
 					isOwner={isOwner}
 					refreshTrip={refreshTrip}
 					onEdit={onEditItinerary}
+					onCreateDay={onCreateDay}
 				/>
 			))}
 		</div>
