@@ -23,7 +23,7 @@ export const App = () => {
 					<Route path="/register" element={<RegisterPage />} />
 
 					<Route path="/" element={<HomePage />} />
-					<Route path="/explore" element={<ProtectedRoute>{<ExplorePage />}</ProtectedRoute>} />
+					<Route path="/explore" element={<ExplorePage />} />
 
 					<Route path="/my-trips/:id" element={<ProtectedRoute>{<MyTripsPage />}</ProtectedRoute>} />
 
@@ -54,14 +54,7 @@ export const App = () => {
 						}
 					/>
 
-					<Route
-						path="/trips/:id"
-						element={
-							<ProtectedRoute>
-								<DetailTripPage />
-							</ProtectedRoute>
-						}
-					/>
+					<Route path="/trips/:id" element={<DetailTripPage />} />
 				</Routes>
 			</main>
 		</>

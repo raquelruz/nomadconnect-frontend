@@ -4,6 +4,7 @@ import { useProfile } from "../hooks/Profile/useProfile";
 import { EditableAccountField } from "../components/Settings/EditableAccountField";
 import { RoleBadge } from "../components/Profile/RoleBadge";
 import { Loading } from "../components/ui/Loading";
+import { ChangePasswordCard } from "../components/Settings/ChangePasswordCard";
 
 const FIELDS = [
 	{ field: "username", label: "Usuario", icon: AtSign },
@@ -81,6 +82,8 @@ export const SettingsPage = () => {
 					))}
 				</dl>
 			</div>
+
+			<ChangePasswordCard />
 		</div>
 	);
 };

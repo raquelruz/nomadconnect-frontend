@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CheckCheck } from "lucide-react";
-
-import { useNotifications } from "../hooks/useNotifications";
+import { useNotifications } from "../context/NotificationsContext";
 import { groupNotificationsByDate } from "../utils/notifications";
-
 import { NotificationItem } from "../components/Notifications/NotificationItem";
 import { NotificationSkeleton } from "../components/Notifications/NotificationSkeleton";
 import { EmptyNotifications } from "../components/Notifications/EmptyNotifications";

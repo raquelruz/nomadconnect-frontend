@@ -1,5 +1,5 @@
 import { FaSun, FaMoon } from "react-icons/fa";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "../../../context/ThemeContext";
 import { navIconButtonClass } from "./navIconButtonsStyles";
 
 export const ThemeButton = ({ className = "" }) => {

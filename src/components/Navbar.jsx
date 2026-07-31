@@ -73,13 +73,13 @@ export const Navbar = () => {
 							<>
 								<Link
 									to="/login"
-									className="hidden md:inline-flex px-5 py-2.5 rounded-full text-sm font-medium border border-border text-text-primary hover:bg-bg-secondary transition-all duration-300 active:scale-95"
+									className="hidden lg:inline-flex px-5 py-2.5 rounded-full text-sm font-medium border border-border text-text-primary hover:bg-bg-secondary transition-all duration-300 active:scale-95"
 								>
 									Iniciar sesión
 								</Link>
 								<Link
 									to="/register"
-									className="hidden md:inline-flex px-5 py-2.5 rounded-full text-sm font-medium text-white bg-linear-to-r from-primary-600 to-primary-500 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:scale-95"
+									className="hidden lg:inline-flex px-5 py-2.5 rounded-full text-sm font-medium text-white bg-linear-to-r from-primary-600 to-primary-500 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:scale-95"
 								>
 									Crear cuenta
 								</Link>
@@ -91,7 +91,7 @@ export const Navbar = () => {
 								to="/settings"
 								title="Ajustes de la cuenta"
 								aria-label="Ajustes de la cuenta"
-								className={`hidden md:flex ${navIconButtonClass}`}
+								className={`hidden lg:flex ${navIconButtonClass}`}
 							>
 								<FaCog className="text-base" />
 							</Link>
@@ -99,12 +99,12 @@ export const Navbar = () => {
 
 						{user && <ThemeButton />}
 
-						{user && <LogoutButton className="hidden md:flex" onClick={handleLogout} />}
+						{user && <LogoutButton className="hidden lg:flex" onClick={handleLogout} />}
 
 						{user && <NotificationButton />}
 						<button
 							onClick={toggleMenu}
-							className="md:hidden p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-all duration-200"
+							className="lg:hidden p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-secondary transition-all duration-200"
 							aria-label="Toggle menu"
 						>
 							<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
