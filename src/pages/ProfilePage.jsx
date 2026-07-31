@@ -10,6 +10,7 @@ import { TravelerBadge } from "../components/Profile/TravelerBadge";
 import { TripsGallery } from "../components/MyTrips/TripsGallery";
 import { TripThumbnailProfile } from "../components/Profile/TripThumbnailProfile";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
+import { LikedTripsSection } from "../components/Profile/LikedTripsSection";
 
 export const ProfilePage = () => {
 	const { user: tokenUser } = useAuth();
@@ -20,6 +21,7 @@ export const ProfilePage = () => {
 	const [uploadingAvatar, setUploadingAvatar] = useState(false);
 	const [removingAvatar, setRemovingAvatar] = useState(false);
 	const [showRemoveAvatarConfirm, setShowRemoveAvatarConfirm] = useState(false);
+	const [likedTrips, setLikedTrips] = useState([]);
 
 	useEffect(() => {
 		if (!tokenUser?.id) return;
@@ -27,10 +29,12 @@ export const ProfilePage = () => {
 		Promise.all([
 			api.get(`/users/${tokenUser.id}`),
 			api.get(`/trips/my-trips/${tokenUser.id}`),
+			api.get(`/trips/liked/${tokenUser.id}`),
 		])
-			.then(([profileResponse, tripsResponse]) => {
+			.then(([profileResponse, tripsResponse, likedTripsResponse]) => {
 				setProfile(profileResponse.data);
 				setTrips(tripsResponse.data);
+				setLikedTrips(likedTripsResponse.data);
 			})
 			.catch((error) => setError(error.message || "Error cargando el perfil"))
 			.finally(() => setLoading(false));
@@ -74,7 +78,7 @@ export const ProfilePage = () => {
 
 	return (
 		<div className="max-w-5xl mx-auto">
-			<div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
 				<div className="flex flex-col sm:flex-row sm:items-start gap-6">
 					<div className="relative shrink-0 w-fit mx-auto sm:mx-0">
 						<ProfileAvatar profile={profile} />
@@ -99,12 +103,10 @@ export const ProfilePage = () => {
 
 					<div className="flex-1 text-center sm:text-left">
 						<div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-							<h2 className="text-xl font-bold text-gray-900">
-								{profile.fullName || profile.username}
-							</h2>
+							<h2 className="text-xl font-bold text-text-primary">{profile.fullName || profile.username}</h2>
 							<TravelerBadge tripsCount={trips.length} />
 						</div>
-						<p className="text-gray-400 text-sm mt-0.5">@{profile.username}</p>
+						<p className="text-text-muted text-sm mt-0.5">@{profile.username}</p>
 
 						<ProfileBio profile={profile} onBioUpdated={setProfile} />
 					</div>
@@ -114,13 +116,17 @@ export const ProfilePage = () => {
 				<ProfileMeta profile={profile} onProfileUpdated={setProfile} />
 			</div>
 
-			<div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-				<h3 className="font-bold text-gray-900 mb-4">Galería de aventuras</h3>
+			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
+				<LikedTripsSection trips={likedTrips}/>
+			</div>
+
+			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
+				<h3 className="font-bold text-text-primary mb-4">Galería de aventuras</h3>
 				<TripsGallery trips={trips} />
 			</div>
 
-			<div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-				<h3 className="font-bold text-gray-900 mb-4">Mis últimos viajes</h3>
+			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
+				<h3 className="font-bold text-text-primary mb-4">Mis últimos viajes</h3>
 
 				{!hasTrips && <p className="text-gray-400 text-sm">Aún no tienes viajes.</p>}
 
@@ -129,11 +135,11 @@ export const ProfilePage = () => {
 						{recentTrips.map((trip) => (
 							<div
 								key={trip.id}
-								className="rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition cursor-pointer"
+								className="bg-bg-card/50 rounded-xl overflow-hidden border border-border hover:shadow-md transition cursor-pointer"
 							>
 								<TripThumbnailProfile trip={trip} />
 								<div className="p-3">
-									<p className="text-sm font-medium text-gray-900 truncate">{trip.title}</p>
+									<p className="text-sm font-medium text-text-primary truncate">{trip.title}</p>
 									{trip.destination && (
 										<p className="text-xs text-gray-400 truncate">{trip.destination}</p>
 									)}
