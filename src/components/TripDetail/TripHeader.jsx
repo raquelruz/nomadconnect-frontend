@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import { Calendar, MapPin, Heart, ArrowLeft } from "lucide-react";
 import { TripCreator } from "../TripDetail/TripCreator";
 import { TripMembersCard } from "../Members/TripMembersCard";
+import { useTripLikes } from "../../hooks/useTripLikes";
 
 export const TripHeader = ({ trip, user, refreshTrip }) => {
+	const { liked, likesCount, loading, toggleLike } = useTripLikes(trip, user);
+
 	const formatDate = (date) => {
 		return new Date(date).toLocaleDateString("es-ES", {
 			day: "numeric",
@@ -12,6 +15,12 @@ export const TripHeader = ({ trip, user, refreshTrip }) => {
 		});
 	};
 
+	let heartClasses = "flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition hover:bg-white/25"
+
+	if (liked) {
+		heartClasses = "flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-error-500 backdrop-blur-md transition hover:bg-white/25"
+	}
+	
 	return (
 		<div className="relative">
 			<div className="relative h-72 w-full overflow-hidden sm:h-96 lg:h-125">
@@ -27,8 +36,11 @@ export const TripHeader = ({ trip, user, refreshTrip }) => {
 						<ArrowLeft size={18} />
 					</Link>
 
-					<button className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition hover:bg-white/25">
-						<Heart size={18} />
+					<button 
+						onClick={toggleLike}
+						disabled={loading}
+						className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md transition hover:bg-white/25">
+							<Heart size={18} fill={liked ? "currentColor" : "none" }/>
 					</button>
 				</div>
 
