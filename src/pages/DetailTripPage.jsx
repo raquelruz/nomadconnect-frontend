@@ -7,12 +7,14 @@ import { TripDescription } from "../components/TripDetail/TripDescription";
 import { TripHeader } from "../components/TripDetail/TripHeader";
 import { TripPlannerSidebar } from "../components/TripDetail/TripPlannerSidebar";
 import { TripModals } from "../components/TripDetail/TripModals";
+import { TripSummaryView } from "../components/TripDetail/TripSummaryView";
 import { MembersList } from "../components/Members/MembersList";
 import { CommentsSection } from "../components/Comments/CommentsSection";
 import { PlannerContent } from "../components/Planner/PlannerContent";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
+import { useTripMembers } from "../hooks/useTripMembers";
 
 export const DetailTripPage = () => {
 	const { user } = useAuth();
@@ -81,6 +83,12 @@ export const DetailTripPage = () => {
 		setSelectedDay(refreshed);
 	}, [selectedItinerary]);
 
+	const { isOwner, isMember, canJoin, hasFreePlaces, loading: joinLoading, joinTrip } = useTripMembers(
+		trip,
+		user,
+		getTrip,
+	);
+
 	if (loading) {
 		return <Loading message="Cargando viaje..." />;
 	}
@@ -107,7 +115,40 @@ export const DetailTripPage = () => {
 		);
 	}
 
-	const isOwner = trip.owner?.id === user?.id;
+	const canAccessPlanner = isOwner || isMember;
+
+	if (trip.visibility === "private" && !canAccessPlanner) {
+		return (
+			<EmptyState
+				emoji="🔒"
+				title="Viaje privado"
+				description="Este viaje es privado y no tienes acceso a su contenido."
+				action={
+					<Link
+						to="/explore"
+						className="inline-flex items-center justify-center rounded-xl bg-primary-600 px-5 py-2.5 text-white transition hover:bg-primary-700"
+					>
+						Explorar otros viajes
+					</Link>
+				}
+			/>
+		);
+	}
+
+	if (!canAccessPlanner) {
+		return (
+			<TripSummaryView
+				trip={trip}
+				user={user}
+				refreshTrip={getTrip}
+				canJoin={canJoin}
+				hasFreePlaces={hasFreePlaces}
+				joining={joinLoading}
+				onJoin={joinTrip}
+			/>
+		);
+	}
+
 	const itineraries = trip.itineraries || [];
 
 	return (

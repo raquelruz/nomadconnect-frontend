@@ -5,9 +5,9 @@ import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { LuUser } from "react-icons/lu";
 import { useAuth } from "../auth/AuthContext";
-import { AuthLayout } from "../components/Auth/AuthLayout";
-import { AuthCard } from "../components/Auth/AuthCard";
-import { AuthLogo } from "../components/Auth/AuthLogo";
+import { AuthLayout } from "../components/Authentication/AuthLayout";
+import { AuthCard } from "../components/Authentication//AuthCard";
+import { AuthLogo } from "../components/Authentication//AuthLogo";
 
 const FIELDS = [
 	{ key: "username", label: "Nombre de usuario", type: "text", placeholder: "juanperez", icon: FaRegUser },
