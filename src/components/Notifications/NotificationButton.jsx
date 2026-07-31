@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
-import { useNotifications } from "../../hooks/useNotifications";
+import { useNotifications } from "../../context/NotificationsContext";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { navIconButtonClass } from "../ui/Buttons/navIconButtonsStyles";
 
