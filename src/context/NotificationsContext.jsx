@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import api from "../api";
 import { useAuth } from "../auth/AuthContext";
 
+const NotificationsContext = createContext(null);
+
 const PAGE_SIZE = 15;
 
-export const useNotifications = () => {
+export const NotificationsProvider = ({ children }) => {
 	const { user } = useAuth();
 
 	const [notifications, setNotifications] = useState([]);
@@ -17,8 +19,6 @@ export const useNotifications = () => {
 	const [loadingMore, setLoadingMore] = useState(false);
 	const [error, setError] = useState(null);
 
-	// El contador de no leídas viene siempre del endpoint dedicado, así es
-	// exacto sin importar cuántas páginas tengamos cargadas en `notifications`.
 	const fetchUnreadCount = useCallback(async () => {
 		if (!user) {
 			setUnreadCount(0);
@@ -33,7 +33,6 @@ export const useNotifications = () => {
 		}
 	}, [user]);
 
-	// Carga la primera página. Se usa al montar y al cambiar de filtro.
 	const fetchNotifications = useCallback(
 		async (nextUnreadOnly = false) => {
 			if (!user) {
@@ -63,7 +62,6 @@ export const useNotifications = () => {
 		[user],
 	);
 
-	// Carga la siguiente página y la añade al final de la lista actual.
 	const loadMore = useCallback(async () => {
 		if (!user || loadingMore || !hasMore) return;
 
@@ -107,8 +105,6 @@ export const useNotifications = () => {
 		}
 	}, []);
 
-	// Usamos allSettled en vez de Promise.all: si una petición falla, las que
-	// sí tuvieron éxito igual se reflejan en pantalla (en vez de perderse todas).
 	const markAllAsRead = useCallback(async () => {
 		const unreadNotifications = notifications.filter((notification) => !notification.isRead);
 
@@ -160,7 +156,7 @@ export const useNotifications = () => {
 		[notifications],
 	);
 
-	return {
+	const value = {
 		notifications,
 		unreadCount,
 		hasMore,
@@ -173,4 +169,12 @@ export const useNotifications = () => {
 		markAllAsRead,
 		deleteNotification,
 	};
+
+	return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>;
+};
+
+export const useNotifications = () => {
+	const context = useContext(NotificationsContext);
+	if (!context) throw new Error("useNotifications debe usarse dentro de <NotificationsProvider>");
+	return context;
 };

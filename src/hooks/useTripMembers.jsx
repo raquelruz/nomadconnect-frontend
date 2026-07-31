@@ -18,7 +18,6 @@ export const useTripMembers = (trip, user, refreshTrip) => {
 
 	const hasFreePlaces = useMemo(() => {
 		if (!trip) return false;
-
 		return (trip.members?.length || 0) < trip.maxMembers;
 	}, [trip]);
 
@@ -27,7 +26,6 @@ export const useTripMembers = (trip, user, refreshTrip) => {
 
 		return user && !isOwner && !isMember && trip.visibility === "public" && hasFreePlaces;
 	}, [user, isOwner, isMember, trip, hasFreePlaces]);
-
 	const canLeave = useMemo(() => {
 		return user && isMember;
 	}, [user, isMember]);
