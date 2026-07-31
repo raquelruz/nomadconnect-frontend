@@ -14,6 +14,7 @@ import { PlannerContent } from "../components/Planner/PlannerContent";
 import { Loading } from "../components/ui/Loading";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
+import { TaskChecklist } from "../components/Tasks/TaskChecklist";
 import { useTripMembers } from "../hooks/useTripMembers";
 
 export const DetailTripPage = () => {
@@ -193,6 +194,11 @@ export const DetailTripPage = () => {
 							tripLocation={`${trip.city}, ${trip.country}`}
 							onCreateDay={() => setShowCreateDay(true)}
 						/>
+					</section>
+
+					<section>
+						<TaskChecklist trip={trip} user={user} isOwner={isOwner} />
+
 					</section>
 
 					<MembersList trip={trip} />
