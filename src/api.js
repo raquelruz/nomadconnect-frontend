@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const http = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: import.meta.env.VITE_API_URL
 });
 
 // Inyecta el token JWT en cada petición si existe
@@ -20,11 +20,17 @@ http.interceptors.response.use(
         return response;
     },
     (error) => {
-        error.message = error.response.data.message;
-        if (error.response.status === 401) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-            window.dispatchEvent(new Event("auth:logout"));
+        if (error.response) {
+            // El servidor respondió con un error (400, 401, 500, etc.)
+            error.message = error.response.data?.message || error.message;
+            if (error.response.status === 401) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.dispatchEvent(new Event("auth:logout"));
+            }
+        } else if (error.request) {
+            // La petición se hizo pero no hubo respuesta (red caída, CORS, timeout...)
+            error.message = "No se pudo conectar con el servidor. Revisa tu conexión.";
         }
         return Promise.reject(error);
     }
