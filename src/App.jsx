@@ -54,14 +54,7 @@ export const App = () => {
 						}
 					/>
 
-					<Route
-						path="/trips/:id"
-						element={
-							<ProtectedRoute>
-								<DetailTripPage />
-							</ProtectedRoute>
-						}
-					/>
+					<Route path="/trips/:id" element={<DetailTripPage />} />
 				</Routes>
 			</main>
 		</>

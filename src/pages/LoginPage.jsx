@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useAuth } from "../auth/AuthContext";
-import { AuthLayout } from "../components/Auth/AuthLayout";
-import { AuthCard } from "../components/Auth/AuthCard";
-import { AuthLogo } from "../components/Auth/AuthLogo";
+import { AuthLayout } from "../components/Authentication/AuthLayout";
+import { AuthCard } from "../components/Authentication/AuthCard";
+import { AuthLogo } from "../components/Authentication/AuthLogo";
 
 export const LoginPage = () => {
 	const { login } = useAuth();
