@@ -65,6 +65,15 @@ export const ProfilePage = () => {
 			});
 	};
 
+	const handleUnlikeTrip = async (tripId) => {
+		try {
+			await api.post(`/trips/${tripId}/like`);
+			setLikedTrips((prev) => prev.filter((trip) => trip.id !== tripId));
+		} catch (error) {
+			setError(error.message || "Error al quitar el like");
+		}
+	};
+
 	if (loading) return <p className="text-gray-500">Cargando perfil...</p>;
 
 	if (error) {
@@ -103,7 +112,9 @@ export const ProfilePage = () => {
 
 					<div className="flex-1 text-center sm:text-left">
 						<div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-							<h2 className="text-xl font-bold text-text-primary">{profile.fullName || profile.username}</h2>
+							<h2 className="text-xl font-bold text-text-primary">
+								{profile.fullName || profile.username}
+							</h2>
 							<TravelerBadge tripsCount={trips.length} />
 						</div>
 						<p className="text-text-muted text-sm mt-0.5">@{profile.username}</p>
@@ -117,7 +128,7 @@ export const ProfilePage = () => {
 			</div>
 
 			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
-				<LikedTripsSection trips={likedTrips}/>
+				<LikedTripsSection trips={likedTrips} onUnlike={handleUnlikeTrip} />
 			</div>
 
 			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">

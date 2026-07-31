@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Heart, MapPin } from "lucide-react";
 import { getStampInfo } from "../../utils/tripPhase";
@@ -9,8 +10,21 @@ const stampTone = {
 	pendingClose: "border-warning text-warning bg-warning/10",
 };
 
-export const LikedTripsSection = ({ trips = [] }) => {
+export const LikedTripsSection = ({ trips = [], onUnlike }) => {
+	const [removingId, setRemovingId] = useState(null);
+
 	const hasLikedTrips = trips.length > 0;
+
+	const handleUnlikeClick = async (event, tripId) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		if (removingId) return;
+
+		setRemovingId(tripId);
+		await onUnlike(tripId);
+		setRemovingId(null);
+	};
 
 	let content = (
 		<div className="rounded-2xl border border-dashed border-border py-12 text-center">
@@ -27,6 +41,7 @@ export const LikedTripsSection = ({ trips = [] }) => {
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 				{trips.map((trip) => {
 					const stamp = getStampInfo(trip);
+					const isRemoving = removingId === trip.id;
 
 					return (
 						<Link
@@ -51,10 +66,14 @@ export const LikedTripsSection = ({ trips = [] }) => {
 									{stamp.label}
 								</span>
 
-								<div className="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
-									<Heart size={12} fill="currentColor" className="text-error-400" />
-									{trip.likesCount || 0}
-								</div>
+								<button
+									onClick={(event) => handleUnlikeClick(event, trip.id)}
+									disabled={isRemoving}
+									aria-label="Quitar de favoritos"
+									className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm transition hover:bg-black/60 disabled:opacity-50"
+								>
+									<Heart size={14} fill="currentColor" className="text-error-400" />
+								</button>
 
 								<div className="absolute bottom-3 left-3 right-3">
 									<p className="truncate text-base font-bold text-white drop-shadow-sm">
@@ -88,7 +107,7 @@ export const LikedTripsSection = ({ trips = [] }) => {
 	return (
 		<div className="p-6 mb-6">
 			<div className="flex items-center gap-2 mb-4">
-				<Heart size={18} className="text-text-primary" fill="currentColor" />
+				<Heart size={18} className="text-error-500" fill="currentColor" />
 				<h3 className="font-bold text-text-primary">Viajes que te han gustado</h3>
 			</div>
 

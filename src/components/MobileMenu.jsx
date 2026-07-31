@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaCog } from "react-icons/fa";
 import { LogoutButton } from "./ui/Buttons/LogoutButton";
 
 export const MobileMenu = ({ links, closeMenu, user, handleLogout }) => {
@@ -16,6 +17,19 @@ export const MobileMenu = ({ links, closeMenu, user, handleLogout }) => {
 						<span>{link.label}</span>
 					</Link>
 				))}
+
+				{user && (
+					<Link
+						to="/settings"
+						onClick={closeMenu}
+						className="px-3 py-3 rounded-lg text-sm font-medium text-text-secondary hover:text-primary-500 hover:bg-bg-tertiary flex items-center gap-2.5 transition-colors duration-200"
+					>
+						<span>
+							<FaCog />
+						</span>
+						<span>Ajustes</span>
+					</Link>
+				)}
 
 				<div className="my-2 border-t border-border" />
 
