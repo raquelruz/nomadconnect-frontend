@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Users, UserPlus, Crown, CheckCircle2 } from "lucide-react";
 import { useTripMembers } from "../../hooks/useTripMembers";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import { TripMembersModal } from "../ui/Modals/TripMembersModal";
 import api from "../../api";
 
 export const TripMembersCard = ({ trip, user, refreshTrip }) => {
@@ -10,6 +11,7 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 	const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
 	const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
 	const [closing, setClosing] = useState(false);
+	const [showMembersModal, setShowMembersModal] = useState(false);
 
 	const members = trip.members || [];
 	const totalMembers = members.length + 1;
@@ -81,6 +83,13 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 					)}
 				</div>
 
+				<button
+					onClick={() => setShowMembersModal(true)}
+					className="mt-3 w-full rounded-xl border border-text-primary/10 px-4 py-2.5 text-sm font-semibold text-text-primary/70 transition hover:bg-text-primary/5"
+				>
+					Ver todos los participantes
+				</button>
+
 				<div className="mt-5 space-y-2">
 					{canJoin && (
 						<button
@@ -146,6 +155,8 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 				onCancel={() => setConfirmCloseOpen(false)}
 				loading={closing}
 			/>
+
+			<TripMembersModal isOpen={showMembersModal} trip={trip} onClose={() => setShowMembersModal(false)} />
 		</>
 	);
 };
