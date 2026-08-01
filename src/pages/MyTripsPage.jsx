@@ -10,9 +10,11 @@ import { MyTripsHeader } from "../components/MyTrips/MyTripsHeader";
 import { CreateNewTripCard } from "../components/Trips/CreateNewTripCard";
 import { RecentMemories } from "../components/MyTrips/RecentsMemories";
 import { Loading } from "../components/ui/Loading";
+import { useToast } from "../context/ToastContext";
 
 export const MyTripsPage = () => {
 	const { id } = useParams();
+	const toast = useToast();
 	const [user, setUser] = useState(null);
 	const [trips, setTrips] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -49,19 +51,12 @@ export const MyTripsPage = () => {
 	}, [id, loadTrips]);
 
 	const remove = async (tripId) => {
-		if (
-			!confirm(
-				"¿Estás seguro de eliminar este viaje? Se borrarán también sus tareas, comentarios y actualizaciones.",
-			)
-		) {
-			return;
-		}
-
 		try {
 			await api.delete(`/trips/${tripId}`);
+			toast.success("Viaje eliminado");
 			loadTrips();
 		} catch (error) {
-			alert(error.message || "Error al eliminar el viaje");
+			toast.error(error.message || "Error al eliminar el viaje");
 		}
 	};
 

@@ -2,8 +2,10 @@ import { useState } from "react";
 import { MapPin, Image as ImageIcon, Eye, FileText } from "lucide-react";
 import api from "../../api";
 import { FormActions } from "../ui/FormActions";
+import { useToast } from "../../context/ToastContext";
 
 export const EditTripForm = ({ trip, onSuccess, onCancel }) => {
+	const toast = useToast();
 	const [country, setCountry] = useState(trip.country || "");
 	const [city, setCity] = useState(trip.city || "");
 	const [description, setDescription] = useState(trip.description || "");
@@ -42,6 +44,7 @@ export const EditTripForm = ({ trip, onSuccess, onCancel }) => {
 			}
 
 			onSuccess(updatedTrip);
+			toast.success("Cambios guardados");
 		} catch (submitError) {
 			setError(submitError.message || "Error al guardar los cambios");
 		} finally {

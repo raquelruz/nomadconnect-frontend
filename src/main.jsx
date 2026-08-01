@@ -5,14 +5,17 @@ import { App } from "./App.jsx";
 import { AuthProvider } from "./auth/AuthContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { NotificationsProvider } from "./context/NotificationsContext.jsx";
+import { ToastProvider } from "./context/ToastContext.jsx";
 
 createRoot(document.getElementById("root")).render(
 	<AuthProvider>
 		<BrowserRouter>
 			<ThemeProvider>
-				<NotificationsProvider>
-					<App />
-				</NotificationsProvider>
+				<ToastProvider>
+					<NotificationsProvider>
+						<App />
+					</NotificationsProvider>
+				</ToastProvider>
 			</ThemeProvider>
 		</BrowserRouter>
 	</AuthProvider>,
