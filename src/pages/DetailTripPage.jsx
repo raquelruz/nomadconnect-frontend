@@ -169,7 +169,7 @@ export const DetailTripPage = () => {
 			/>
 
 			<main className="min-w-0 flex-1 pb-16 sm:pb-20">
-				<TripHeader trip={trip} user={user} refreshTrip={getTrip} />
+				<TripHeader trip={trip} user={user} refreshTrip={getTrip} isOwner={isOwner} />
 
 				<div className="mx-auto max-w-6xl px-4 sm:px-6">
 					<TripDescription description={trip.description} />
