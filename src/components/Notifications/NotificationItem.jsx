@@ -4,6 +4,7 @@ import { Trash2, MessageCircle, PartyPopper, Bell, CheckCircle2, UserPlus, UserM
 
 import { getRelativeTime, getNotificationLink } from "../../utils/notifications";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import { UserAvatar } from "../ui/UserAvatar";
 
 const icons = {
 	new_comment: MessageCircle,
@@ -51,11 +52,7 @@ export const NotificationItem = ({ notification, markAsRead, deleteNotification,
 				onClick={handleOpen}
 				className="flex flex-1 gap-4 rounded-lg text-left focus-visible:outline-2 focus-visible:outline-primary-500"
 			>
-				<img
-					src={notification.sender?.avatar || "/default-avatar.png"}
-					alt=""
-					className="h-12 w-12 shrink-0 rounded-full object-cover"
-				/>
+				<UserAvatar user={notification.sender} size="lg" />
 
 				<div className="flex-1">
 					<div className="flex items-center gap-2">
