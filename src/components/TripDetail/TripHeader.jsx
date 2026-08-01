@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Calendar, MapPin, Heart, ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Heart, ArrowLeft, Pencil, Trash2, CheckCircle2 } from "lucide-react";
 import { TripCreator } from "../TripDetail/TripCreator";
 import { TripMembersCard } from "../Members/TripMembersCard";
 import { useTripLikes } from "../../hooks/useTripLikes";
@@ -89,6 +89,13 @@ export const TripHeader = ({ trip, user, refreshTrip, isOwner = false }) => {
 
 				<div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 lg:p-8">
 					<div className="mx-auto max-w-6xl">
+						{trip.status === "completed" && (
+							<span className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-success-500 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+								<CheckCircle2 size={13} />
+								Viaje finalizado
+							</span>
+						)}
+
 						<h1 className="wrap-break-word text-3xl font-bold text-white drop-shadow-sm sm:text-4xl lg:text-5xl">
 							{trip.title}
 						</h1>

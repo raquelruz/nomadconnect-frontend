@@ -1,21 +1,38 @@
 import { useState } from "react";
-import { Users, UserPlus, Crown } from "lucide-react";
+import { Users, UserPlus, Crown, CheckCircle2 } from "lucide-react";
 import { useTripMembers } from "../../hooks/useTripMembers";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import api from "../../api";
 
 export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 	const { isOwner, canJoin, canLeave, loading, joinTrip, leaveTrip } = useTripMembers(trip, user, refreshTrip);
 
-	const [confirmOpen, setConfirmOpen] = useState(false);
+	const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
+	const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
+	const [closing, setClosing] = useState(false);
 
 	const members = trip.members || [];
 	const totalMembers = members.length + 1;
 	const maxMembers = trip.maxMembers || null;
 	const availablePlaces = maxMembers ? maxMembers - totalMembers : null;
+	const isClosed = trip.status === "completed";
 
 	const handleConfirmLeave = async () => {
 		await leaveTrip();
-		setConfirmOpen(false);
+		setConfirmLeaveOpen(false);
+	};
+
+	const handleConfirmClose = async () => {
+		try {
+			setClosing(true);
+			await api.put(`/trips/${trip.id}`, { status: "completed" });
+			await refreshTrip();
+		} catch (error) {
+			alert(error.message || "Error al cerrar el viaje");
+		} finally {
+			setClosing(false);
+			setConfirmCloseOpen(false);
+		}
 	};
 
 	return (
@@ -64,7 +81,7 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 					)}
 				</div>
 
-				<div className="mt-5">
+				<div className="mt-5 space-y-2">
 					{canJoin && (
 						<button
 							onClick={joinTrip}
@@ -78,7 +95,7 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 
 					{canLeave && (
 						<button
-							onClick={() => setConfirmOpen(true)}
+							onClick={() => setConfirmLeaveOpen(true)}
 							disabled={loading}
 							className="w-full rounded-xl border border-red-500/25 px-4 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/10 disabled:opacity-50"
 						>
@@ -92,16 +109,42 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 							Eres el organizador
 						</div>
 					)}
+
+					{isOwner && !isClosed && (
+						<button
+							onClick={() => setConfirmCloseOpen(true)}
+							className="flex w-full items-center justify-center gap-2 rounded-xl border border-success-500/25 px-4 py-3 text-sm font-semibold text-success-500 transition hover:bg-success-500/10"
+						>
+							<CheckCircle2 size={16} />
+							Cerrar viaje
+						</button>
+					)}
+
+					{isClosed && (
+						<div className="flex items-center justify-center gap-1.5 rounded-xl bg-success-500/10 px-4 py-3 text-sm font-semibold text-success-500">
+							<CheckCircle2 size={15} />
+							Viaje finalizado
+						</div>
+					)}
 				</div>
 			</div>
 
 			<ConfirmModal
-				isOpen={confirmOpen}
+				isOpen={confirmLeaveOpen}
 				title="Abandonar viaje"
 				message="¿Seguro que quieres abandonar este viaje? Perderás acceso a su planificación, tareas y comentarios."
 				onConfirm={handleConfirmLeave}
-				onCancel={() => setConfirmOpen(false)}
+				onCancel={() => setConfirmLeaveOpen(false)}
 				loading={loading}
+			/>
+
+			<ConfirmModal
+				isOpen={confirmCloseOpen}
+				title="Cerrar viaje"
+				message="Se notificará a todos los participantes de que el viaje ha finalizado. Podrás seguir viendo su contenido con normalidad."
+				onConfirm={handleConfirmClose}
+				onCancel={() => setConfirmCloseOpen(false)}
+				loading={closing}
 			/>
 		</>
 	);
