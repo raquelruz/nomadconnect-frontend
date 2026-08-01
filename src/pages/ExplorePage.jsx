@@ -1,3 +1,4 @@
+// src/pages/ExplorePage.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../api";
@@ -6,10 +7,12 @@ import { ExploreHeader } from "../components/Trips/ExploreHeader";
 import { CreateTripModal } from "../components/ui/Modals/CreateTripsModal";
 import { useAuth } from "../auth/AuthContext";
 import { Loading } from "../components/ui/Loading";
+import { useToast } from "../context/ToastContext";
 
 export const ExplorePage = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
+    const toast = useToast();
 
     const [trips, setTrips] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -45,9 +48,10 @@ export const ExplorePage = () => {
     const remove = async (id) => {
         try {
             await api.delete(`/trips/${id}`);
+            toast.success("Viaje eliminado");
             loadTrips();
         } catch (error) {
-            alert(error.message || "Error al eliminar el viaje");
+            toast.error(error.message || "Error al eliminar el viaje");
         }
     };
 

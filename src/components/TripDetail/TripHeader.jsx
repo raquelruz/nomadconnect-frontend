@@ -6,11 +6,13 @@ import { TripMembersCard } from "../Members/TripMembersCard";
 import { useTripLikes } from "../../hooks/useTripLikes";
 import { EditTripModal } from "../ui/Modals/EditTripModal";
 import { ConfirmModal } from "../ui/ConfirmModal";
+import { useToast } from "../../context/ToastContext";
 import api from "../../api";
 
 export const TripHeader = ({ trip, user, refreshTrip, isOwner = false }) => {
 	const { liked, likesCount, loading, toggleLike } = useTripLikes(trip, user);
 	const navigate = useNavigate();
+	const toast = useToast();
 
 	const [showEditModal, setShowEditModal] = useState(false);
 	const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -34,11 +36,12 @@ export const TripHeader = ({ trip, user, refreshTrip, isOwner = false }) => {
 		try {
 			setDeleting(true);
 			await api.delete(`/trips/${trip.id}`);
+			toast.success("Viaje eliminado");
 			navigate(`/my-trips/${user.id}`);
 		} catch (error) {
 			setDeleting(false);
 			setConfirmDeleteOpen(false);
-			alert(error.message || "Error al eliminar el viaje");
+			toast.error(error.message || "Error al eliminar el viaje");
 		}
 	};
 

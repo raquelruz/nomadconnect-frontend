@@ -3,10 +3,12 @@ import { Users, UserPlus, Crown, CheckCircle2 } from "lucide-react";
 import { useTripMembers } from "../../hooks/useTripMembers";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import { TripMembersModal } from "../ui/Modals/TripMembersModal";
+import { useToast } from "../../context/ToastContext";
 import api from "../../api";
 
 export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 	const { isOwner, canJoin, canLeave, loading, joinTrip, leaveTrip } = useTripMembers(trip, user, refreshTrip);
+	const toast = useToast();
 
 	const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
 	const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
@@ -29,8 +31,9 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 			setClosing(true);
 			await api.put(`/trips/${trip.id}`, { status: "completed" });
 			await refreshTrip();
+			toast.success("Viaje marcado como finalizado");
 		} catch (error) {
-			alert(error.message || "Error al cerrar el viaje");
+			toast.error(error.message || "Error al cerrar el viaje");
 		} finally {
 			setClosing(false);
 			setConfirmCloseOpen(false);
