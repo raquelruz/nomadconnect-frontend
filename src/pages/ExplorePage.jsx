@@ -1,4 +1,3 @@
-// src/pages/ExplorePage.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../api";
@@ -44,10 +43,6 @@ export const ExplorePage = () => {
     }, [search, date]);
 
     const remove = async (id) => {
-        if (!confirm("¿Eliminar este viaje? Se borrarán también sus tareas, comentarios y updates.")) {
-            return;
-        }
-
         try {
             await api.delete(`/trips/${id}`);
             loadTrips();
