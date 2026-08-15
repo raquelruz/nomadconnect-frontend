@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
-import api from "../api";
+import api from "../api"
+import { useToast } from "../context/ToastContext"; // ajusta la ruta si tu ToastContext vive en otro sitio
 
 export const useTripMembers = (trip, user, refreshTrip) => {
 	const [loading, setLoading] = useState(false);
+	const toast = useToast();
 
 	const isOwner = useMemo(() => {
 		if (!trip || !user) return false;
@@ -17,15 +19,13 @@ export const useTripMembers = (trip, user, refreshTrip) => {
 	}, [trip, user]);
 
 	const hasFreePlaces = useMemo(() => {
-		if (!trip) return false;
 		return (trip.members?.length || 0) < trip.maxMembers;
 	}, [trip]);
 
 	const canJoin = useMemo(() => {
-		if (!trip) return false;
-
 		return user && !isOwner && !isMember && trip.visibility === "public" && hasFreePlaces;
 	}, [user, isOwner, isMember, trip, hasFreePlaces]);
+
 	const canLeave = useMemo(() => {
 		return user && isMember;
 	}, [user, isMember]);
@@ -38,7 +38,7 @@ export const useTripMembers = (trip, user, refreshTrip) => {
 
 			await refreshTrip();
 		} catch (error) {
-			console.error(error);
+			toast.error(error.message || "No se ha podido unir al viaje");
 		} finally {
 			setLoading(false);
 		}
@@ -52,24 +52,13 @@ export const useTripMembers = (trip, user, refreshTrip) => {
 
 			await refreshTrip();
 		} catch (error) {
-			console.error(error);
+			toast.error(error.message || "No se ha podido abandonar el viaje");
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	return {
-		loading,
-
-		isOwner,
-		isMember,
-
-		canJoin,
-		canLeave,
-
-		hasFreePlaces,
-
-		joinTrip,
-		leaveTrip,
+		loading,  isOwner, isMember, canJoin, canLeave, hasFreePlaces, joinTrip, leaveTrip,
 	};
 };
