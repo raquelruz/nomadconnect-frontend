@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import api from "../api"
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../context/ToastContext"; 
 
 export const useTripMembers = (trip, user, refreshTrip) => {
 	const [loading, setLoading] = useState(false);

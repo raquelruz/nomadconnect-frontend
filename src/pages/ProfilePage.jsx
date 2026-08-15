@@ -11,6 +11,10 @@ import { TripsGallery } from "../components/MyTrips/TripsGallery";
 import { TripThumbnailProfile } from "../components/Profile/TripThumbnailProfile";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 import { LikedTripsSection } from "../components/Profile/LikedTripsSection";
+import { BlockedUsersModal } from "../components/ui/Modals/BlockedUsersModal";
+import { useBlockedUsers } from "../hooks/useBlockedUsers";
+import { useToast } from "../context/ToastContext";
+import { Ban } from "lucide-react";
 
 export const ProfilePage = () => {
 	const { user: tokenUser } = useAuth();
@@ -22,6 +26,10 @@ export const ProfilePage = () => {
 	const [removingAvatar, setRemovingAvatar] = useState(false);
 	const [showRemoveAvatarConfirm, setShowRemoveAvatarConfirm] = useState(false);
 	const [likedTrips, setLikedTrips] = useState([]);
+	const [showBlockedModal, setShowBlockedModal] = useState(false);
+
+	const { blockedUsers, loading: blockedLoading, unblockUser } = useBlockedUsers();
+	const toast = useToast();
 
 	useEffect(() => {
 		if (!tokenUser?.id) return;
@@ -71,6 +79,15 @@ export const ProfilePage = () => {
 			setLikedTrips((prev) => prev.filter((trip) => trip.id !== tripId));
 		} catch (error) {
 			setError(error.message || "Error al quitar el like");
+		}
+	};
+
+	const handleUnblock = async (member) => {
+		try {
+			await unblockUser(member.id || member._id);
+			toast.success(`Has desbloqueado a @${member.username}`);
+		} catch (error) {
+			toast.error(error.message || "Error al desbloquear el usuario");
 		}
 	};
 
@@ -127,6 +144,21 @@ export const ProfilePage = () => {
 				<ProfileMeta profile={profile} onProfileUpdated={setProfile} />
 			</div>
 
+			<div className="mb-6">
+				<button
+					onClick={() => setShowBlockedModal(true)}
+					className="flex w-full items-center justify-between rounded-2xl border border-border bg-bg-card p-4 text-sm font-semibold text-text-primary shadow-sm transition hover:bg-text-primary/5"
+				>
+					<span className="flex items-center gap-2">
+						<Ban size={16} className="text-text-primary/40" />
+						Usuarios bloqueados
+					</span>
+					<span className="rounded-full bg-text-primary/10 px-2.5 py-0.5 text-xs font-bold text-text-primary/60">
+						{blockedUsers.length}
+					</span>
+				</button>
+			</div>
+
 			<div className="bg-bg-card rounded-2xl shadow-sm border border-border p-6 mb-6">
 				<LikedTripsSection trips={likedTrips} onUnlike={handleUnlikeTrip} />
 			</div>
@@ -160,6 +192,14 @@ export const ProfilePage = () => {
 					</div>
 				)}
 			</div>
+
+			<BlockedUsersModal
+				isOpen={showBlockedModal}
+				onClose={() => setShowBlockedModal(false)}
+				blockedUsers={blockedUsers}
+				loading={blockedLoading}
+				onUnblock={handleUnblock}
+			/>
 		</div>
 	);
 };
