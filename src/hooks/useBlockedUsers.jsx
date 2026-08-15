@@ -1,14 +1,19 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import api from "../api";
 
 export const useBlockedUsers = () => {
-    const [blockedIds, setBlockedIds] = useState([]);
+    const [blockedUsers, setBlockedUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const blockedIds = useMemo(
+        () => blockedUsers.map((u) => u.id || u._id),
+        [blockedUsers]
+    );
 
     const fetchBlockedUsers = useCallback(async () => {
         try {
             const response = await api.get("/users/blocked");
-            setBlockedIds(response.data.map((u) => u.id || u._id));
+            setBlockedUsers(response.data);
         } catch (error) {
             console.error(error);
         }
@@ -42,5 +47,5 @@ export const useBlockedUsers = () => {
         }
     };
 
-    return { blockedIds, loading, blockUser, unblockUser };
+    return { blockedUsers, blockedIds, loading, blockUser, unblockUser };
 };

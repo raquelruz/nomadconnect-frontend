@@ -3,6 +3,7 @@ import { Users, UserPlus, Crown, CheckCircle2 } from "lucide-react";
 import { useTripMembers } from "../../hooks/useTripMembers";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import { TripMembersModal } from "../ui/Modals/TripMembersModal";
+import { UserAvatar } from "../ui/UserAvatar";
 import { useToast } from "../../context/ToastContext";
 import api from "../../api";
 
@@ -59,18 +60,14 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 
 				<div className="mt-5 flex items-center justify-between">
 					<div className="flex -space-x-3">
-						<img
-							src={trip.owner.avatar}
-							alt={trip.owner.username}
-							className="h-9 w-9 rounded-full object-cover ring-2 ring-bg-card"
-						/>
+						<UserAvatar user={trip.owner} size="sm" className="ring-2 ring-bg-card" />
 
 						{members.slice(0, 4).map((member) => (
-							<img
+							<UserAvatar
 								key={member.id || member._id}
-								src={member.avatar}
-								alt={member.username}
-								className="h-9 w-9 rounded-full object-cover ring-2 ring-bg-card"
+								user={member}
+								size="sm"
+								className="ring-2 ring-bg-card"
 							/>
 						))}
 
@@ -159,7 +156,12 @@ export const TripMembersCard = ({ trip, user, refreshTrip }) => {
 				loading={closing}
 			/>
 
-			<TripMembersModal isOpen={showMembersModal} trip={trip} onClose={() => setShowMembersModal(false)} />
+			<TripMembersModal
+				isOpen={showMembersModal}
+				trip={trip}
+				user={user}
+				onClose={() => setShowMembersModal(false)}
+			/>
 		</>
 	);
 };
