@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Map, ChevronDown, Plus } from "lucide-react";
 import { DaysList } from "../Days/DaysList";
 import { ItineraryActions } from "./ItineraryActions";
 import { useItineraryActions } from "../../hooks/Itineraries/useItineraryActions";
+import { ConfirmModal } from "../ui/ConfirmModal";
 
 export const ItineraryRow = ({
 	itinerary,
@@ -15,6 +17,13 @@ export const ItineraryRow = ({
 	onCreateDay,
 }) => {
 	const { deleteItinerary, loading } = useItineraryActions({ itinerary, refreshTrip });
+
+	const [confirmOpen, setConfirmOpen] = useState(false);
+
+	const handleConfirmDelete = async () => {
+		await deleteItinerary();
+		setConfirmOpen(false);
+	};
 
 	return (
 		<div
@@ -47,7 +56,11 @@ export const ItineraryRow = ({
 				</button>
 
 				{isOwner && (
-					<ItineraryActions onEdit={() => onEdit(itinerary)} onDelete={deleteItinerary} deleting={loading} />
+					<ItineraryActions
+						onEdit={() => onEdit(itinerary)}
+						onDelete={() => setConfirmOpen(true)}
+						deleting={loading}
+					/>
 				)}
 			</div>
 
@@ -68,6 +81,15 @@ export const ItineraryRow = ({
 					</button>
 				</div>
 			)}
+
+			<ConfirmModal
+				isOpen={confirmOpen}
+				title="Eliminar itinerario"
+				message={`¿Seguro que quieres eliminar "${itinerary.title}"? Se eliminarán también todos sus días y actividades.`}
+				onConfirm={handleConfirmDelete}
+				onCancel={() => setConfirmOpen(false)}
+				loading={loading}
+			/>
 		</div>
 	);
 };

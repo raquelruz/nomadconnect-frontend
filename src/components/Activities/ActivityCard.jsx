@@ -4,6 +4,7 @@ import { useActivityActions } from "../../hooks/Activities/useActivityActions";
 import { ActivityActions } from "./ActivityActions";
 import { ActivityCarousel } from "./ActivityCarousel";
 import { ActivityViewer } from "./ActivityViewer";
+import { ConfirmModal } from "../ui/ConfirmModal";
 
 const formatTime = (time) => {
 	if (!time) return null;
@@ -26,6 +27,7 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 
 	const [viewerOpen, setViewerOpen] = useState(false);
 	const [currentImage, setCurrentImage] = useState(0);
+	const [confirmOpen, setConfirmOpen] = useState(false);
 
 	const images = activity.images || [];
 	const time = formatTime(activity.time);
@@ -36,24 +38,34 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 		setViewerOpen(true);
 	};
 
+	const handleConfirmDelete = async () => {
+		await deleteActivity();
+		setConfirmOpen(false);
+	};
+
+	let mediaContent;
+	if (images.length > 0) {
+		mediaContent = (
+			<ActivityCarousel
+				images={images}
+				title={activity.title}
+				onImageClick={openViewer}
+				badge={price}
+				height="h-40 sm:h-full"
+			/>
+		);
+	} else {
+		mediaContent = (
+			<div className="flex h-40 items-center justify-center bg-bg-card/90 text-text-primary sm:h-full">
+				<Clock size={22} />
+			</div>
+		);
+	}
+
 	return (
 		<>
-			<div className="flex flex-col overflow-hidden rounded-2xl bg-bg-card shadow-sm ring-1 ring-slate-100 transition hover:shadow-md sm:flex-row">
-				<div className="sm:w-56 sm:shrink-0">
-					{images.length > 0 ? (
-						<ActivityCarousel
-							images={images}
-							title={activity.title}
-							onImageClick={openViewer}
-							badge={price}
-							height="h-40 sm:h-full"
-						/>
-					) : (
-						<div className="flex h-40 items-center justify-center bg-bg-card/90 text-text-primary sm:h-full">
-							<Clock size={22} />
-						</div>
-					)}
-				</div>
+			<div className="flex flex-col overflow-hidden rounded-2xl bg-bg-card shadow-sm transition hover:shadow-md sm:flex-row">
+				<div className="sm:w-56 sm:shrink-0">{mediaContent}</div>
 
 				<div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-4 sm:p-5">
 					<div className="flex items-start justify-between gap-3">
@@ -69,7 +81,7 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 						<ActivityActions
 							isOwner={isOwner}
 							onEdit={onEdit}
-							onDelete={deleteActivity}
+							onDelete={() => setConfirmOpen(true)}
 							deleting={loading}
 							variant="compact"
 						/>
@@ -100,6 +112,15 @@ export const ActivityCard = ({ activity, refreshDay, isOwner, onEdit }) => {
 				currentImage={currentImage}
 				setCurrentImage={setCurrentImage}
 				onClose={() => setViewerOpen(false)}
+			/>
+
+			<ConfirmModal
+				isOpen={confirmOpen}
+				title="Eliminar actividad"
+				message={`¿Seguro que quieres eliminar "${activity.title}"? Esta acción no se puede deshacer.`}
+				onConfirm={handleConfirmDelete}
+				onCancel={() => setConfirmOpen(false)}
+				loading={loading}
 			/>
 		</>
 	);

@@ -1,10 +1,11 @@
-// src/components/Trips/TripCard.jsx
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, Users, MapPin, Trash2 } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { getStampInfo } from "../../utils/tripPhase";
 import { getTripDurationInDays } from "../../utils/tripStats";
 import { UserAvatar } from "../ui/UserAvatar";
+import { ConfirmModal } from "../ui/ConfirmModal";
 
 const phaseDotColor = {
 	upcoming: "bg-info-500",
@@ -19,6 +20,16 @@ const columnClasses = {
 
 export const TripCard = ({ trips, onDelete, showPhase = false, columns = 3, viewerId = null }) => {
 	const { user } = useAuth();
+
+	const [pendingDeleteTrip, setPendingDeleteTrip] = useState(null);
+	const [deleting, setDeleting] = useState(false);
+
+	const handleConfirmDelete = async () => {
+		setDeleting(true);
+		await onDelete(pendingDeleteTrip.id);
+		setDeleting(false);
+		setPendingDeleteTrip(null);
+	};
 
 	if (!Array.isArray(trips) || trips.length === 0) {
 		return (
@@ -39,6 +50,18 @@ export const TripCard = ({ trips, onDelete, showPhase = false, columns = 3, view
 				const canDelete = onDelete && user && ownerId === user.id;
 				const spotsTaken = trip.members?.length ?? 0;
 				const role = viewerId ? (ownerId === viewerId ? "owner" : "member") : null;
+
+				let ownerInfo;
+				if (owner) {
+					ownerInfo = (
+						<div className="flex items-center gap-1.5 text-xs text-text-secondary">
+							<UserAvatar user={owner} size="xs" />
+							{owner.username}
+						</div>
+					);
+				} else {
+					ownerInfo = <span />;
+				}
 
 				return (
 					<Link
@@ -82,7 +105,7 @@ export const TripCard = ({ trips, onDelete, showPhase = false, columns = 3, view
 								<button
 									onClick={(event) => {
 										event.preventDefault();
-										onDelete(trip.id);
+										setPendingDeleteTrip(trip);
 									}}
 									title="Eliminar viaje"
 									className="absolute bottom-3 left-3 flex h-8 w-8 items-center justify-center rounded-full bg-bg-card/90 text-error-500 opacity-0 backdrop-blur transition hover:bg-error-500 hover:text-white group-hover:opacity-100"
@@ -126,14 +149,7 @@ export const TripCard = ({ trips, onDelete, showPhase = false, columns = 3, view
 
 							<div className="mt-2.5 border-t border-border pt-2.5">
 								<div className="flex items-center justify-between">
-									{owner ? (
-										<div className="flex items-center gap-1.5 text-xs text-text-secondary">
-											<UserAvatar user={owner} size="xs" />
-											{owner.username}
-										</div>
-									) : (
-										<span />
-									)}
+									{ownerInfo}
 
 									<span className="flex items-center gap-1 text-xs text-text-secondary">
 										<Users size={12} />
@@ -145,6 +161,19 @@ export const TripCard = ({ trips, onDelete, showPhase = false, columns = 3, view
 					</Link>
 				);
 			})}
+
+			<ConfirmModal
+				isOpen={!!pendingDeleteTrip}
+				title="Eliminar viaje"
+				message={
+					pendingDeleteTrip
+						? `¿Seguro que quieres eliminar "${pendingDeleteTrip.title}"? Se borrarán también sus tareas, comentarios y actualizaciones.`
+						: ""
+				}
+				onConfirm={handleConfirmDelete}
+				onCancel={() => setPendingDeleteTrip(null)}
+				loading={deleting}
+			/>
 		</div>
 	);
 };

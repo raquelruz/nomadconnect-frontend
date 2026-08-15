@@ -8,7 +8,6 @@ import { TripHeader } from "../components/TripDetail/TripHeader";
 import { TripPlannerSidebar } from "../components/TripDetail/TripPlannerSidebar";
 import { TripModals } from "../components/TripDetail/TripModals";
 import { TripSummaryView } from "../components/TripDetail/TripSummaryView";
-import { MembersList } from "../components/Members/MembersList";
 import { CommentsSection } from "../components/Comments/CommentsSection";
 import { PlannerContent } from "../components/Planner/PlannerContent";
 import { Loading } from "../components/ui/Loading";
@@ -169,7 +168,7 @@ export const DetailTripPage = () => {
 			/>
 
 			<main className="min-w-0 flex-1 pb-16 sm:pb-20">
-				<TripHeader trip={trip} user={user} refreshTrip={getTrip} />
+				<TripHeader trip={trip} user={user} refreshTrip={getTrip} isOwner={isOwner} />
 
 				<div className="mx-auto max-w-6xl px-4 sm:px-6">
 					<TripDescription description={trip.description} />
@@ -200,8 +199,6 @@ export const DetailTripPage = () => {
 						<TaskChecklist trip={trip} user={user} isOwner={isOwner} />
 
 					</section>
-
-					<MembersList trip={trip} />
 
 					<CommentsSection trip={trip} user={user} />
 				</div>

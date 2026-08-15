@@ -5,17 +5,24 @@ import { DayEditForm } from "../Days/DayEditForm";
 import { CreateActivityModal } from "../ui/Modals/CreateActivityModal";
 import { EditActivityModal } from "../ui/Modals/EditActivityModal";
 import { ModalOverlay } from "../ui/ModalOverlay";
+import { ConfirmModal } from "../ui/ConfirmModal";
 import { useDayActions } from "../../hooks/Days/useDayActions";
 
 export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip, onCreateDay }) => {
 	const [showEditDay, setShowEditDay] = useState(false);
 	const [showCreateActivity, setShowCreateActivity] = useState(false);
 	const [editingActivity, setEditingActivity] = useState(null);
+	const [confirmDeleteDay, setConfirmDeleteDay] = useState(false);
 
 	const { deleteDay, updateDay, loading } = useDayActions({
 		day: selectedDay ?? {},
 		refreshItinerary: refreshTrip,
 	});
+
+	const handleConfirmDeleteDay = async () => {
+		await deleteDay();
+		setConfirmDeleteDay(false);
+	};
 
 	if (!itinerary) {
 		return (
@@ -59,7 +66,7 @@ export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip, o
 				isOwner={isOwner}
 				refreshDay={refreshTrip}
 				onEdit={() => setShowEditDay(true)}
-				onDelete={deleteDay}
+				onDelete={() => setConfirmDeleteDay(true)}
 				onAddActivity={() => setShowCreateActivity(true)}
 				onEditActivity={setEditingActivity}
 			/>
@@ -88,6 +95,15 @@ export const PlannerContent = ({ itinerary, selectedDay, isOwner, refreshTrip, o
 				activity={editingActivity}
 				refreshTrip={refreshTrip}
 				onClose={() => setEditingActivity(null)}
+			/>
+
+			<ConfirmModal
+				isOpen={confirmDeleteDay}
+				title="Eliminar día"
+				message="¿Seguro que quieres eliminar este día? Se eliminarán también todas sus actividades."
+				onConfirm={handleConfirmDeleteDay}
+				onCancel={() => setConfirmDeleteDay(false)}
+				loading={loading}
 			/>
 		</>
 	);

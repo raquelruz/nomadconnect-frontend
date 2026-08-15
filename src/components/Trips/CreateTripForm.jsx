@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../../api";
+import { useToast } from "../../context/ToastContext";
 
 const emptyForm = {
 	title: "",
@@ -12,6 +13,7 @@ const emptyForm = {
 };
 
 export const CreateTripForm = ({ onSuccess }) => {
+	const toast = useToast();
 	const [form, setForm] = useState(emptyForm);
 	const [imageFile, setImageFile] = useState(null);
 	const [submitting, setSubmitting] = useState(false);
@@ -33,11 +35,13 @@ export const CreateTripForm = ({ onSuccess }) => {
 			setForm(emptyForm);
 			setImageFile(null);
 
+			toast.success("Viaje creado con éxito");
+
 			if (onSuccess) {
 				onSuccess();
 			}
 		} catch (error) {
-			alert("Error al crear el viaje");
+			toast.error("Error al crear el viaje");
 		} finally {
 			setSubmitting(false);
 		}
